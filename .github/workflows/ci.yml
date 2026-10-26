@@ -37,7 +37,8 @@ jobs:
       - name: CLI smoke tests
         run: |
           set -u
-          cli="$PWD/dist/index.js"
+          repo="$PWD"
+          cli="$repo/dist/index.js"
           node "$cli" --help
           node "$cli" --version
           node "$cli" scan .
@@ -62,5 +63,9 @@ jobs:
           expect_exit 1 init
           expect_exit 2 scan ./does-not-exist
           expect_exit 2 bogus
-          expect_exit 4 check
-          expect_exit 4 report
+          expect_exit 2 check
+          expect_exit 0 report
+          cd "$repo"
+          expect_exit 0 check
+          expect_exit 3 check tests/fixtures/layered
+          expect_exit 0 report tests/fixtures/layered

@@ -4,32 +4,38 @@
 
 DepTrace is a command-line tool for analyzing the architecture of TypeScript and JavaScript
 repositories. It builds a static dependency graph of your source files, finds circular
-dependencies, and lets you inspect who depends on what.
+dependencies, lets you inspect who depends on what, and checks the graph against architecture
+rules you define (layers, forbidden imports and packages, module boundaries, cycle policies).
 
-> **Status: Phase 2 (dependency analysis).** Import extraction, module resolution, the dependency
-> graph, cycle detection and dependency inspection work. **Architecture rules (`check`) and
-> reports (`report`) are not implemented yet.** See [Roadmap](#roadmap).
+> **Status: Phase 3 (architecture rules).** Dependency analysis, dependency inspection, the rules
+> engine (`check`) and architecture reports (`report`) work. Baselines, SARIF and CI integrations
+> are not implemented yet. See [Roadmap](#roadmap).
 
 ## What works today
 
-| Command                        | Status          | What it does                                                                   |
-| ------------------------------ | --------------- | ------------------------------------------------------------------------------ |
-| `deptrace scan [directory]`    | Working         | Dependency analysis: files, imports, graph, cycles, diagnostics (text or JSON) |
-| `deptrace deps <file>`         | Working         | What a file imports (`outgoing`), or which files import it (`incoming`)        |
-| `deptrace path <from> <to>`    | Working         | A shortest import path between two files                                       |
-| `deptrace init`                | Working         | Creates a starter `deptrace.yml`; never overwrites an existing one             |
-| `deptrace --help`, `--version` | Working         |                                                                                |
-| `deptrace check`               | Not implemented | Prints a notice and exits with code `4`. No checks are run                     |
-| `deptrace report`              | Not implemented | Prints a notice and exits with code `4`. No report is generated                |
+| Command                        | Status  | What it does                                                                   |
+| ------------------------------ | ------- | ------------------------------------------------------------------------------ |
+| `deptrace scan [directory]`    | Working | Dependency analysis: files, imports, graph, cycles, diagnostics (text or JSON) |
+| `deptrace deps <file>`         | Working | What a file imports (`outgoing`), or which files import it (`incoming`)        |
+| `deptrace path <from> <to>`    | Working | A shortest import path between two files                                       |
+| `deptrace init`                | Working | Creates a starter `deptrace.yml`; never overwrites an existing one             |
+| `deptrace --help`, `--version` | Working |                                                                                |
+| `deptrace check [directory]`   | Working | Evaluates the rules in `deptrace.yml`; exit code `3` on violations             |
+| `deptrace report [directory]`  | Working | Layers, layer dependencies, rule results and cycles (text or JSON)             |
 
 The analysis is **static**: DepTrace parses files with the TypeScript compiler and never runs your
 code. It cannot see imports computed at runtime, dependency injection, reflection or other
 dynamic relationships, so the graph is not a complete runtime architecture map. A dependency, even
-a circular one, is reported as a finding, not as a policy violation: there are no rules yet, and
-`scan` exits `0` whenever the analysis completes.
+a circular one, is reported by `scan` as a finding, not as a policy violation: only `check`
+enforces rules, and only the rules you configure.
 
-Full details: [docs/analysis.md](docs/analysis.md) (recognized imports, resolution, cycles, JSON
-schema, diagnostics, limitations) and [docs/performance.md](docs/performance.md).
+Documentation:
+
+- [docs/rules.md](docs/rules.md): rule catalog, `check` and `report`, violations, troubleshooting
+- [docs/configuration.md](docs/configuration.md): `deptrace.yml` reference
+- [docs/analysis.md](docs/analysis.md): recognized imports, resolution, cycles, JSON schema,
+  diagnostics, limitations
+- [docs/performance.md](docs/performance.md): design and measured performance
 
 ## Installation
 
@@ -144,10 +150,80 @@ Dependency path from src/component.tsx to src/services/api.ts (2 steps):
 Follows imports from importer to imported file. Prints `No dependency path from ... to ...` when
 none exists (exit code `0`). Supports `--root` and `--format json`.
 
+### `deptrace check [directory]`
+
+Evaluates the architecture rules in `deptrace.yml` (see [docs/rules.md](docs/rules.md)):
+
+```yaml
+layers:
+  - name: presentation
+    files: ['src/presentation/**']
+  - name: domain
+    files: ['src/domain/**']
+  - name: infrastructure
+    files: ['src/infrastructure/**']
+
+rules:
+  layer-boundaries: # importer layer -> layers it may import
+    allowed:
+      presentation: [domain]
+      domain: []
+      infrastructure: [domain]
+  forbidden-packages:
+    - name: pure-domain
+      from: ['src/domain/**']
+      packages: ['express', 'pg']
+  circular-dependencies:
+    severity: warning
+    ignore-type-only: true
+```
+
+```console
+$ deptrace check
+DepTrace architecture check
+
+Rules
+  error   layer-boundaries                         3 violations
+  error   forbidden-packages/pure-domain           1 violation
+  warning circular-dependencies                    1 violation
+
+Violations: 4 errors, 1 warning
+  warning src/application/notify.ts:1:28  [circular-dependencies]
+          Circular dependency between 2 file(s): src/application/notify.ts -> src/application/place-order.ts -> src/application/notify.ts.
+  error   src/domain/pricing.ts:1:30  [forbidden-packages/pure-domain]
+          src/domain/pricing.ts must not import the package "express" (rule "forbidden-packages/pure-domain").
+          imports: "express" import type-only 1:30
+  error   src/domain/pricing.ts:2:22  [layer-boundaries]
+          Layer "domain" must not depend on layer "infrastructure" (allowed for "domain": none). src/domain/pricing.ts imports src/infrastructure/db/connection.ts.
+          imports: "../infrastructure/db/connection" import 2:22
+  ...
+
+Analysis: complete (20 files, 26 dependencies).
+error: Architecture check failed: 4 failing violations.
+```
+
+(Output for the sample project in `tests/fixtures/layered` with the configuration above.)
+
+Exit codes: `0` passed, `3` violations, `2` missing/invalid configuration or no rules. `--strict`
+makes warnings fail too; `--format json` prints machine-readable results with a stable
+`fingerprint` per violation. Unresolved imports and cycles are never violations unless a rule
+says so.
+
+A complete sample project with every rule type and seven deliberate violations is in
+[tests/fixtures/layered](tests/fixtures/layered): `deptrace check tests/fixtures/layered`.
+
+### `deptrace report [directory]`
+
+An architecture overview: analysis summary, layers with file counts, dependencies between layers
+(marked allowed / NOT ALLOWED), rule results, violations and cycles. Always exits `0` when the
+analysis completes; `--format json` adds an `architecture` section to the `scan` JSON document.
+
 ### `deptrace init`
 
-Creates `deptrace.yml` in the current directory. If the file exists, nothing is written and the
-command exits with code `1`. There is no overwrite flag.
+Creates a starter `deptrace.yml` in the current directory, with a commented rules example. If the
+file exists, nothing is written and the command exits with code `1`. There is no overwrite flag.
+The full format is described in [docs/configuration.md](docs/configuration.md); without a
+`deptrace.yml`, `scan` analyzes all supported files and `check` refuses to run.
 
 ### Global options
 
@@ -157,57 +233,16 @@ command exits with code `1`. There is no overwrite flag.
 | `-V, --version` | Print the version                                   |
 | `--debug`       | Print stack traces and underlying errors on failure |
 
-## Configuration
-
-`deptrace init` writes the following (the project name is taken from the directory name):
-
-<!-- prettier-ignore -->
-```yaml
-version: 1
-
-# DepTrace configuration (format version 1).
-# Read by "deptrace scan", "deptrace deps" and "deptrace path".
-
-project:
-  name: "my-app"
-
-# Which files the dependency analysis covers. Patterns are globs relative to
-# this directory. Only .ts .tsx .js .jsx .mts .cts .mjs .cjs files are analyzed.
-# node_modules, dist, build, coverage, .git, .next, .turbo and *.min.js are
-# always excluded.
-analysis:
-  include:
-    - "**/*"
-  exclude: []
-  # exclude:
-  #   - "**/*.test.ts"
-  #   - "scripts/**"
-
-# Architecture rules are not implemented yet. Keep this list empty.
-rules: []
-```
-
-| Field              | Type          | Meaning                                              |
-| ------------------ | ------------- | ---------------------------------------------------- |
-| `version`          | `1`           | Configuration format version                         |
-| `project.name`     | string        | Project name                                         |
-| `analysis.include` | list of globs | Files to analyze, relative to the config's directory |
-| `analysis.exclude` | list of globs | Files and directories to skip                        |
-| `rules`            | empty list    | Reserved; rules are not supported yet                |
-
-Without a `deptrace.yml`, all supported files are analyzed. Glob patterns must be relative (no
-leading `/`, drive letter or `..`). An invalid file is reported with exit code `2`.
-
 ## Exit codes
 
-| Code  | Meaning                                                                                                                                               |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `0`   | Success. For `scan`/`deps`/`path`: the analysis completed, even if it found cycles or diagnostics                                                     |
-| `1`   | Operational error (e.g. permission denied, `deptrace.yml` already exists for `init`)                                                                  |
-| `2`   | Invalid usage or configuration (unknown command/option, missing directory, invalid `deptrace.yml`, file argument that is not an analyzed source file) |
-| `3`   | Reserved for future architecture violations (never returned today)                                                                                    |
-| `4`   | Functionality not implemented (`check`, `report`)                                                                                                     |
-| `130` | Interrupted with Ctrl+C                                                                                                                               |
+| Code  | Meaning                                                                                                                                                                      |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`   | Success. For `scan`/`deps`/`path`: the analysis completed, even if it found cycles or diagnostics                                                                            |
+| `1`   | Operational error (e.g. permission denied, `deptrace.yml` already exists for `init`)                                                                                         |
+| `2`   | Invalid usage or configuration (unknown command/option, missing directory, invalid `deptrace.yml`, `check` without rules, file argument that is not an analyzed source file) |
+| `3`   | `check`: architecture rule violations (errors; with `--strict` also warnings)                                                                                                |
+| `4`   | Reserved for functionality that is not implemented (no command returns it today)                                                                                             |
+| `130` | Interrupted with Ctrl+C                                                                                                                                                      |
 
 Whether an analysis was complete is reported in the output (`status` in JSON, the last line in
 text), not in the exit code.
@@ -232,6 +267,5 @@ See [docs/development.md](docs/development.md) and [docs/architecture.md](docs/a
 
 Planned, **not available** in this release:
 
-- Architecture rules in `deptrace.yml` (layers, forbidden imports, cycle policies) evaluated by
-  `deptrace check`, with exit code `3` on violations.
-- Reports (`deptrace report`), baselines for existing violations and CI integration.
+- Baselines (accepting existing violations and failing only on new ones, using the fingerprints).
+- SARIF output and CI integrations such as GitHub code scanning annotations.

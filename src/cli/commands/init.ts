@@ -15,7 +15,7 @@ export function registerInitCommand(program: Command): void {
       const file = await writeStarterConfig(process.cwd());
       logger.info(`Created ${file}`);
       logger.info(
-        'Note: architecture rules are not implemented yet. This file is a starting point for future versions.',
+        'Add layers and rules to it (see the commented example), then run "deptrace check".',
       );
     });
 }

@@ -17,7 +17,8 @@ The graph is **not a complete runtime architecture map**. Static analysis cannot
 - bundler-specific loading (`require.context`, `import.meta.glob`, virtual modules)
 
 A dependency relationship, including a circular one, is a **finding**, not an architecture policy
-violation. DepTrace does not yet evaluate rules or fail builds; see [Exit codes](#exit-codes).
+violation. Rules are evaluated only by `deptrace check` ([rules.md](rules.md)); see
+[Exit codes](#exit-codes).
 
 ## Source discovery
 
@@ -250,10 +251,10 @@ Any error or warning sets `status` to `completed-with-diagnostics` and the text 
 | `0`  | The analysis completed, **with or without** cycles and diagnostics. Check `status`.                                                              |
 | `1`  | Operational failure (for example the root directory cannot be read).                                                                             |
 | `2`  | Invalid usage or configuration: missing/non-directory root, invalid `deptrace.yml`, unknown option value, unknown or non-analyzed file argument. |
-| `3`  | Reserved for future policy violations. Never returned today.                                                                                     |
+| `3`  | Never returned by these commands (`deptrace check` uses it for rule violations).                                                                 |
 
-Detection is deliberately separate from enforcement: there is no failure policy yet, so cycles do
-not change the exit code. `deptrace path` exits `0` whether or not a path exists.
+Detection is deliberately separate from enforcement: cycles found by `scan` do not change its exit
+code. To fail on cycles, configure the `circular-dependencies` rule and run `deptrace check`. `deptrace path` exits `0` whether or not a path exists.
 
 ## Limitations
 

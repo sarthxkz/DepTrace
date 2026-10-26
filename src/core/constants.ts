@@ -10,6 +10,7 @@ export const ExitCode = {
   UsageError: 2,
   /** Reserved for future policy violations; never returned yet. */
   ArchitectureViolations: 3,
+  /** Functionality not implemented. No command returns it today. */
   NotImplemented: 4,
 } as const;
 

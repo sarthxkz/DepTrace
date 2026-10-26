@@ -12,10 +12,6 @@ export class DepTraceError extends Error {
   }
 }
 
-export function notImplemented(message: string): DepTraceError {
-  return new DepTraceError(message, ExitCode.NotImplemented);
-}
-
 const FS_REASONS: Record<string, string> = {
   ENOENT: 'the path does not exist',
   ENOTDIR: 'a parent path is not a directory',

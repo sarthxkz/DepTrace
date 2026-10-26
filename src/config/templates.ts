@@ -6,7 +6,7 @@ export function renderStarterConfig(projectName: string): string {
   return `version: ${String(CONFIG_VERSION)}
 
 # ${PRODUCT_NAME} configuration (format version ${String(CONFIG_VERSION)}).
-# Read by "deptrace scan", "deptrace deps" and "deptrace path".
+# Reference: docs/configuration.md and docs/rules.md.
 
 project:
   name: ${JSON.stringify(projectName)}
@@ -23,7 +23,23 @@ analysis:
   #   - "**/*.test.ts"
   #   - "scripts/**"
 
-# Architecture rules are not implemented yet. Keep this list empty.
+# Architecture rules, evaluated by "deptrace check". No rules are active until
+# you add them. Example (importer layer -> layers it may import):
+#
+# layers:
+#   - name: ui
+#     files: ["src/ui/**"]
+#   - name: domain
+#     files: ["src/domain/**"]
+#
+# rules:
+#   layer-boundaries:
+#     severity: error
+#     allowed:
+#       ui: [domain]
+#       domain: []
+#   circular-dependencies:
+#     severity: warning
 rules: []
 `;
 }

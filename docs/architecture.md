@@ -1,7 +1,7 @@
 # Architecture
 
-This describes the code as it exists today (through Phase 2). Analysis behavior is documented in
-[analysis.md](analysis.md).
+This describes the code as it exists today (through Phase 3). Analysis behavior is documented in
+[analysis.md](analysis.md), rules in [rules.md](rules.md).
 
 ## Layers
 
@@ -12,6 +12,7 @@ src/cli/                  Argument parsing and presentation (Commander)
   options.ts              Shared options (--format, --root), JSON printing, lazy analysis loader
   analysis.ts             Runs an analysis for a command; maps file arguments to graph nodes
   output.ts               Text formatting of scan results and edges
+  policy-output.ts        Text formatting of check and report
   commands/*.ts           One file per command
 src/analysis/             Dependency analysis engine (no CLI dependencies)
   types.ts                Data model: GraphNode, GraphEdge, ImportReference, ResolutionResult, ...
@@ -24,6 +25,15 @@ src/analysis/             Dependency analysis engine (no CLI dependencies)
   analyze.ts              Orchestration: discovery → parse → resolve → graph → cycles → summary
   json.ts                 JSON document for `scan --format json`
   paths.ts                Path normalization (forward slashes, root-relative, realpath)
+src/rules/                Architecture rules engine (no CLI dependencies)
+  types.ts                Policy, Rule, Violation, PolicyEvaluation
+  config.ts               Validation and normalization of `layers` and `rules`
+  patterns.ts             Glob safety checks and matchers
+  layers.ts               File -> layer and file -> module resolvers
+  registry.ts             The five rule types and their evaluators
+  evaluate.ts             Runs enabled rules, de-duplicates and sorts violations; layer summary
+  fingerprint.ts          Stable violation fingerprints
+  json.ts                 JSON documents for `check` and `report`
 src/core/                 Shared basics
   constants.ts            Product names, config filename, exit codes
   errors.ts               DepTraceError (message + exit code), filesystem error translation
@@ -37,10 +47,14 @@ src/config/               Configuration format
 src/utils/logger.ts       stdout/stderr output, debug-only diagnostics
 ```
 
-Dependencies point inward: `cli` uses `analysis`, `core`, `config` and `utils`; `analysis` uses
-only its own modules and the TypeScript compiler. Analysis functions return data; only the CLI
-layer prints. DepTrace's own `deptrace.yml` lets `deptrace scan` analyze this repository (test
-fixtures are excluded because they contain deliberate cycles and syntax errors).
+Dependencies point inward: `cli` uses `rules`, `analysis`, `config` and `core`; `rules` uses
+`analysis` and `core`; `analysis` uses `core` and the TypeScript compiler; `config` uses the rule
+configuration validator. Analysis and rule evaluation return data; only the CLI layer prints.
+
+These boundaries are enforced by DepTrace itself: the repository's own `deptrace.yml` defines them
+as layers, forbids loading `typescript` from modules every command loads, and forbids cycles. CI
+runs `deptrace check` on this repository (test fixtures are excluded because they contain
+deliberate cycles, syntax errors and violations).
 
 ## Analysis pipeline
 

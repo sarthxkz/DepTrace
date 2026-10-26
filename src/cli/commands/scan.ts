@@ -1,5 +1,5 @@
 import type { Command } from 'commander';
-import { toJsonDocument } from '../../analysis/json.js';
+import { repositoryMetadata, toJsonDocument } from '../../analysis/json.js';
 import { formatOption, loadAnalysis, printJson, type OutputFormat } from '../options.js';
 import { formatScan } from '../output.js';
 import { logger } from '../../utils/logger.js';
@@ -26,15 +26,7 @@ analysis completed (check "status" for diagnostics), even when cycles exist.`,
       const { runAnalysis } = await loadAnalysis();
       const { info, result } = await runAnalysis(directory);
       if (options.format === 'json') {
-        printJson(
-          toJsonDocument(result, program.version() ?? '', {
-            packageName:
-              typeof info.packageJson === 'object' ? (info.packageJson.name ?? null) : null,
-            packageVersion:
-              typeof info.packageJson === 'object' ? (info.packageJson.version ?? null) : null,
-            git: info.gitRoot !== undefined,
-          }),
-        );
+        printJson(toJsonDocument(result, program.version() ?? '', repositoryMetadata(info)));
       } else {
         logger.info(formatScan(info, result, options.verbose === true));
       }

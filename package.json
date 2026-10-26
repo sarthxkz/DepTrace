@@ -1,6 +1,6 @@
 {
   "name": "deptrace-cli",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "DepTrace: see your architecture. Catch violations before they ship.",
   "keywords": [
     "architecture",

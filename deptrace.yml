@@ -1,7 +1,7 @@
 version: 1
 
-# DepTrace analyzing its own source. Test fixtures contain deliberate cycles
-# and syntax errors, so they are excluded.
+# DepTrace analyzing and checking its own source. Test fixtures contain
+# deliberate cycles, syntax errors and violations, so they are excluded.
 
 project:
   name: 'deptrace'
@@ -12,4 +12,36 @@ analysis:
   exclude:
     - 'tests/fixtures/**'
 
-rules: []
+layers:
+  - name: cli
+    files: ['src/index.ts', 'src/cli/**']
+  - name: rules
+    files: ['src/rules/**']
+  - name: analysis
+    files: ['src/analysis/**']
+  - name: config
+    files: ['src/config/**']
+  - name: core
+    files: ['src/core/**', 'src/utils/**']
+
+rules:
+  layer-boundaries:
+    severity: error
+    # importer layer -> layers it may import
+    allowed:
+      cli: [rules, analysis, config, core]
+      rules: [analysis, core]
+      analysis: [core]
+      config: [rules, core]
+      core: []
+
+  forbidden-packages:
+    - name: fast-startup
+      description: Modules loaded by every command must not load the TypeScript compiler
+      severity: error
+      from:
+        ['src/index.ts', 'src/core/**', 'src/config/**', 'src/cli/index.ts', 'src/cli/options.ts']
+      packages: ['typescript']
+
+  circular-dependencies:
+    severity: error

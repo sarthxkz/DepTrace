@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "tool": {
     "name": "deptrace",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "status": "completed-with-diagnostics",
   "repository": {
@@ -66,7 +66,7 @@
     "runtimeCycles": 2,
     "errors": 1,
     "warnings": 5,
-    "durationMs": 71
+    "durationMs": 52
   },
   "nodes": [
     {

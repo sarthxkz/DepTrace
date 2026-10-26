@@ -27,8 +27,18 @@ describe('renderStarterConfig', () => {
     expect(text).not.toContain('\r');
   });
 
-  it('states that rules and analysis are not implemented', () => {
-    expect(renderStarterConfig('x')).toMatch(/not implemented yet/);
+  it('contains no active rules', () => {
+    expect(parse(renderStarterConfig('x'))).toMatchObject({ rules: [] });
+  });
+
+  it('contains a commented rules example that is valid when uncommented', () => {
+    const lines = renderStarterConfig('x').split('\n');
+    const start = lines.findIndex((line) => line === '# layers:');
+    const end = lines.findIndex((line) => line === 'rules: []');
+    const example = lines.slice(start, end).map((line) => line.replace(/^# ?/, ''));
+    const config = [...lines.slice(0, start), ...example].join('\n');
+    expect(validateConfig(parse(config))).toEqual([]);
+    expect(parse(config)).toMatchObject({ rules: { 'layer-boundaries': { severity: 'error' } } });
   });
 
   it.each(['my app', 'a: b', '#hash', 'it\'s "quoted"'])(
@@ -55,12 +65,24 @@ describe('validateConfig', () => {
       { ...valid(), analysis: { include: [1], exclude: [] } },
       'analysis.include must be a list of strings',
     ],
-    ['non-empty rules', { ...valid(), rules: [{ name: 'x' }] }, 'rules must be an empty list'],
+    [
+      'a non-empty rules list',
+      { ...valid(), rules: [{ name: 'x' }] },
+      'rules: must be a mapping of rule types',
+    ],
+    ['an unknown top-level setting', { ...valid(), rulez: {} }, 'rulez: unknown setting'],
   ])('rejects %s', (_label, input, problem) => {
     expect(validateConfig(input).join('\n')).toContain(problem);
   });
 
-  it.each(['../src/**', 'src/../../x', '/etc/**', 'C:/repo/**', 'c:\\repo', ''])(
+  it('rejects empty patterns and backslashes', () => {
+    const check = (pattern: string) =>
+      validateConfig({ ...valid(), analysis: { include: [pattern], exclude: [] } }).join('\n');
+    expect(check('')).toContain('must not be empty');
+    expect(check('src\\**')).toContain('must use forward slashes');
+  });
+
+  it.each(['../src/**', 'src/../../x', '/etc/**', 'C:/repo/**', 'c:\\repo', '..\\x'])(
     'rejects the pattern %j because it could point outside the root',
     (pattern) => {
       const config = { ...valid(), analysis: { include: [pattern], exclude: [] } };

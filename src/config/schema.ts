@@ -1,14 +1,21 @@
+import { parsePolicy } from '../rules/config.js';
+import { patternProblem } from '../rules/patterns.js';
+
 /** Current configuration format version written by `deptrace init`. */
 export const CONFIG_VERSION = 1;
 
-/** The configuration fields supported by format version 1. */
+/** The configuration fields supported by format version 1 (as parsed from YAML). */
 export interface DepTraceConfig {
   version: typeof CONFIG_VERSION;
   project: { name: string };
   analysis: { include: string[]; exclude: string[] };
-  /** Rules are not implemented yet; only an empty list is accepted. */
-  rules: [];
+  /** Architecture layers; see docs/rules.md. Validated by `parsePolicy`. */
+  layers?: unknown;
+  /** `[]` (no rules) or a mapping of rule types; see docs/rules.md. */
+  rules: unknown;
 }
+
+const TOP_LEVEL_KEYS = ['version', 'project', 'analysis', 'layers', 'rules'];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -18,20 +25,15 @@ function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === 'string');
 }
 
-/** Patterns are matched against root-relative paths, so they cannot point outside the root. */
-function isRelativePattern(pattern: string): boolean {
-  return (
-    pattern.length > 0 &&
-    !pattern.startsWith('/') &&
-    !/^[a-zA-Z]:/.test(pattern) &&
-    !pattern.split(/[\\/]/).includes('..')
-  );
-}
-
 /** Validates a parsed configuration object. Returns a list of problems (empty when valid). */
 export function validateConfig(value: unknown): string[] {
   if (!isRecord(value)) return ['configuration must be a mapping'];
   const problems: string[] = [];
+  for (const key of Object.keys(value)) {
+    if (!TOP_LEVEL_KEYS.includes(key)) {
+      problems.push(`${key}: unknown setting (supported: ${TOP_LEVEL_KEYS.join(', ')})`);
+    }
+  }
   if (value.version !== CONFIG_VERSION) {
     problems.push(`version must be ${String(CONFIG_VERSION)}`);
   }
@@ -45,15 +47,14 @@ export function validateConfig(value: unknown): string[] {
       const patterns = value.analysis[key];
       if (!isStringArray(patterns)) {
         problems.push(`analysis.${key} must be a list of strings`);
-      } else if (patterns.some((pattern) => !isRelativePattern(pattern))) {
-        problems.push(
-          `analysis.${key} patterns must be relative to the repository root (no leading "/", drive letter or ".." segment)`,
-        );
+        continue;
+      }
+      for (const pattern of patterns) {
+        const problem = patternProblem(pattern);
+        if (problem) problems.push(`analysis.${key} patterns ${problem} (got "${pattern}")`);
       }
     }
   }
-  if (!Array.isArray(value.rules) || value.rules.length > 0) {
-    problems.push('rules must be an empty list (rules are not supported in this version)');
-  }
+  problems.push(...parsePolicy(value.layers, value.rules).problems);
   return problems;
 }

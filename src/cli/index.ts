@@ -17,6 +17,8 @@ Examples:
   $ ${CLI_NAME} deps src/index.ts                 What src/index.ts imports
   $ ${CLI_NAME} deps src/db.ts -d incoming        Which files import src/db.ts
   $ ${CLI_NAME} path src/index.ts src/db.ts       Shortest import path between two files
+  $ ${CLI_NAME} check                             Enforce the rules in deptrace.yml (exit 3 on violations)
+  $ ${CLI_NAME} report --format json              Layers, rule results and the full graph
 
 Run "${CLI_NAME} <command> --help" for details about a command.`;
 
@@ -62,10 +64,7 @@ function handleError(error: unknown): ExitCode {
     return error.exitCode === 0 ? ExitCode.Success : ExitCode.UsageError;
   }
   if (error instanceof DepTraceError) {
-    // A placeholder status is not a failure, so it is printed without the "error:" prefix.
-    logger.error(
-      error.exitCode === ExitCode.NotImplemented ? error.message : `error: ${error.message}`,
-    );
+    logger.error(`error: ${error.message}`);
     const detail = error.cause instanceof Error ? error.cause : error;
     logger.debug(detail.stack ?? detail.message);
     return error.exitCode;

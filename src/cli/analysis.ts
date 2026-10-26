@@ -5,13 +5,19 @@ import { DEFAULT_INCLUDE } from '../analysis/discovery.js';
 import { realPath, toRelative } from '../analysis/paths.js';
 import type { AnalysisResult } from '../analysis/types.js';
 import { loadConfig } from '../config/load.js';
+import type { DepTraceConfig } from '../config/schema.js';
 import { resolveTargetDirectory } from '../config/paths.js';
 import { CONFIG_FILENAME, ExitCode } from '../core/constants.js';
 import { DepTraceError } from '../core/errors.js';
 import { inspectRepository, type RepositoryInfo } from '../core/inspect.js';
+import { parsePolicy } from '../rules/config.js';
+import { evaluatePolicy } from '../rules/evaluate.js';
+import type { Policy, PolicyEvaluation } from '../rules/types.js';
 
 export interface AnalysisRun {
   info: RepositoryInfo;
+  /** The parsed deptrace.yml, or undefined when there is none. */
+  config: DepTraceConfig | undefined;
   result: AnalysisResult;
 }
 
@@ -36,7 +42,7 @@ export async function runAnalysis(directory: string): Promise<AnalysisRun> {
       },
     }),
   });
-  return { info, result };
+  return { info, result, config };
 }
 
 /**
@@ -63,3 +69,19 @@ export function resolveNodeArgument(result: AnalysisResult, file: string): strin
   }
   return id;
 }
+
+/** Evaluates the rules of `config` (none when there is no config). */
+export function evaluateConfiguredPolicy(
+  result: AnalysisResult,
+  config: DepTraceConfig | undefined,
+): { policy: Policy; evaluation: PolicyEvaluation } {
+  // loadConfig already validated the config, so parsing cannot report problems here.
+  const policy = config
+    ? parsePolicy(config.layers, config.rules).policy
+    : { layers: [], rules: [] };
+  return { policy, evaluation: evaluatePolicy(result, policy) };
+}
+
+// Heavy (TypeScript-dependent) helpers, re-exported so commands load them through loadAnalysis().
+export { checkOutcome, toArchitectureSection, toCheckDocument } from '../rules/json.js';
+export { formatCheck, formatReport } from './policy-output.js';

@@ -36,7 +36,8 @@ npm run dev -- scan .
   brute-force reference on random graphs and on 200 000-node graphs).
 - `tests/fixtures/` holds small realistic repositories: `app` (every import kind, aliases,
   packages with `exports`, assets, syntax errors, cycles), `monorepo` (workspace packages) and
-  `solution-config` (tsconfig project references). They include a committed `node_modules`, so
+  `solution-config` (tsconfig project references) and `layered` (the sample layered project for
+  architecture rules, with one deliberate violation per rule type). They include a committed `node_modules`, so
   `.gitignore` re-includes `tests/fixtures/**/node_modules/`. Tests copy fixtures into temp
   directories before use; ESLint, Prettier and `tsc` ignore them.
 - `docs/examples/scan-output.json` is checked against the current output by a test. Regenerate it

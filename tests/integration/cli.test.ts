@@ -110,15 +110,27 @@ describe('scan', () => {
   });
 });
 
-describe('placeholder commands exit with code 4', () => {
-  it.each([
-    ['check', 'Architecture checking is not implemented'],
-    ['report', 'Report generation is not implemented'],
-  ])('%s', async (command, message) => {
-    const result = runCli([command], await makeTempDir());
-    expect(result.code).toBe(4);
-    expect(result.stderr).toContain(message);
-    expect(`${result.stdout}${result.stderr}`).not.toMatch(/pass/i);
+describe('check and report without rules', () => {
+  it('check refuses to pass without a deptrace.yml (exit 2)', async () => {
+    const result = runCli(['check'], await makeTempDir());
+    expect(result.code).toBe(2);
+    expect(result.stderr).toContain('No deptrace.yml found');
+    expect(`${result.stdout}${result.stderr}`).not.toMatch(/passed/i);
+  });
+
+  it('check refuses to pass when the config has no rules (exit 2)', async () => {
+    const dir = await makeTempDir();
+    expect(runCli(['init'], dir).code).toBe(0);
+    const result = runCli(['check'], dir);
+    expect(result.code).toBe(2);
+    expect(result.stderr).toContain('No architecture rules are configured');
+  });
+
+  it('report works without a config and exits 0', async () => {
+    const result = runCli(['report'], await makeTempDir());
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain('Layers: none defined');
+    expect(result.stdout).toContain('Rules: none configured');
   });
 });
 

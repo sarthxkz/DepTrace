@@ -1,0 +1,60 @@
+version: 1
+
+# Sample layered application ("clean architecture") with feature modules.
+# It contains deliberate violations; see the comments in the source files.
+
+project:
+  name: "layered-shop"
+
+analysis:
+  include:
+    - "src/**/*"
+  exclude: []
+
+layers:
+  - name: presentation
+    files: ["src/presentation/**"]
+  - name: application
+    files: ["src/application/**"]
+  - name: domain
+    files: ["src/domain/**"]
+  - name: infrastructure
+    files: ["src/infrastructure/**"]
+
+rules:
+  layer-boundaries:
+    severity: error
+    # importer layer -> layers it may import
+    allowed:
+      presentation: [application]
+      application: [domain]
+      domain: []
+      infrastructure: [application, domain]
+    # The composition root wires every layer together.
+    exclude: ["src/main.ts"]
+
+  forbidden-packages:
+    - name: pure-domain
+      description: The domain layer does not depend on frameworks or drivers
+      severity: error
+      from: ["src/domain/**"]
+      packages: ["express", "pg"]
+
+  forbidden-imports:
+    - name: no-legacy
+      description: New code must not use the legacy helpers
+      severity: warning
+      from: ["src/**"]
+      to: ["src/legacy/**"]
+      exclude: ["src/legacy/**"]
+
+  module-boundaries:
+    - name: features
+      description: Features only use each other's public index
+      severity: error
+      modules: ["src/features/*"]
+      public: ["index.ts"]
+
+  circular-dependencies:
+    severity: warning
+    ignore-type-only: true

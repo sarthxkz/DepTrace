@@ -1,4 +1,5 @@
 import { CLI_NAME } from '../core/constants.js';
+import type { RepositoryInfo } from '../core/inspect.js';
 import type { AnalysisResult } from './types.js';
 
 /** Version of the JSON document produced by `deptrace scan --format json`. */
@@ -33,5 +34,15 @@ export function toJsonDocument(
     unresolvedDependencies: result.unresolved,
     excludedDependencies: result.excluded,
     diagnostics: result.diagnostics,
+  };
+}
+
+/** Repository metadata for JSON documents, without absolute paths. */
+export function repositoryMetadata(info: RepositoryInfo): RepositoryMetadata {
+  const packageJson = typeof info.packageJson === 'object' ? info.packageJson : undefined;
+  return {
+    packageName: packageJson?.name ?? null,
+    packageVersion: packageJson?.version ?? null,
+    git: info.gitRoot !== undefined,
   };
 }
