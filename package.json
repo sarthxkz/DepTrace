@@ -1,6 +1,6 @@
 {
   "name": "deptrace-cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "DepTrace: see your architecture. Catch violations before they ship.",
   "keywords": [
     "architecture",
@@ -29,21 +29,24 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "bench": "tsx scripts/benchmark.ts"
   },
   "dependencies": {
-    "commander": "^15.0.0"
+    "commander": "^15.0.0",
+    "picomatch": "^4.0.7",
+    "typescript": "~6.0.3",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^22.20.5",
+    "@types/picomatch": "^4.0.3",
     "eslint": "^10.13.0",
     "prettier": "^3.9.10",
     "tsup": "^9.0.0",
     "tsx": "^4.23.15",
-    "typescript": "~6.0.3",
     "typescript-eslint": "^8.72.0",
-    "vitest": "^5.0.5",
-    "yaml": "^2.9.1"
+    "vitest": "^5.0.5"
   }
 }

@@ -61,17 +61,18 @@ describe('init', () => {
   });
 });
 
+const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const directoryRow = (dir: string) => new RegExp(`Directory:\\s+${escape(dir)}\\n`);
+
 describe('scan', () => {
   it('inspects the current directory by default', async () => {
     const dir = await makeTempDir();
     await writeFile(path.join(dir, 'package.json'), '{"name":"demo","version":"1.0.0"}');
     const result = runCli(['scan'], dir);
     expect(result.code).toBe(0);
-    expect(result.stdout).toContain(`Directory:      ${dir}`);
+    expect(result.stdout).toMatch(directoryRow(dir));
     expect(result.stdout).toContain('demo@1.0.0');
-    expect(result.stdout).toContain(
-      'Repository inspection completed. Dependency analysis is not available in this version.',
-    );
+    expect(result.stdout).toContain('Analysis completed in');
   });
 
   it('accepts relative and absolute paths, including spaces', async () => {
@@ -82,7 +83,7 @@ describe('scan', () => {
       const cwd = arg === '.' ? target : dir;
       const result = runCli(['scan', arg], cwd);
       expect(result.code).toBe(0);
-      expect(result.stdout).toContain(`Directory:      ${target}`);
+      expect(result.stdout).toMatch(directoryRow(target));
     }
   });
 

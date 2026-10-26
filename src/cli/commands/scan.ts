@@ -1,36 +1,42 @@
 import type { Command } from 'commander';
-import { resolveTargetDirectory } from '../../config/paths.js';
-import { PHASE_STATUS, PRODUCT_NAME } from '../../core/constants.js';
-import { inspectRepository, type RepositoryInfo } from '../../core/inspect.js';
+import { toJsonDocument } from '../../analysis/json.js';
+import { formatOption, loadAnalysis, printJson, type OutputFormat } from '../options.js';
+import { formatScan } from '../output.js';
 import { logger } from '../../utils/logger.js';
+
+interface ScanOptions {
+  format: OutputFormat;
+  verbose?: true;
+}
 
 export function registerScanCommand(program: Command): void {
   program
     .command('scan')
-    .description('Inspect a repository directory (basic metadata only)')
-    .argument('[directory]', 'directory to inspect', '.')
-    .action(async (directory: string) => {
-      const info = await inspectRepository(resolveTargetDirectory(directory, process.cwd()));
-      logger.info(formatRepositoryInfo(info));
+    .description('Analyze source dependencies and detect circular imports')
+    .argument('[directory]', 'repository root to analyze', '.')
+    .addOption(formatOption())
+    .option('--verbose', 'list every cycle, diagnostic, external package and edge location')
+    .addHelpText(
+      'after',
+      `
+The scan reports findings; it does not fail on them. Exit code 0 means the
+analysis completed (check "status" for diagnostics), even when cycles exist.`,
+    )
+    .action(async (directory: string, options: ScanOptions) => {
+      const { runAnalysis } = await loadAnalysis();
+      const { info, result } = await runAnalysis(directory);
+      if (options.format === 'json') {
+        printJson(
+          toJsonDocument(result, program.version() ?? '', {
+            packageName:
+              typeof info.packageJson === 'object' ? (info.packageJson.name ?? null) : null,
+            packageVersion:
+              typeof info.packageJson === 'object' ? (info.packageJson.version ?? null) : null,
+            git: info.gitRoot !== undefined,
+          }),
+        );
+      } else {
+        logger.info(formatScan(info, result, options.verbose === true));
+      }
     });
-}
-
-function formatPackage(info: RepositoryInfo['packageJson']): string {
-  if (info === undefined) return 'not found';
-  if (info === 'invalid') return 'found, but could not be read as JSON';
-  return `${info.name ?? '(unnamed)'}${info.version ? `@${info.version}` : ''}`;
-}
-
-function formatRepositoryInfo(info: RepositoryInfo): string {
-  return [
-    `${PRODUCT_NAME} repository inspection`,
-    '',
-    `  Directory:      ${info.path}`,
-    `  package.json:   ${formatPackage(info.packageJson)}`,
-    `  tsconfig.json:  ${info.hasTsconfig ? 'found' : 'not found'}`,
-    `  Git repository: ${info.gitRoot ? `yes (root: ${info.gitRoot})` : 'not detected'}`,
-    `  Status:         ${PHASE_STATUS}`,
-    '',
-    'Repository inspection completed. Dependency analysis is not available in this version.',
-  ].join('\n');
 }

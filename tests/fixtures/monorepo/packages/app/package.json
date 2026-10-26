@@ -1,0 +1,7 @@
+{
+  "name": "@mono/app",
+  "version": "1.0.0",
+  "dependencies": {
+    "@mono/lib": "1.0.0"
+  }
+}

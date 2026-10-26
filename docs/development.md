@@ -15,22 +15,32 @@ npm run dev -- scan .
 
 ## Scripts
 
-| Script                  | Command              | Purpose                                       |
-| ----------------------- | -------------------- | --------------------------------------------- |
-| `npm run dev -- <args>` | `tsx src/index.ts`   | Run the CLI from source                       |
-| `npm run build`         | `tsup`               | Bundle to `dist/index.js` (ESM, shebang)      |
-| `npm start -- <args>`   | `node dist/index.js` | Run the built CLI                             |
-| `npm test`              | `vitest run`         | Build, then run all tests                     |
-| `npm run test:watch`    | `vitest`             | Watch mode                                    |
-| `npm run lint`          | `eslint .`           | Lint (typescript-eslint strict, type-checked) |
-| `npm run lint:fix`      | `eslint . --fix`     | Lint and auto-fix                             |
-| `npm run typecheck`     | `tsc --noEmit`       | Strict type check of sources and tests        |
-| `npm run format`        | `prettier --write .` | Format                                        |
-| `npm run format:check`  | `prettier --check .` | Verify formatting                             |
+| Script                  | Command                    | Purpose                                                   |
+| ----------------------- | -------------------------- | --------------------------------------------------------- |
+| `npm run dev -- <args>` | `tsx src/index.ts`         | Run the CLI from source                                   |
+| `npm run build`         | `tsup`                     | Bundle to `dist/index.js` (ESM, shebang)                  |
+| `npm start -- <args>`   | `node dist/index.js`       | Run the built CLI                                         |
+| `npm test`              | `vitest run`               | Build, then run all tests                                 |
+| `npm run test:watch`    | `vitest`                   | Watch mode                                                |
+| `npm run lint`          | `eslint .`                 | Lint (typescript-eslint strict, type-checked)             |
+| `npm run lint:fix`      | `eslint . --fix`           | Lint and auto-fix                                         |
+| `npm run typecheck`     | `tsc --noEmit`             | Strict type check of sources and tests                    |
+| `npm run format`        | `prettier --write .`       | Format                                                    |
+| `npm run format:check`  | `prettier --check .`       | Verify formatting                                         |
+| `npm run bench`         | `tsx scripts/benchmark.ts` | Reproducible benchmark ([performance.md](performance.md)) |
 
 ## Tests
 
-- `tests/unit/` tests modules directly (config template, validation, init, inspection).
+- `tests/unit/` tests modules directly: config, parser, discovery and resolution
+  (`analyze.test.ts`), graph construction and paths, and Tarjan's algorithm (checked against a
+  brute-force reference on random graphs and on 200 000-node graphs).
+- `tests/fixtures/` holds small realistic repositories: `app` (every import kind, aliases,
+  packages with `exports`, assets, syntax errors, cycles), `monorepo` (workspace packages) and
+  `solution-config` (tsconfig project references). They include a committed `node_modules`, so
+  `.gitignore` re-includes `tests/fixtures/**/node_modules/`. Tests copy fixtures into temp
+  directories before use; ESLint, Prettier and `tsc` ignore them.
+- `docs/examples/scan-output.json` is checked against the current output by a test. Regenerate it
+  with `node dist/index.js scan tests/fixtures/app --format json > docs/examples/scan-output.json`.
 - `tests/integration/` spawns the built `dist/index.js` and checks stdout, stderr and exit codes.
 - `tests/global-setup.ts` builds the CLI once before the run, so `npm test` always tests a fresh
   build.
@@ -55,7 +65,9 @@ files that would be published (`dist/`, `package.json`, `README.md`).
 
 ## Toolchain notes
 
-- TypeScript is pinned to `~6.0` because `typescript-eslint` 8 supports `<6.1`.
+- TypeScript is a runtime dependency (parser and module resolution) pinned to `~6.0`, because
+  `typescript-eslint` 8 supports `<6.1`. `yaml` (config parsing) and `picomatch` (globs) are the
+  other runtime dependencies besides `commander`.
 - TypeScript 6 defaults `types` to `[]`, so `tsconfig.json` lists `"types": ["node"]`.
 - The build uses tsup (esbuild). esbuild's postinstall script is not required; its platform binary
   comes from an optional dependency.

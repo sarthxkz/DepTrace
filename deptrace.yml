@@ -1,0 +1,15 @@
+version: 1
+
+# DepTrace analyzing its own source. Test fixtures contain deliberate cycles
+# and syntax errors, so they are excluded.
+
+project:
+  name: 'deptrace'
+
+analysis:
+  include:
+    - '**/*'
+  exclude:
+    - 'tests/fixtures/**'
+
+rules: []

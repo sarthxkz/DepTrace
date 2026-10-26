@@ -41,6 +41,10 @@ jobs:
           node "$cli" --help
           node "$cli" --version
           node "$cli" scan .
+          node "$cli" scan . --format json > "$RUNNER_TEMP/scan.json"
+          node -e "JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'))" "$RUNNER_TEMP/scan.json"
+          node "$cli" deps src/index.ts --direction both
+          node "$cli" path src/index.ts src/cli/index.ts
 
           work="$RUNNER_TEMP/deptrace-smoke"
           mkdir -p "$work"

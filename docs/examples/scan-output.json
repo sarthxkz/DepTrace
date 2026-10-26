@@ -1,0 +1,655 @@
+{
+  "schemaVersion": 1,
+  "tool": {
+    "name": "deptrace",
+    "version": "0.2.0"
+  },
+  "status": "completed-with-diagnostics",
+  "repository": {
+    "packageName": "fixture-app",
+    "packageVersion": "1.0.0",
+    "git": true
+  },
+  "settings": {
+    "configFile": null,
+    "include": [
+      "**/*"
+    ],
+    "exclude": [],
+    "builtinExcludedDirectories": [
+      ".git",
+      ".next",
+      ".turbo",
+      "build",
+      "coverage",
+      "dist",
+      "node_modules"
+    ],
+    "builtinExcludedFiles": [
+      "**/*.min.js"
+    ],
+    "extensions": [
+      ".ts",
+      ".tsx",
+      ".js",
+      ".jsx",
+      ".mts",
+      ".cts",
+      ".mjs",
+      ".cjs"
+    ],
+    "tsconfigs": [
+      "tsconfig.json"
+    ]
+  },
+  "summary": {
+    "filesDiscovered": 14,
+    "directoriesExcluded": 2,
+    "filesExcluded": 0,
+    "symlinksSkipped": 0,
+    "unreadableDirectories": 0,
+    "filesParsed": 13,
+    "filesWithParseErrors": 1,
+    "filesUnreadable": 0,
+    "importReferences": 24,
+    "internalReferences": 16,
+    "externalReferences": 3,
+    "externalPackages": 3,
+    "excludedReferences": 2,
+    "unresolvedReferences": 3,
+    "unanalyzableImports": 2,
+    "nodes": 14,
+    "edges": 15,
+    "typeOnlyEdges": 4,
+    "stronglyConnectedComponents": 12,
+    "cyclicComponents": 3,
+    "runtimeCycles": 2,
+    "errors": 1,
+    "warnings": 5,
+    "durationMs": 71
+  },
+  "nodes": [
+    {
+      "id": "src/broken.ts",
+      "path": "src/broken.ts",
+      "extension": ".ts",
+      "status": "parse-errors",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/component.tsx",
+      "path": "src/component.tsx",
+      "extension": ".tsx",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/index.ts",
+      "path": "src/index.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/lazy.ts",
+      "path": "src/lazy.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/legacy.cjs",
+      "path": "src/legacy.cjs",
+      "extension": ".cjs",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/math.ts",
+      "path": "src/math.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/polyfills.ts",
+      "path": "src/polyfills.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/self.ts",
+      "path": "src/self.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/services/api.ts",
+      "path": "src/services/api.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/shadow.js",
+      "path": "src/shadow.js",
+      "extension": ".js",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/types-cycle/a.ts",
+      "path": "src/types-cycle/a.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/types-cycle/b.ts",
+      "path": "src/types-cycle/b.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/types.ts",
+      "path": "src/types.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/utils/index.ts",
+      "path": "src/utils/index.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    }
+  ],
+  "edges": [
+    {
+      "from": "src/broken.ts",
+      "to": "src/math.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./math",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 21
+        }
+      ]
+    },
+    {
+      "from": "src/component.tsx",
+      "to": "src/utils/index.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./utils",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 24
+        }
+      ]
+    },
+    {
+      "from": "src/index.ts",
+      "to": "src/lazy.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./lazy",
+          "kind": "dynamic-import",
+          "typeOnly": false,
+          "line": 19,
+          "column": 34
+        }
+      ]
+    },
+    {
+      "from": "src/index.ts",
+      "to": "src/math.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./math.js",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 5,
+          "column": 23
+        },
+        {
+          "specifier": "./math.js",
+          "kind": "re-export",
+          "typeOnly": false,
+          "line": 16,
+          "column": 15
+        }
+      ]
+    },
+    {
+      "from": "src/index.ts",
+      "to": "src/polyfills.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./polyfills",
+          "kind": "side-effect",
+          "typeOnly": false,
+          "line": 4,
+          "column": 8
+        }
+      ]
+    },
+    {
+      "from": "src/index.ts",
+      "to": "src/services/api.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "@/services/api",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 2,
+          "column": 21
+        }
+      ]
+    },
+    {
+      "from": "src/index.ts",
+      "to": "src/types.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "./types",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 3,
+          "column": 29
+        }
+      ]
+    },
+    {
+      "from": "src/index.ts",
+      "to": "src/utils/index.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./utils",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 24
+        }
+      ]
+    },
+    {
+      "from": "src/legacy.cjs",
+      "to": "src/math.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./math",
+          "kind": "require",
+          "typeOnly": false,
+          "line": 1,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "from": "src/self.ts",
+      "to": "src/self.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./self",
+          "kind": "side-effect",
+          "typeOnly": false,
+          "line": 1,
+          "column": 8
+        }
+      ]
+    },
+    {
+      "from": "src/services/api.ts",
+      "to": "src/utils/index.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../utils",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 24
+        }
+      ]
+    },
+    {
+      "from": "src/types-cycle/a.ts",
+      "to": "src/types-cycle/b.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "./b",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 1,
+          "column": 24
+        }
+      ]
+    },
+    {
+      "from": "src/types-cycle/b.ts",
+      "to": "src/types-cycle/a.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "./a",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 1,
+          "column": 24
+        }
+      ]
+    },
+    {
+      "from": "src/types.ts",
+      "to": "src/services/api.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "./services/api",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 1,
+          "column": 26
+        }
+      ]
+    },
+    {
+      "from": "src/utils/index.ts",
+      "to": "src/services/api.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../services/api",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 21
+        }
+      ]
+    }
+  ],
+  "cycles": [
+    {
+      "nodes": [
+        "src/self.ts"
+      ],
+      "representativePath": [
+        "src/self.ts",
+        "src/self.ts"
+      ],
+      "edges": [
+        {
+          "from": "src/self.ts",
+          "to": "src/self.ts",
+          "typeOnly": false,
+          "references": [
+            {
+              "specifier": "./self",
+              "kind": "side-effect",
+              "typeOnly": false,
+              "line": 1,
+              "column": 8
+            }
+          ]
+        }
+      ],
+      "runtime": true
+    },
+    {
+      "nodes": [
+        "src/services/api.ts",
+        "src/utils/index.ts"
+      ],
+      "representativePath": [
+        "src/services/api.ts",
+        "src/utils/index.ts",
+        "src/services/api.ts"
+      ],
+      "edges": [
+        {
+          "from": "src/services/api.ts",
+          "to": "src/utils/index.ts",
+          "typeOnly": false,
+          "references": [
+            {
+              "specifier": "../utils",
+              "kind": "import",
+              "typeOnly": false,
+              "line": 1,
+              "column": 24
+            }
+          ]
+        },
+        {
+          "from": "src/utils/index.ts",
+          "to": "src/services/api.ts",
+          "typeOnly": false,
+          "references": [
+            {
+              "specifier": "../services/api",
+              "kind": "import",
+              "typeOnly": false,
+              "line": 1,
+              "column": 21
+            }
+          ]
+        }
+      ],
+      "runtime": true
+    },
+    {
+      "nodes": [
+        "src/types-cycle/a.ts",
+        "src/types-cycle/b.ts"
+      ],
+      "representativePath": [
+        "src/types-cycle/a.ts",
+        "src/types-cycle/b.ts",
+        "src/types-cycle/a.ts"
+      ],
+      "edges": [
+        {
+          "from": "src/types-cycle/a.ts",
+          "to": "src/types-cycle/b.ts",
+          "typeOnly": true,
+          "references": [
+            {
+              "specifier": "./b",
+              "kind": "import",
+              "typeOnly": true,
+              "line": 1,
+              "column": 24
+            }
+          ]
+        },
+        {
+          "from": "src/types-cycle/b.ts",
+          "to": "src/types-cycle/a.ts",
+          "typeOnly": true,
+          "references": [
+            {
+              "specifier": "./a",
+              "kind": "import",
+              "typeOnly": true,
+              "line": 1,
+              "column": 24
+            }
+          ]
+        }
+      ],
+      "runtime": false
+    }
+  ],
+  "externalDependencies": [
+    {
+      "packageName": "@scope/pkg",
+      "builtin": false,
+      "references": [
+        {
+          "file": "src/index.ts",
+          "specifier": "@scope/pkg/feature",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 7,
+          "column": 25
+        }
+      ]
+    },
+    {
+      "packageName": "fs",
+      "builtin": true,
+      "references": [
+        {
+          "file": "src/index.ts",
+          "specifier": "node:fs",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 8,
+          "column": 16
+        }
+      ]
+    },
+    {
+      "packageName": "left-pad",
+      "builtin": false,
+      "references": [
+        {
+          "file": "src/index.ts",
+          "specifier": "left-pad",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 6,
+          "column": 21
+        }
+      ]
+    }
+  ],
+  "unresolvedDependencies": [
+    {
+      "file": "src/index.ts",
+      "specifier": "./missing",
+      "kind": "import",
+      "typeOnly": false,
+      "line": 9,
+      "column": 21,
+      "reason": "file-not-found"
+    },
+    {
+      "file": "src/index.ts",
+      "specifier": "@missing/thing",
+      "kind": "import",
+      "typeOnly": false,
+      "line": 10,
+      "column": 18,
+      "reason": "alias-not-found"
+    },
+    {
+      "file": "src/index.ts",
+      "specifier": "not-installed",
+      "kind": "import",
+      "typeOnly": false,
+      "line": 11,
+      "column": 26,
+      "reason": "package-not-found"
+    }
+  ],
+  "excludedDependencies": [
+    {
+      "file": "src/index.ts",
+      "specifier": "./data.json",
+      "kind": "import",
+      "typeOnly": false,
+      "line": 12,
+      "column": 18,
+      "reason": "non-source-file",
+      "target": "src/data.json"
+    },
+    {
+      "file": "src/index.ts",
+      "specifier": "./styles.css",
+      "kind": "side-effect",
+      "typeOnly": false,
+      "line": 13,
+      "column": 8,
+      "reason": "non-source-file",
+      "target": "src/styles.css"
+    }
+  ],
+  "diagnostics": [
+    {
+      "severity": "error",
+      "code": "parse-error",
+      "message": "Syntax error: ')' expected. Imports were still extracted where possible.",
+      "file": "src/broken.ts",
+      "line": 3,
+      "column": 30
+    },
+    {
+      "severity": "warning",
+      "code": "unresolved-import",
+      "message": "Cannot resolve \"./missing\": no matching file exists.",
+      "file": "src/index.ts",
+      "line": 9,
+      "column": 21
+    },
+    {
+      "severity": "warning",
+      "code": "unresolved-import",
+      "message": "Cannot resolve \"@missing/thing\": it matches a tsconfig \"paths\" alias, but no target file exists.",
+      "file": "src/index.ts",
+      "line": 10,
+      "column": 18
+    },
+    {
+      "severity": "warning",
+      "code": "unresolved-import",
+      "message": "Cannot resolve \"not-installed\": the package is not installed or not resolvable from this file.",
+      "file": "src/index.ts",
+      "line": 11,
+      "column": 26
+    },
+    {
+      "severity": "warning",
+      "code": "unanalyzable-import",
+      "message": "import() with a non-literal specifier cannot be analyzed statically.",
+      "file": "src/index.ts",
+      "line": 21,
+      "column": 37
+    },
+    {
+      "severity": "warning",
+      "code": "unanalyzable-import",
+      "message": "require() with a non-literal specifier cannot be analyzed statically.",
+      "file": "src/legacy.cjs",
+      "line": 3,
+      "column": 23
+    },
+    {
+      "severity": "info",
+      "code": "shadowed-require",
+      "message": "require() call ignored: this file declares its own \"require\", so it is not treated as CommonJS.",
+      "file": "src/shadow.js",
+      "line": 5,
+      "column": 30
+    }
+  ]
+}

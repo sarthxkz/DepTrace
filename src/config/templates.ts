@@ -6,25 +6,24 @@ export function renderStarterConfig(projectName: string): string {
   return `version: ${String(CONFIG_VERSION)}
 
 # ${PRODUCT_NAME} configuration (format version ${String(CONFIG_VERSION)}).
-#
-# This is a Phase 1 starter template. Architecture analysis and rules are
-# not implemented yet: no current command reads this file, and the settings
-# below are placeholders for future versions.
+# Read by "deptrace scan", "deptrace deps" and "deptrace path".
 
 project:
   name: ${JSON.stringify(projectName)}
 
-# File patterns intended for future analysis. Not used by any command yet.
+# Which files the dependency analysis covers. Patterns are globs relative to
+# this directory. Only .ts .tsx .js .jsx .mts .cts .mjs .cjs files are analyzed.
+# node_modules, dist, build, coverage, .git, .next, .turbo and *.min.js are
+# always excluded.
 analysis:
   include:
-    - src/**/*.ts
-    - src/**/*.tsx
-  exclude:
-    - node_modules/**
-    - dist/**
-    - coverage/**
+    - "**/*"
+  exclude: []
+  # exclude:
+  #   - "**/*.test.ts"
+  #   - "scripts/**"
 
-# Architecture rules are not supported in this version. Keep this list empty.
+# Architecture rules are not implemented yet. Keep this list empty.
 rules: []
 `;
 }

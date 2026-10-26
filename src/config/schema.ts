@@ -18,6 +18,16 @@ function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === 'string');
 }
 
+/** Patterns are matched against root-relative paths, so they cannot point outside the root. */
+function isRelativePattern(pattern: string): boolean {
+  return (
+    pattern.length > 0 &&
+    !pattern.startsWith('/') &&
+    !/^[a-zA-Z]:/.test(pattern) &&
+    !pattern.split(/[\\/]/).includes('..')
+  );
+}
+
 /** Validates a parsed configuration object. Returns a list of problems (empty when valid). */
 export function validateConfig(value: unknown): string[] {
   if (!isRecord(value)) return ['configuration must be a mapping'];
@@ -32,8 +42,13 @@ export function validateConfig(value: unknown): string[] {
     problems.push('analysis must be a mapping');
   } else {
     for (const key of ['include', 'exclude'] as const) {
-      if (!isStringArray(value.analysis[key])) {
+      const patterns = value.analysis[key];
+      if (!isStringArray(patterns)) {
         problems.push(`analysis.${key} must be a list of strings`);
+      } else if (patterns.some((pattern) => !isRelativePattern(pattern))) {
+        problems.push(
+          `analysis.${key} patterns must be relative to the repository root (no leading "/", drive letter or ".." segment)`,
+        );
       }
     }
   }

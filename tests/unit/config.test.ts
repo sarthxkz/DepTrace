@@ -59,6 +59,25 @@ describe('validateConfig', () => {
   ])('rejects %s', (_label, input, problem) => {
     expect(validateConfig(input).join('\n')).toContain(problem);
   });
+
+  it.each(['../src/**', 'src/../../x', '/etc/**', 'C:/repo/**', 'c:\\repo', ''])(
+    'rejects the pattern %j because it could point outside the root',
+    (pattern) => {
+      const config = { ...valid(), analysis: { include: [pattern], exclude: [] } };
+      expect(validateConfig(config).join('\n')).toContain(
+        'must be relative to the repository root',
+      );
+    },
+  );
+
+  it.each(['**/*', 'src/**/*.ts', '..hidden/*.ts', 'a..b/**'])(
+    'accepts the pattern %j',
+    (pattern) => {
+      expect(validateConfig({ ...valid(), analysis: { include: [pattern], exclude: [] } })).toEqual(
+        [],
+      );
+    },
+  );
 });
 
 describe('paths', () => {

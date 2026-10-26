@@ -8,7 +8,7 @@ export function registerReportCommand(program: Command): void {
     .description('Generate an architecture report (not implemented yet; exits with code 4)')
     .action(() => {
       throw notImplemented(
-        `Report generation is not implemented in ${PRODUCT_NAME} Phase 1. No report was generated.`,
+        `Report generation is not implemented in this version of ${PRODUCT_NAME}. No report was generated.`,
       );
     });
 }

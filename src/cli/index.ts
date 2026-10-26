@@ -3,16 +3,20 @@ import { CLI_NAME, ExitCode, PRODUCT_NAME, TAGLINE } from '../core/constants.js'
 import { DepTraceError } from '../core/errors.js';
 import { logger } from '../utils/logger.js';
 import { registerCheckCommand } from './commands/check.js';
+import { registerDepsCommand } from './commands/deps.js';
 import { registerInitCommand } from './commands/init.js';
+import { registerPathCommand } from './commands/path.js';
 import { registerReportCommand } from './commands/report.js';
 import { registerScanCommand } from './commands/scan.js';
 
 const EXAMPLES = `
 Examples:
-  $ ${CLI_NAME} init            Create a starter deptrace.yml in the current directory
-  $ ${CLI_NAME} scan            Inspect the current directory
-  $ ${CLI_NAME} scan ./my-app   Inspect another directory
-  $ ${CLI_NAME} --version       Print the installed version
+  $ ${CLI_NAME} init                              Create a starter deptrace.yml
+  $ ${CLI_NAME} scan                              Analyze the current directory
+  $ ${CLI_NAME} scan ./my-app --format json       Machine-readable dependency graph
+  $ ${CLI_NAME} deps src/index.ts                 What src/index.ts imports
+  $ ${CLI_NAME} deps src/db.ts -d incoming        Which files import src/db.ts
+  $ ${CLI_NAME} path src/index.ts src/db.ts       Shortest import path between two files
 
 Run "${CLI_NAME} <command> --help" for details about a command.`;
 
@@ -32,6 +36,8 @@ export function createProgram(version: string): Command {
 
   registerInitCommand(program);
   registerScanCommand(program);
+  registerDepsCommand(program);
+  registerPathCommand(program);
   registerCheckCommand(program);
   registerReportCommand(program);
   return program;
