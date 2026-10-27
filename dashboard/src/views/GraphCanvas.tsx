@@ -27,6 +27,8 @@ export interface CanvasEdge {
   violation: boolean;
   external: boolean;
   label?: string;
+  /** Curve offset for edges between nodes on one row, so they do not run over each other. */
+  bend?: number;
 }
 
 export type CanvasLayout = 'grouped' | 'hierarchy' | 'force';
@@ -130,6 +132,14 @@ function stylesheet(large: boolean): StylesheetJson {
         opacity: 0.9,
         'transition-property': 'opacity',
         'transition-duration': 150,
+      },
+    },
+    {
+      selector: 'edge[bend]',
+      style: {
+        'curve-style': 'unbundled-bezier',
+        'control-point-distances': 'data(bend)',
+        'control-point-weights': 0.5,
       },
     },
     { selector: 'edge[?typeOnly]', style: { 'line-style': 'dashed', 'line-dash-pattern': [5, 4] } },

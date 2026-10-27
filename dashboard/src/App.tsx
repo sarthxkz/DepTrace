@@ -14,6 +14,7 @@ import { GraphView } from './views/GraphView';
 import { Layers } from './views/Layers';
 import { Modules } from './views/Modules';
 import { Overview } from './views/Overview';
+import { Privacy } from './views/Privacy';
 import { Reports } from './views/Reports';
 import { Violations } from './views/Violations';
 
@@ -31,6 +32,7 @@ const NAV: { page: Page; label: string; icon: IconName; needsGraph: boolean }[] 
   { page: 'modules', label: 'Modules', icon: 'modules', needsGraph: true },
   { page: 'reports', label: 'Reports', icon: 'reports', needsGraph: false },
   { page: 'configuration', label: 'Configuration', icon: 'configuration', needsGraph: true },
+  { page: 'privacy', label: 'Privacy & security', icon: 'shield', needsGraph: false },
 ];
 
 function toReady(loaded: Loaded, source: Source): Ready {
@@ -177,6 +179,8 @@ export function App() {
           {state.status === 'error' &&
             (route.page === 'reports' ? (
               <Reports ready={null} onImport={importFile} />
+            ) : route.page === 'privacy' ? (
+              <Privacy ready={null} onTheme={setTheme} />
             ) : (
               <ErrorPage
                 state={state}
@@ -187,7 +191,13 @@ export function App() {
               />
             ))}
           {ready && (
-            <PageView page={route.page} params={route.params} ready={ready} onImport={importFile} />
+            <PageView
+              page={route.page}
+              params={route.params}
+              ready={ready}
+              onImport={importFile}
+              onTheme={setTheme}
+            />
           )}
         </main>
       </div>
@@ -200,11 +210,13 @@ function PageView({
   params,
   ready,
   onImport,
+  onTheme,
 }: {
   page: Page;
   params: URLSearchParams;
   ready: Ready;
   onImport: (file: File) => Promise<{ message: string; problems: string[] } | null>;
+  onTheme: (choice: ThemeChoice) => void;
 }) {
   const { model } = ready;
   const unavailable = useMemo(() => {
@@ -212,6 +224,7 @@ function PageView({
     return item?.needsGraph === true && model === null;
   }, [page, model]);
   if (page === 'reports') return <Reports ready={ready} onImport={onImport} />;
+  if (page === 'privacy') return <Privacy ready={ready} onTheme={onTheme} />;
   if (page === 'overview') return <Overview ready={ready} />;
   if (page === 'violations') return <Violations ready={ready} params={params} />;
   if (unavailable || model === null) {

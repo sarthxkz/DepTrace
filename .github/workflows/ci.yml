@@ -89,6 +89,24 @@ jobs:
           expect_exit 2 dashboard --report "$RUNNER_TEMP/missing-dir" --port 0 "$storefront"
           expect_exit 2 dashboard --port 70000
 
+  dependencies:
+    name: Runtime dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+
+      # Known high or critical advisories in what the published package installs.
+      # Dev dependencies (build and test tools, bundled dashboard libraries) are kept
+      # current through Dependabot instead.
+      - run: npm audit --omit=dev --audit-level=high
+
   dashboard-e2e:
     name: Dashboard end-to-end (Chrome)
     runs-on: ubuntu-latest

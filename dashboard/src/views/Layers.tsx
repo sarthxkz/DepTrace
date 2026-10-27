@@ -1,7 +1,14 @@
 import { Fragment } from 'react';
 import { Icon } from '../components/Icon';
 import { FindingRow } from '../components/ModuleCard';
-import { CardSection, CatalogCard, EmptyState, ModuleLink, Notice } from '../components/ui';
+import {
+  CardSection,
+  CatalogCard,
+  DetailPane,
+  EmptyState,
+  ModuleLink,
+  Notice,
+} from '../components/ui';
 import { plural } from '../lib/format';
 import { href } from '../lib/router';
 import { UNCLASSIFIED, type EdgeInfo, type Model } from '../model/model';
@@ -150,8 +157,11 @@ rules:
             <span className="legend-cell cell-allowed" /> allowed
           </li>
           <li>
-            <span className="legend-cell cell-forbidden used" /> forbidden (number: violations
-            reported)
+            <span className="legend-cell cell-forbidden used" /> forbidden and used (flag:
+            violations reported)
+          </li>
+          <li>
+            <span className="legend-cell cell-forbidden" /> forbidden, unused
           </li>
           <li>
             <span className="legend-cell cell-same" /> within a layer
@@ -220,7 +230,11 @@ rules:
 
       {selectedLayer !== null && <LayerCard model={model} name={selectedLayer} />}
       {selectedLayer === null && from !== null && to !== null && (
-        <aside className="split-detail" aria-label="Selected layer pair">
+        <DetailPane
+          label="Selected layer pair"
+          closeTo={href('layers')}
+          returnHref={href('layers', { from, to })}
+        >
           <CatalogCard
             label={`${display(from)} imports ${display(to)}`}
             title={
@@ -264,7 +278,7 @@ rules:
               )}
             </CardSection>
           </CatalogCard>
-        </aside>
+        </DetailPane>
       )}
     </div>
   );
@@ -317,7 +331,11 @@ function LayerCard({ model, name }: { model: Model; name: string }) {
   );
   const allowed = model.report.architecture.layerRule?.allowed[name];
   return (
-    <aside className="split-detail" aria-label="Selected layer">
+    <DetailPane
+      label="Selected layer"
+      closeTo={href('layers')}
+      returnHref={href('layers', { layer: name })}
+    >
       <CatalogCard
         label={`Layer ${unclassified ? 'unclassified' : name}`}
         title={
@@ -379,7 +397,7 @@ function LayerCard({ model, name }: { model: Model; name: string }) {
           </ul>
         </CardSection>
       </CatalogCard>
-    </aside>
+    </DetailPane>
   );
 }
 

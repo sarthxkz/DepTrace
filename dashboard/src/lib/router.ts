@@ -9,6 +9,7 @@ export const PAGES = [
   'modules',
   'reports',
   'configuration',
+  'privacy',
 ] as const;
 
 export type Page = (typeof PAGES)[number];

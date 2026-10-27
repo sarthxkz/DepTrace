@@ -103,6 +103,38 @@ test('is keyboard operable from the first Tab', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Overview' })).toBeFocused();
 });
 
+test('talks only to the local server and sets no cookies', async ({ page, context, baseURL }) => {
+  const origin = new URL(baseURL ?? '').origin;
+  const foreign: string[] = [];
+  page.on('request', (request) => {
+    const url = new URL(request.url());
+    if (url.protocol !== 'data:' && url.origin !== origin) foreign.push(request.url());
+  });
+  for (const route of [
+    'overview',
+    'graph',
+    'layers',
+    'violations',
+    'cycles',
+    'modules',
+    'reports',
+    'configuration',
+    'privacy',
+  ]) {
+    await page.goto(`/#/${route}`);
+    await expect(page.locator('main h1').first()).toBeVisible();
+  }
+  await page.getByRole('radio', { name: 'Dark' }).check({ force: true });
+  await page.goto('/#/privacy');
+  const storage = page.getByRole('region', { name: 'What is stored' });
+  await expect(storage).toContainText('dark');
+  await storage.getByRole('button', { name: 'Delete stored preference' }).click();
+  await expect(storage).toContainText('nothing stored');
+  expect(await page.evaluate(() => localStorage.length)).toBe(0);
+  expect(await context.cookies()).toEqual([]);
+  expect(foreign).toEqual([]);
+});
+
 test('navigation works through the drawer @phone', async ({ page }) => {
   await page.goto('/#/overview');
   const menu = page.getByRole('button', { name: 'Sections' });

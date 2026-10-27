@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 
 export type ThemeChoice = 'system' | 'light' | 'dark';
-const KEY = 'deptrace.theme';
+/** The only key the dashboard writes to browser storage. */
+export const THEME_STORAGE_KEY = 'deptrace.theme';
+const KEY = THEME_STORAGE_KEY;
 
 function stored(): ThemeChoice {
   try {

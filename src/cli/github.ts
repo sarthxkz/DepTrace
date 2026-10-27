@@ -1,5 +1,6 @@
 import type { AnalysisResult } from '../analysis/types.js';
 import { CLI_NAME, PRODUCT_NAME } from '../core/constants.js';
+import { terminalSafe } from '../core/errors.js';
 import type { PolicyEvaluation, Violation } from '../rules/types.js';
 import type { BaselineView } from './policy-output.js';
 
@@ -59,7 +60,8 @@ export function formatAnnotations(violations: Violation[], pathPrefix: string): 
  * from the repository cannot inject links, HTML or table cells.
  */
 export function markdownText(text: string, max = MAX_CELL_LENGTH): string {
-  return truncate(text.replace(/\s+/g, ' '), max).replace(/[!-/:-@[-`{-~]/g, '\\$&');
+  // terminalSafe: bidi overrides could make a rendered path read differently from what it is.
+  return truncate(terminalSafe(text.replace(/\s+/g, ' ')), max).replace(/[!-/:-@[-`{-~]/g, '\\$&');
 }
 
 const location = (violation: Violation) =>

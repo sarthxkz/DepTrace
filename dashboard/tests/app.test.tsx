@@ -1,4 +1,4 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../src/App';
@@ -498,6 +498,69 @@ describe('reports and import', () => {
     expect(await screen.findByText('Loaded check.json.')).toBeTruthy();
     await go('#/overview');
     expect(screen.getByText(/check report, findings only/)).toBeTruthy();
+  });
+});
+
+describe('privacy and security page', () => {
+  afterEach(() => {
+    localStorage.clear();
+    document.documentElement.removeAttribute('data-theme');
+  });
+
+  it('states the data practices and deletes the stored preference', async () => {
+    localStorage.setItem('deptrace.theme', 'dark');
+    await open('#/privacy');
+    expect(screen.getByRole('heading', { level: 1, name: 'Privacy & security' })).toBeTruthy();
+    const storage = screen.getByRole('region', { name: 'What is stored' });
+    expect(within(storage).getByText('deptrace.theme')).toBeTruthy();
+    expect(within(storage).getByText('dark')).toBeTruthy();
+    expect(
+      screen.getByText(/No analytics, telemetry, fonts or other third-party requests/),
+    ).toBeTruthy();
+    expect(screen.getByText(/This analysis of storefront was made by/)).toBeTruthy();
+
+    await userEvent.click(
+      within(storage).getByRole('button', { name: /Delete stored preference/ }),
+    );
+    expect(localStorage.getItem('deptrace.theme')).toBeNull();
+    expect(within(storage).getByText('nothing stored')).toBeTruthy();
+    expect(within(storage).getByRole('status').textContent).toMatch(
+      /stored preference was deleted/,
+    );
+    expect(
+      within(storage).getByRole('button', { name: /Delete stored preference/ }),
+    ).toHaveProperty('disabled', true);
+    expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
+  });
+
+  it('is reachable from the navigation and without a loaded analysis', async () => {
+    await open('#/overview');
+    expect(screen.getByRole('link', { name: 'Privacy & security' }).getAttribute('href')).toBe(
+      '#/privacy',
+    );
+    cleanup();
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.reject(new TypeError('Failed to fetch'))),
+    );
+    window.location.hash = '#/privacy';
+    render(<App />);
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Privacy & security' }),
+    ).toBeTruthy();
+    expect(screen.getByText(/Report security problems privately/)).toBeTruthy();
+  });
+
+  it('shows hidden bidirectional characters in repository text instead of obeying them', async () => {
+    const report = fixture<
+      Record<string, unknown> & { architecture: { violations: { message: string }[] } }
+    >('storefront-report.json');
+    const rlo = String.fromCharCode(0x202e);
+    const first = defined(report.architecture.violations[0]);
+    first.message = `Evil ${rlo}gpj.exe message`;
+    await open('#/violations', report);
+    expect(screen.getByText('Evil \\u202egpj.exe message')).toBeTruthy();
+    expect(document.body.textContent).not.toContain(rlo);
   });
 });
 

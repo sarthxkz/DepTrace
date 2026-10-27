@@ -1,8 +1,9 @@
 # Architecture
 
-This describes the code as it exists today (through Phase 5). Analysis behavior is documented in
+This describes the code as it exists today (through Phase 7A). Analysis behavior is documented in
 [analysis.md](analysis.md), rules in [rules.md](rules.md), baselines in [baseline.md](baseline.md),
-CI in [github-actions.md](github-actions.md) and the dashboard in [dashboard.md](dashboard.md).
+CI in [github-actions.md](github-actions.md), the dashboard in [dashboard.md](dashboard.md) and
+security, privacy and the threat model in the [Security & Trust Center](trust/README.md).
 
 ## Layers
 
@@ -26,7 +27,8 @@ src/analysis/             Dependency analysis engine (no CLI dependencies)
   scc.ts                  Iterative Tarjan strongly connected components
   analyze.ts              Orchestration: discovery → parse → resolve → graph → cycles → summary
   json.ts                 JSON document for `scan --format json`
-  paths.ts                Path normalization (forward slashes, root-relative, realpath)
+  paths.ts                Path normalization (forward slashes, root-relative, realpath) and
+                          redaction of absolute paths from diagnostic messages
 src/rules/                Architecture rules engine (no CLI dependencies)
   types.ts                Policy, Rule, Violation, PolicyEvaluation
   config.ts               Validation and normalization of `layers` and `rules`
@@ -46,7 +48,8 @@ src/dashboard/            Local dashboard server (Node built-ins only)
   git.ts                  Branch and commit read from .git files (never runs git)
 src/core/                 Shared basics
   constants.ts            Product names, config filename, exit codes
-  errors.ts               DepTraceError (message + exit code), filesystem error translation
+  errors.ts               DepTraceError (message + exit code), filesystem error translation,
+                          escaping of untrusted text (printable, terminalSafe)
   inspect.ts              Repository metadata (package.json, tsconfig.json, Git root)
 src/config/               Configuration format
   schema.ts               Config type, format version, validation
@@ -54,7 +57,7 @@ src/config/               Configuration format
   templates.ts            Starter template
   paths.ts                Target directory and config path resolution
   init.ts                 Writing the starter config safely
-src/utils/logger.ts       stdout/stderr output, debug-only diagnostics
+src/utils/logger.ts       stdout/stderr output (control and bidi characters escaped), debug-only diagnostics
 
 dashboard/                Browser app (React, Cytoscape.js), built by Vite into dist/dashboard
   src/contract/           Validation of report, check report and SARIF documents (untrusted input)

@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import ts from 'typescript';
 import {
@@ -10,7 +11,7 @@ import {
 } from './discovery.js';
 import { buildGraph, findCycles, type GraphLink } from './graph.js';
 import { extractImports, getParseDiagnostics, parseSourceFile } from './parser.js';
-import { toPosix, toRelative } from './paths.js';
+import { redactPaths, toPosix, toRelative } from './paths.js';
 import { ProjectLocator } from './project.js';
 import { ImportResolver } from './resolver.js';
 import type {
@@ -208,6 +209,11 @@ export async function analyzeRepository(
   for (const entry of external) entry.references.sort(compareFileReferences);
   unresolved.sort(compareFileReferences);
   excluded.sort(compareFileReferences);
+  // Filesystem and TypeScript messages can contain absolute paths; reports must not.
+  const home = os.homedir();
+  for (const diagnostic of diagnostics) {
+    diagnostic.message = redactPaths(diagnostic.message, root, home);
+  }
   diagnostics.sort(
     (a, b) =>
       compareStrings(a.file ?? '', b.file ?? '') ||

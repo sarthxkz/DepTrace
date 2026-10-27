@@ -61,6 +61,12 @@ npm run dev -- scan .
   resolved entry). `dashboard/tests/fixtures/` holds its real report, check report and SARIF output;
   `tests/integration/dashboard-cli.test.ts` fails when they drift. See [dashboard.md](dashboard.md)
   for the dashboard tests and how to regenerate the fixtures.
+- Security checks: `tests/unit/redaction.test.ts` (absolute paths removed from reports, terminal
+  escaping), `tests/unit/source-hygiene.test.ts` (no invisible control or bidi characters in any
+  repository text file), `tests/unit/trust-docs.test.ts` (policy drafts flagged for legal review,
+  every placeholder listed in [trust/README.md](trust/README.md#open-placeholders), no invented
+  contact details or compliance claims, documented facts match the code). CI also runs
+  `npm audit --omit=dev --audit-level=high`.
 - `npm run test:e2e` needs a build (`npm run build`) and Google Chrome (or set
   `PLAYWRIGHT_CHANNEL`, e.g. `msedge`); it starts `deptrace dashboard` on port 7398 itself.
 - Every test works in its own temporary directory (`makeTempDir` in `tests/helpers.ts`), removed

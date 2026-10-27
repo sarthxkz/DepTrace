@@ -27,3 +27,34 @@ export function realPath(file: string): string {
     return path.resolve(file);
   }
 }
+
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/**
+ * Removes machine-specific absolute paths from a message (e.g. a TypeScript or
+ * filesystem error): paths under `root` become repository-relative and the
+ * home directory becomes "~". Reports and CI artifacts then never reveal the
+ * checkout location or the user name.
+ */
+export function redactPaths(message: string, root: string, home: string): string {
+  const flags = process.platform === 'win32' ? 'gi' : 'g';
+  let result = message;
+  for (const [base, replacement] of [
+    [root, ''],
+    [home, '~'],
+  ] as const) {
+    // Skip empty and filesystem-root bases: replacing "/" would mangle every path.
+    if (base.length < 2 || path.parse(base).root === base) continue;
+    for (const variant of new Set([base, base.replace(/\\/g, '/'), base.replace(/\//g, '\\')])) {
+      const pattern = escapeRegExp(variant);
+      // A base followed by a separator is a prefix; alone (not part of a longer name) it is the base itself.
+      result =
+        replacement === ''
+          ? result
+              .replace(new RegExp(`${pattern}[\\\\/]`, flags), '')
+              .replace(new RegExp(`${pattern}(?![\\w.-])`, flags), '.')
+          : result.replace(new RegExp(`${pattern}(?![\\w.-])`, flags), replacement);
+    }
+  }
+  return result;
+}

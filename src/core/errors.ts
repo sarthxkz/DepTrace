@@ -43,7 +43,21 @@ export function fromFsError(error: unknown, target: string, action: string): Dep
  */
 export function printable(text: string): string {
   // eslint-disable-next-line no-control-regex
-  return text.replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g, (char) => {
-    return `\\u${char.charCodeAt(0).toString(16).padStart(4, '0')}`;
-  });
+  return text.replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g, escapeChar);
 }
+
+const escapeChar = (char: string) => `\\u${char.charCodeAt(0).toString(16).padStart(4, '0')}`;
+
+/**
+ * Escapes characters that let untrusted text (file names, import specifiers)
+ * control a terminal or disguise itself: control characters other than
+ * newline and tab (ANSI escape sequences start with ESC), and Unicode
+ * bidirectional overrides ("Trojan Source"). Applied to all CLI text output.
+ */
+export function terminalSafe(text: string): string {
+  return text.replace(TERMINAL_UNSAFE, escapeChar);
+}
+
+const TERMINAL_UNSAFE =
+  // eslint-disable-next-line no-control-regex
+  /[\u0000-\u0008\u000b-\u001f\u007f-\u009f\u2028\u2029\u202a-\u202e\u2066-\u2069]/g;

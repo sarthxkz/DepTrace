@@ -151,6 +151,12 @@ snapshots, so the dashboard shows one report at a time and no trends.
 
 **Configuration.** The analysis settings and rules recorded in the report (read-only).
 
+**Privacy & security.** What the dashboard does with data (local analysis, local server, no
+third-party requests, imported files stay in the tab), what it stores (only the theme preference,
+under `deptrace.theme`, and only if you choose Light or Dark) with a button to delete it, and where
+to report vulnerabilities. It is available even when no analysis could be loaded. See the
+[Security & Trust Center](trust/README.md).
+
 The header shows the project (package name, else the directory or file name), analysis status,
 analyzer version, analysis time and Git branch and commit. The analysis time and Git information
 come only from a live analysis; Git information is read from `.git` files (HEAD and refs) without
@@ -192,7 +198,9 @@ deptrace dashboard ──analysis (static, in-process)──▶ report JSON (in 
 - Responses carry a strict Content Security Policy (`default-src 'none'`, scripts and styles from
   the same origin only, no framing), `nosniff`, `no-referrer` and `no-store`.
 - The app renders all repository text (paths, messages, specifiers) as text; there is no HTML
-  rendering of report content. It makes no external requests: no fonts, analytics or telemetry.
+  rendering of report content. Invisible control and bidirectional-override characters in that text
+  are shown as visible escapes (for example, U+202E RIGHT-TO-LEFT OVERRIDE appears as a backslash-u escape), so a file name cannot display as something
+  else. It makes no external requests: no fonts, analytics or telemetry.
 - Reports contain repository-relative paths only; the server adds the directory name, never its
   absolute path.
 - There is no authentication: any program running as you on this machine can read the report from

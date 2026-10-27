@@ -1,0 +1,7 @@
+# Keeps security reports out of public issues: the issue chooser points to the
+# security policy, which describes the private reporting channels.
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/sarthxkz/DepTrace/security/policy
+    about: Please do not open a public issue for security problems. Follow SECURITY.md to report privately.

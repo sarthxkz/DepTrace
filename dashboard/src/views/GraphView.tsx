@@ -9,7 +9,7 @@ import {
   PathChain,
   SeverityBadge,
 } from '../components/ui';
-import { number, plural } from '../lib/format';
+import { number, plural, revealControls } from '../lib/format';
 import { href, navigate } from '../lib/router';
 import {
   DEFAULT_FILTERS,
@@ -148,7 +148,7 @@ export function GraphView({ model, params }: { model: Model; params: URLSearchPa
       const severities = module?.findings.map((f) => f.severity) ?? [];
       return {
         id: module?.id ?? String(index),
-        label: module?.name ?? '',
+        label: revealControls(module?.name ?? ''),
         kind: 'module',
         slot: module?.layer ? (model.layerByName.get(module.layer)?.slot ?? null) : null,
         size: nodeSize((module?.incoming.length ?? 0) + (module?.outgoing.length ?? 0)),
@@ -266,6 +266,18 @@ export function GraphView({ model, params }: { model: Model; params: URLSearchPa
     for (const band of grouped.bands) all.set(`band:${band.group}`, { x: band.x, y: band.y });
     return all;
   }, [grouped]);
+
+  // In the band layout, edges inside one row would draw over each other (a cycle
+  // there looks like a single line): bend them; opposite directions bend apart.
+  const canvasEdges = useMemo(() => {
+    if (!positions) return graph.edges;
+    return graph.edges.map((edge) => {
+      const a = positions.get(edge.source);
+      const b = positions.get(edge.target);
+      if (!a || !b || Math.abs(a.y - b.y) > 1) return edge;
+      return { ...edge, bend: Math.round(Math.min(140, 22 + Math.abs(a.x - b.x) * 0.18)) };
+    });
+  }, [graph, positions]);
 
   const tooLarge =
     graph.nodes.length > RENDER_LIMIT.nodes || graph.edges.length > RENDER_LIMIT.edges;
@@ -514,7 +526,7 @@ export function GraphView({ model, params }: { model: Model; params: URLSearchPa
           ) : (
             <GraphCanvas
               nodes={canvasNodes}
-              edges={graph.edges}
+              edges={canvasEdges}
               layout={effectiveLayout}
               positions={positions}
               highlight={canvasHighlight}
@@ -643,7 +655,12 @@ function FilterPanel({
     list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
   return (
     <details className="filter-panel">
-      <summary>Filters{!isDefaultFilters(filters) && <span className="count">on</span>}</summary>
+      <summary>
+        <span className="disclosure" aria-hidden="true">
+          <Icon name="chevronDown" size={14} />
+        </span>
+        Filters{!isDefaultFilters(filters) && <span className="count">on</span>}
+      </summary>
       <div className="filter-body">
         <label className="field">
           <span>Folder</span>
@@ -786,7 +803,12 @@ function FilterPanel({
 function Legend({ model, granularity }: { model: Model; granularity: 'files' | 'folders' }) {
   return (
     <details className="legend">
-      <summary>Legend</summary>
+      <summary>
+        <span className="disclosure" aria-hidden="true">
+          <Icon name="chevronDown" size={14} />
+        </span>
+        Legend
+      </summary>
       <ul>
         {model.layers.map((layer) => (
           <li key={layer.name}>
@@ -995,7 +1017,7 @@ function FocusPanel({
           }
         >
           <CardSection title="What it breaks">
-            <p>{finding.message}</p>
+            <p>{revealControls(finding.message)}</p>
           </CardSection>
           {finding.path && (
             <CardSection title="Dependency path">
@@ -1027,7 +1049,7 @@ function FocusPanel({
           <ul className="ref-list">
             {edge.references.map((ref, i) => (
               <li key={i}>
-                <code>{ref.specifier}</code>
+                <code>{revealControls(ref.specifier)}</code>
                 <span className="tag">{ref.kind}</span>
                 {ref.typeOnly && <span className="tag">type-only</span>}
                 <span className="ref">

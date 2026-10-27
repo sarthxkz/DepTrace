@@ -3,9 +3,11 @@ import type { Ready } from '../lib/state';
 import { Icon } from '../components/Icon';
 import {
   BaselineBadge,
+  Breakable,
   CardSection,
   CatalogCard,
   CopyButton,
+  DetailPane,
   EmptyState,
   ModuleLink,
   Pager,
@@ -14,8 +16,8 @@ import {
 } from '../components/ui';
 import type { Finding } from '../contract/load';
 import type { BaselineEntry, Target } from '../contract/report';
-import { location, plural } from '../lib/format';
-import { href, navigate } from '../lib/router';
+import { location, plural, revealControls } from '../lib/format';
+import { href } from '../lib/router';
 
 const PAGE_SIZE = 50;
 const SEVERITY_ORDER = { error: 0, warning: 1, note: 2 } as const;
@@ -247,18 +249,25 @@ export function Violations({ ready, params }: { ready: Ready; params: URLSearchP
                         {finding.baselineStatus && (
                           <BaselineBadge status={finding.baselineStatus} />
                         )}
-                        <code>{finding.ruleId}</code>
+                        <code>
+                          <Breakable text={finding.ruleId} />
+                        </code>
                       </span>
                       <span className="violation-where mono">
-                        {location(finding.file, finding.line, finding.column) || 'no location'}
+                        <Breakable
+                          text={
+                            location(finding.file, finding.line, finding.column) || 'no location'
+                          }
+                        />
                         {finding.target && (
                           <>
                             {' '}
-                            <span className="chain-step">→</span> {targetText(finding.target)}
+                            <span className="chain-step">→</span>{' '}
+                            <Breakable text={targetText(finding.target)} />
                           </>
                         )}
                       </span>
-                      <span className="violation-message">{finding.message}</span>
+                      <span className="violation-message">{revealControls(finding.message)}</span>
                     </a>
                   </li>
                 ))}
@@ -279,7 +288,9 @@ export function Violations({ ready, params }: { ready: Ready; params: URLSearchP
               {baseline.resolvedViolations.map((entry: BaselineEntry) => (
                 <li key={entry.fingerprint}>
                   <BaselineBadge status="resolved" />
-                  <code>{entry.ruleId}</code>
+                  <code>
+                    <Breakable text={entry.ruleId} />
+                  </code>
                   <span className="mono">
                     {entry.file} → {targetText(entry.target)}
                   </span>
@@ -292,16 +303,11 @@ export function Violations({ ready, params }: { ready: Ready; params: URLSearchP
       </div>
 
       {selectedId !== null && (
-        <aside className="split-detail" aria-label="Selected violation">
-          <button
-            type="button"
-            className="button ghost small close-detail"
-            onClick={() => {
-              navigate('violations');
-            }}
-          >
-            Close
-          </button>
+        <DetailPane
+          label="Selected violation"
+          closeTo={href('violations')}
+          returnHref={href('violations', { finding: selectedId })}
+        >
           {selected ? (
             <FindingCard finding={selected} hasGraph={model !== null} />
           ) : (
@@ -309,7 +315,7 @@ export function Violations({ ready, params }: { ready: Ready; params: URLSearchP
               <p>No violation with this identifier is in the loaded report.</p>
             </EmptyState>
           )}
-        </aside>
+        </DetailPane>
       )}
     </div>
   );
@@ -319,7 +325,11 @@ function FindingCard({ finding, hasGraph }: { finding: Finding; hasGraph: boolea
   return (
     <CatalogCard
       label={`Violation of ${finding.ruleId}`}
-      title={<code>{finding.ruleId}</code>}
+      title={
+        <code>
+          <Breakable text={finding.ruleId} />
+        </code>
+      }
       meta={
         <>
           <SeverityBadge severity={finding.severity} />
@@ -336,7 +346,7 @@ function FindingCard({ finding, hasGraph }: { finding: Finding; hasGraph: boolea
       }
     >
       <CardSection title="What it breaks">
-        <p>{finding.message}</p>
+        <p>{revealControls(finding.message)}</p>
         {finding.ruleDescription && <p className="muted">Rule: {finding.ruleDescription}</p>}
       </CardSection>
       <CardSection title="Where">
@@ -370,7 +380,7 @@ function FindingCard({ finding, hasGraph }: { finding: Finding; hasGraph: boolea
           <ul className="ref-list">
             {finding.references.map((ref, index) => (
               <li key={index}>
-                <code>{ref.specifier}</code>
+                <code>{revealControls(ref.specifier)}</code>
                 <span className="tag">{ref.kind}</span>
                 {ref.typeOnly && <span className="tag">type-only</span>}
                 <span className="ref">

@@ -1,4 +1,4 @@
-import { SeverityBadge } from '../components/ui';
+import { Breakable, SeverityBadge } from '../components/ui';
 import type { Model } from '../model/model';
 
 const List = ({ items, empty }: { items: string[]; empty: string }) =>
@@ -78,7 +78,9 @@ export function Configuration({ model }: { model: Model }) {
                 {architecture.rules.map((rule) => (
                   <tr key={rule.id}>
                     <td>
-                      <code>{rule.id}</code>
+                      <code>
+                        <Breakable text={rule.id} />
+                      </code>
                     </td>
                     <td>
                       <SeverityBadge severity={rule.severity} />

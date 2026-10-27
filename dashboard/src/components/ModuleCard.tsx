@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import type { Finding } from '../contract/load';
 import type { ImportRef } from '../contract/report';
-import { plural } from '../lib/format';
+import { plural, revealControls } from '../lib/format';
 import { href } from '../lib/router';
 import { reach } from '../model/graph';
 import { hasLayers, type Model } from '../model/model';
 import { Icon } from './Icon';
-import { CardSection, CatalogCard, CopyButton, ModuleLink, SeverityBadge } from './ui';
+import { Breakable, CardSection, CatalogCard, CopyButton, ModuleLink, SeverityBadge } from './ui';
 
 const LIST_LIMIT = 200;
 
@@ -17,7 +17,7 @@ function References({ refs }: { refs: ImportRef[] }) {
         <span
           key={index}
           className="ref"
-          title={`"${ref.specifier}" (${ref.kind}${ref.typeOnly ? ', type-only' : ''})`}
+          title={`"${revealControls(ref.specifier)}" (${ref.kind}${ref.typeOnly ? ', type-only' : ''})`}
         >
           {ref.line}:{ref.column}
           {ref.kind !== 'import' && <span className="kind"> {ref.kind}</span>}
@@ -44,9 +44,11 @@ export function FindingRow({ finding }: { finding: Finding }) {
     <li className="finding-row">
       <SeverityBadge severity={finding.severity} />
       <a href={href('violations', { finding: finding.id })}>
-        <code>{finding.ruleId}</code>
+        <code>
+          <Breakable text={finding.ruleId} />
+        </code>
       </a>
-      <span className="finding-message">{finding.message}</span>
+      <span className="finding-message">{revealControls(finding.message)}</span>
     </li>
   );
 }
@@ -70,6 +72,9 @@ function Transitive({
   return (
     <details className="transitive">
       <summary>
+        <span className="disclosure" aria-hidden="true">
+          <Icon name="chevronDown" size={14} />
+        </span>
         {label}: {plural(reached.length, `file`)}
         {Number.isFinite(depth) ? ` within ${String(depth)} step${depth === 1 ? '' : 's'}` : ''}
       </summary>
@@ -211,7 +216,7 @@ export function ModuleCard({ model, index }: { model: Model; index: number }) {
           <ul className="ref-list">
             {module.unresolved.map((ref, i) => (
               <li key={i}>
-                <code>{ref.specifier}</code>
+                <code>{revealControls(ref.specifier)}</code>
                 <span className="tag">{ref.reason}</span>
                 <span className="ref">
                   {ref.line}:{ref.column}

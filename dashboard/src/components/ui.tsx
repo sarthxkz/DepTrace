@@ -1,13 +1,104 @@
-import { useState, type ReactNode } from 'react';
+import { Fragment, useEffect, useRef, useState, type ReactNode } from 'react';
+import { revealControls } from '../lib/format';
 import { href, type Page } from '../lib/router';
 import { Icon, type IconName } from './Icon';
+
+/** A repository-relative path that opens its module card. */
+/** Text that may wrap only after "/" (paths, rule ids), never inside a name. */
+export function Breakable({ text }: { text: string }) {
+  const parts = revealControls(text).split('/');
+  return (
+    <>
+      {parts.map((part, index) => (
+        <Fragment key={index}>
+          {part}
+          {index < parts.length - 1 && (
+            <>
+              /<wbr />
+            </>
+          )}
+        </Fragment>
+      ))}
+    </>
+  );
+}
+
+/** A path set like a call number: the folder recedes, the file name reads first. */
+export function PathText({ id: raw }: { id: string }) {
+  const id = revealControls(raw);
+  const slash = id.lastIndexOf('/');
+  if (slash === -1) return <span className="path-file">{id}</span>;
+  return (
+    <>
+      <span className="path-dir">
+        <Breakable text={id.slice(0, slash + 1)} />
+      </span>
+      <span className="path-file">{id.slice(slash + 1)}</span>
+    </>
+  );
+}
 
 /** A repository-relative path that opens its module card. */
 export function ModuleLink({ id, label }: { id: string; label?: string }) {
   return (
     <a className="path-link" href={href('modules', { file: id })}>
-      {label ?? id}
+      {label ?? <PathText id={id} />}
     </a>
+  );
+}
+
+/**
+ * The detail column of a list page. When it opens it takes focus (and, when
+ * it is stacked below the list on narrow screens, scrolls into view); Close
+ * returns focus to the list entry that opened it.
+ */
+export function DetailPane({
+  label,
+  closeTo,
+  returnHref,
+  children,
+}: {
+  label: string;
+  /** Hash to go to on Close (no Close button when absent). */
+  closeTo?: string;
+  /** The href of the list entry that opened this pane. */
+  returnHref: string;
+  children: ReactNode;
+}) {
+  const pane = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const element = pane.current;
+    if (!element) return;
+    const stacked =
+      typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 1080px)').matches;
+    const heading = element.querySelector<HTMLElement>('h2');
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus({ preventScroll: !stacked });
+    }
+    if (stacked) element.scrollIntoView({ block: 'start' });
+  }, [returnHref]);
+  const close = () => {
+    if (closeTo === undefined) return;
+    window.location.hash = closeTo;
+    requestAnimationFrame(() => {
+      for (const link of document.querySelectorAll<HTMLAnchorElement>('main a[href]')) {
+        if (link.getAttribute('href') === returnHref) {
+          link.focus();
+          break;
+        }
+      }
+    });
+  };
+  return (
+    <aside ref={pane} className="split-detail" aria-label={label}>
+      {closeTo !== undefined && (
+        <button type="button" className="button ghost small close-detail" onClick={close}>
+          <Icon name="close" /> Close
+        </button>
+      )}
+      {children}
+    </aside>
   );
 }
 

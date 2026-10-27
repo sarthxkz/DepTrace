@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { Icon } from '../components/Icon';
 import { LayerTag, ModuleCard } from '../components/ModuleCard';
-import { EmptyState, Pager } from '../components/ui';
+import { DetailPane, EmptyState, Pager, PathText } from '../components/ui';
 import { plural } from '../lib/format';
-import { href, navigate } from '../lib/router';
+import { href } from '../lib/router';
 import { hasLayers, UNCLASSIFIED, type Model, type ModuleInfo } from '../model/model';
 
 const PAGE_SIZE = 100;
@@ -164,7 +164,7 @@ export function Modules({ model, params }: { model: Model; params: URLSearchPara
           </EmptyState>
         ) : (
           <div className="table-wrap">
-            <table className="data-table">
+            <table className="data-table modules-table">
               <thead>
                 <tr>
                   {header('path', 'Path')}
@@ -184,7 +184,7 @@ export function Modules({ model, params }: { model: Model; params: URLSearchPara
                   >
                     <td>
                       <a className="path-link" href={href('modules', { file: m.id })}>
-                        {m.id}
+                        <PathText id={m.id} />
                       </a>
                       {m.cycle !== null && <span className="tag inline">cycle {m.cycle + 1}</span>}
                       {m.unresolved.length > 0 && (
@@ -198,10 +198,18 @@ export function Modules({ model, params }: { model: Model; params: URLSearchPara
                         <LayerTag model={model} layer={m.layer} />
                       </td>
                     )}
-                    <td className="numeric">{m.outgoing.length}</td>
-                    <td className="numeric">{m.incoming.length}</td>
-                    <td className="numeric">{m.packages.length}</td>
-                    <td className="numeric">{m.findings.length + m.involvedIn.length || ''}</td>
+                    <td className="numeric" data-label="Imports">
+                      {m.outgoing.length}
+                    </td>
+                    <td className="numeric" data-label="Imported by">
+                      {m.incoming.length}
+                    </td>
+                    <td className="numeric" data-label="Packages">
+                      {m.packages.length}
+                    </td>
+                    <td className="numeric" data-label="Violations">
+                      {m.findings.length + m.involvedIn.length}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -211,18 +219,13 @@ export function Modules({ model, params }: { model: Model; params: URLSearchPara
         <Pager page={page} pageSize={PAGE_SIZE} total={rows.length} onPage={setPage} />
       </div>
       {selected !== undefined && (
-        <aside className="split-detail" aria-label="Selected module">
-          <button
-            type="button"
-            className="button ghost small close-detail"
-            onClick={() => {
-              navigate('modules');
-            }}
-          >
-            Close
-          </button>
+        <DetailPane
+          label="Selected module"
+          closeTo={href('modules')}
+          returnHref={href('modules', { file: model.modules[selected]?.id })}
+        >
           <ModuleCard model={model} index={selected} />
-        </aside>
+        </DetailPane>
       )}
       {params.get('file') !== null && selected === undefined && (
         <aside className="split-detail">

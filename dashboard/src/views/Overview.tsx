@@ -1,11 +1,14 @@
 import type { ReactNode } from 'react';
 import type { Ready } from '../lib/state';
 import { Icon, type IconName } from '../components/Icon';
-import { BarList, EmptyState, Notice, SeverityBadge } from '../components/ui';
+import { BarList, Breakable, EmptyState, Notice, PathText, SeverityBadge } from '../components/ui';
 import type { Finding } from '../contract/load';
 import { number, plural } from '../lib/format';
 import { href } from '../lib/router';
 import { hasLayers, UNCLASSIFIED, type Model } from '../model/model';
+
+/** "type-only" with a non-breaking hyphen, so ledger details never wrap inside it. */
+const TYPE_ONLY = `type${String.fromCharCode(0x2011)}only`;
 
 interface LedgerRow {
   label: string;
@@ -69,7 +72,10 @@ function leadsFor(findings: Finding[], model: Model | null, baselineKnown: boole
         tone: severity,
         text: (
           <>
-            {plural(count, severity)} from <code>{rule}</code>
+            {plural(count, severity)} from{' '}
+            <code>
+              <Breakable text={rule} />
+            </code>
           </>
         ),
         link: href('violations', { rule, severity }),
@@ -85,7 +91,9 @@ function leadsFor(findings: Finding[], model: Model | null, baselineKnown: boole
           text: (
             <>
               Runtime cycle of {plural(cycle.nodes.length, 'file')} through{' '}
-              <code>{cycle.nodes[0]}</code>
+              <code>
+                <Breakable text={cycle.nodes[0] ?? ''} />
+              </code>
             </>
           ),
           link: href('cycles', { cycle: index }),
@@ -234,7 +242,11 @@ export function Overview({ ready }: { ready: Ready }) {
               label="Findings by rule"
               rows={countBy(findings, (f) => f.ruleId).map(([rule, value]) => ({
                 key: rule,
-                label: <code>{rule}</code>,
+                label: (
+                  <code>
+                    <Breakable text={rule} />
+                  </code>
+                ),
                 value,
               }))}
             />
@@ -249,7 +261,9 @@ export function Overview({ ready }: { ready: Ready }) {
                 key: rule.id,
                 label: (
                   <span className="rule-label">
-                    <code>{rule.id}</code>
+                    <code>
+                      <Breakable text={rule.id} />
+                    </code>
                     <SeverityBadge severity={rule.severity} />
                   </span>
                 ),
@@ -284,7 +298,7 @@ function ledgerRows(model: Model, rules: number, errors: number, warnings: numbe
     {
       label: 'Internal dependencies',
       value: summary.edges,
-      detail: `file-to-file; ${plural(summary.internalReferences, 'import statement')}, ${number(summary.typeOnlyEdges)} type-only`,
+      detail: `file-to-file; ${plural(summary.internalReferences, 'import statement')}, ${number(summary.typeOnlyEdges)} ${TYPE_ONLY}`,
       link: href('graph'),
     },
     {
@@ -295,7 +309,7 @@ function ledgerRows(model: Model, rules: number, errors: number, warnings: numbe
     {
       label: 'Cycle groups',
       value: summary.cyclicComponents,
-      detail: `${number(summary.runtimeCycles)} runtime, ${number(summary.cyclicComponents - summary.runtimeCycles)} type-only`,
+      detail: `${number(summary.runtimeCycles)} runtime, ${number(summary.cyclicComponents - summary.runtimeCycles)} ${TYPE_ONLY}`,
       link: href('cycles'),
     },
     rules === 0
@@ -324,6 +338,11 @@ function ledgerRows(model: Model, rules: number, errors: number, warnings: numbe
           value: null,
           detail: 'No layers configured in deptrace.yml',
         },
+    {
+      label: 'Analysis diagnostics',
+      value: summary.errors + summary.warnings,
+      detail: `${plural(summary.errors, 'error')}, ${plural(summary.warnings, 'warning')} from parsing and resolution`,
+    },
   ];
   return rows;
 }
@@ -385,7 +404,7 @@ function Concentration({ model }: { model: Model }) {
         key: m.id,
         label: (
           <a className="path-link" href={href('modules', { file: m.id })} title={m.id}>
-            {m.id}
+            <PathText id={m.id} />
           </a>
         ),
         value: m[key].length,
@@ -431,10 +450,15 @@ function ImportKinds({ model }: { model: Model }) {
     <section className="panel" aria-labelledby="kinds-title">
       <h2 id="kinds-title">Import statements by kind</h2>
       <p className="panel-note">Internal, external and unresolved imports.</p>
-      {rows.length > 0 ? (
-        <BarList label="Import statements by kind" rows={rows} />
-      ) : (
+      {rows.length === 0 ? (
         <p className="muted">No imports found.</p>
+      ) : rows.length === 1 ? (
+        <p>
+          All {number(rows[0]?.value ?? 0)} import statements are <code>{rows[0]?.key}</code>{' '}
+          imports.
+        </p>
+      ) : (
+        <BarList label="Import statements by kind" rows={rows} />
       )}
     </section>
   );

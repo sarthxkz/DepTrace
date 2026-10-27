@@ -1,6 +1,13 @@
 import { Icon } from '../components/Icon';
 import { FindingRow } from '../components/ModuleCard';
-import { CardSection, CatalogCard, EmptyState, ModuleLink, PathChain } from '../components/ui';
+import {
+  CardSection,
+  CatalogCard,
+  DetailPane,
+  EmptyState,
+  ModuleLink,
+  PathChain,
+} from '../components/ui';
 import { plural } from '../lib/format';
 import { href } from '../lib/router';
 import type { Model } from '../model/model';
@@ -65,7 +72,11 @@ export function Cycles({ model, params }: { model: Model; params: URLSearchParam
         </aside>
       )}
       {cycle && selected !== null && (
-        <aside className="split-detail" aria-label="Selected cycle">
+        <DetailPane
+          label="Selected cycle"
+          closeTo={href('cycles')}
+          returnHref={href('cycles', { cycle: selected })}
+        >
           <CatalogCard
             label={`Cycle ${String(selected + 1)}`}
             title={`Cycle ${String(selected + 1)}`}
@@ -153,7 +164,7 @@ export function Cycles({ model, params }: { model: Model; params: URLSearchParam
                 : 'Every cycle in this group goes through a type-only import, which is erased at runtime.'}
             </p>
           </CatalogCard>
-        </aside>
+        </DetailPane>
       )}
     </div>
   );

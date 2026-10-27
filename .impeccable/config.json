@@ -20,6 +20,15 @@
         ],
         "createdAt": "2026-10-27T03:26:36.359Z",
         "reason": "Claude: throwaway direction-round sketch, never shipped"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "georgia",
+        "files": [
+          ".impeccable/mocks/decision/challenger-lexicon.html"
+        ],
+        "createdAt": "2026-10-27T03:43:42.354Z",
+        "reason": "Claude: unchosen direction sketch (Lexicon), never shipped"
       }
     ]
   }

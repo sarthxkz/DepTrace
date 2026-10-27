@@ -1,0 +1,14 @@
+# Version updates for npm dependencies and the SHA-pinned GitHub Actions.
+# Review every update before merging: pins are verified commit SHAs (see docs/github-actions.md).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5

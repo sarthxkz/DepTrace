@@ -7,9 +7,10 @@ repositories. It builds a static dependency graph of your source files, finds ci
 dependencies, lets you inspect who depends on what, and checks the graph against architecture
 rules you define (layers, forbidden imports and packages, module boundaries, cycle policies).
 
-> **Status: Phase 5 (architecture dashboard).** Dependency analysis, dependency inspection, the
+> **Status: Phase 7A (security, privacy and legal foundation).** Dependency analysis, dependency inspection, the
 > rules engine (`check`), architecture reports (`report`), baselines, SARIF output, GitHub Actions
-> workflows and a local browser dashboard (`dashboard`) work. The package is not published to npm
+> workflows and a local browser dashboard (`dashboard`) work; security, privacy and legal documents
+> exist as drafts awaiting legal review. The package is not published to npm
 > and there is no published GitHub Action. See [Roadmap](#roadmap).
 
 ## What works today
@@ -40,6 +41,9 @@ Documentation:
 - [docs/baseline.md](docs/baseline.md): baselines, fingerprints, compatibility, approval process
 - [docs/github-actions.md](docs/github-actions.md): GitHub Actions setup, SARIF, security model
 - [docs/dashboard.md](docs/dashboard.md): the dashboard, supported reports, graph limits, security
+- [docs/trust/README.md](docs/trust/README.md): Security & Trust Center: security features, data
+  inventory, threat model; [SECURITY.md](SECURITY.md) (reporting vulnerabilities),
+  [PRIVACY.md](PRIVACY.md) and [TERMS.md](TERMS.md) (drafts, legal review required)
 - [docs/configuration.md](docs/configuration.md): `deptrace.yml` reference
 - [docs/analysis.md](docs/analysis.md): recognized imports, resolution, cycles, JSON schema,
   diagnostics, limitations
@@ -307,6 +311,17 @@ The full format is described in [docs/configuration.md](docs/configuration.md); 
 
 Whether an analysis was complete is reported in the output (`status` in JSON, the last line in
 text), not in the exit code.
+
+## Security, privacy and license
+
+DepTrace runs only on your machine and in your CI: no telemetry, no network requests from the CLI,
+no accounts. Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md), never in a
+public issue. What DepTrace reads and stores is listed in the
+[data inventory](docs/trust/data-inventory.md); protections and their tests are in the
+[Security & Trust Center](docs/trust/README.md).
+
+The repository has **no license yet**, and the privacy policy and terms are drafts with
+placeholders that need the owner's decisions and legal review.
 
 ## Development
 
