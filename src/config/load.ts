@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { parse } from 'yaml';
 import { CONFIG_FILENAME, ExitCode } from '../core/constants.js';
-import { DepTraceError, fromFsError } from '../core/errors.js';
+import { DepTraceError, fromFsError, printable } from '../core/errors.js';
 import { configPath } from './paths.js';
 import { validateConfig, type DepTraceConfig } from './schema.js';
 
@@ -24,7 +24,7 @@ export async function loadConfig(directory: string): Promise<DepTraceConfig | un
     value = parse(text);
   } catch (error) {
     throw new DepTraceError(
-      `Invalid ${CONFIG_FILENAME}: ${(error as Error).message}`,
+      `Invalid ${CONFIG_FILENAME}: ${printable((error as Error).message)}`,
       ExitCode.UsageError,
       { cause: error },
     );
@@ -32,7 +32,7 @@ export async function loadConfig(directory: string): Promise<DepTraceConfig | un
   const problems = validateConfig(value);
   if (problems.length > 0) {
     throw new DepTraceError(
-      `Invalid ${CONFIG_FILENAME} at ${file}:\n${problems.map((p) => `  - ${p}`).join('\n')}`,
+      `Invalid ${CONFIG_FILENAME} at ${file}:\n${problems.map((p) => `  - ${printable(p)}`).join('\n')}`,
       ExitCode.UsageError,
     );
   }

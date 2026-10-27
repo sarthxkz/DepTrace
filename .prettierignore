@@ -3,3 +3,6 @@ coverage/
 package-lock.json
 tests/fixtures/
 docs/examples/
+.impeccable/
+test-results/
+playwright-report/

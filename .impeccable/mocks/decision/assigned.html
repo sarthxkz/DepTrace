@@ -1,0 +1,54 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Catalog Cards</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font:14px/1.45 system-ui,sans-serif;color:#1C1F24;background:#FBFBF8;display:grid;grid-template-columns:232px 1fr}
+.rail{background:#6B4F2E;color:#F3EADB;padding:20px 0}
+.brand{font:600 22px/1 ui-monospace,monospace;padding:0 20px 24px}
+.rail a{display:block;padding:9px 20px;color:#F3EADB;text-decoration:none;border-left:3px solid transparent}
+.rail a.on{background:#5A4126;border-left-color:#C8352E}
+main{display:grid;grid-template-rows:56px 112px 1fr;min-width:0}
+header{display:flex;align-items:center;gap:16px;padding:0 24px;border-bottom:1px solid #9DB7D5}
+header h1{font-size:22px;font-weight:600}
+.chip{border:1px solid #9DB7D5;padding:2px 8px;font-size:12px}
+.metrics{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid #9DB7D5}
+.m{padding:18px 20px;border-right:1px solid #DDE6F0}
+.m b{display:block;font:600 34px/1.1 ui-monospace,monospace}
+.m.err b{color:#C8352E}
+.work{display:grid;grid-template-columns:1fr 420px;min-height:0}
+.graph{position:relative;border-right:1px solid #9DB7D5;background:repeating-linear-gradient(#FBFBF8 0 31px,#EEF3F8 31px 32px)}
+.n{position:absolute;padding:4px 8px;border:1px solid #1C1F24;background:#fff;font:12px ui-monospace,monospace}
+.n.dim{opacity:.25}.n.sel{outline:3px solid #C8352E}
+svg{position:absolute;inset:0}
+.card{margin:24px;background:#fff;border:1px solid #9DB7D5;box-shadow:0 1px 0 #9DB7D5}
+.card .head{border-bottom:2px solid #C8352E;padding:14px 18px}
+.card .call{font:600 24px/1.2 ui-monospace,monospace}
+.card .row{padding:8px 18px;border-bottom:1px solid #DDE6F0;font-family:ui-monospace,monospace;font-size:13px}
+.card h3{padding:12px 18px 4px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#6B4F2E}
+.depth{margin:0 24px;display:flex;gap:8px;align-items:center}
+.depth span{border:1px solid #1C1F24;padding:4px 10px}.depth span.on{background:#1C1F24;color:#fff}
+</style></head><body>
+<nav class="rail"><div class="brand">deptrace</div>
+<a>Overview</a><a class="on">Dependency graph</a><a>Layers</a><a>Violations</a><a>Cycles</a><a>Modules</a><a>Reports</a><a>Configuration</a></nav>
+<main>
+<header><h1>layered-shop</h1><span class="chip">analysis completed</span><span class="chip">deptrace 0.4.0</span><span class="chip">main · 3d3c42e</span></header>
+<section class="metrics">
+<div class="m"><b>20</b>source files</div><div class="m"><b>26</b>internal deps</div><div class="m"><b>2</b>packages</div><div class="m"><b>2</b>cycle groups</div><div class="m err"><b>5</b>errors</div><div class="m"><b>2</b>warnings</div></section>
+<section class="work">
+<div class="graph">
+<svg width="100%" height="100%"><g stroke="#1C1F24" stroke-width="1.2" fill="none"><path d="M200 120 L380 220"/><path d="M380 220 L560 160"/><path d="M380 220 L520 360"/><path d="M520 360 L700 420" stroke="#C8352E" stroke-width="2.5"/><path d="M200 430 L380 220" opacity=".25"/></g></svg>
+<div class="n" style="left:120px;top:105px">presentation/cli.ts</div>
+<div class="n sel" style="left:300px;top:205px">application/place-order.ts</div>
+<div class="n" style="left:520px;top:145px">application/notify.ts</div>
+<div class="n" style="left:450px;top:345px">domain/pricing.ts</div>
+<div class="n" style="left:640px;top:405px">infrastructure/db/connection.ts</div>
+<div class="n dim" style="left:120px;top:420px">features/cart/index.ts</div>
+<div class="n dim" style="left:700px;top:260px">legacy/pad.ts</div>
+</div>
+<aside>
+<div class="card"><div class="head"><div class="call">src/application/place-order.ts</div>layer application · in cycle 1</div>
+<h3>Imports →</h3><div class="row">src/application/notify.ts · 3:30</div><div class="row">src/domain/order.ts · type 1:1</div><div class="row">src/domain/pricing.ts · 2:24</div>
+<h3>Imported by ←</h3><div class="row">src/application/notify.ts · 1:28</div><div class="row">src/presentation/http/order-controller.ts</div>
+<h3>Violations</h3><div class="row">warning circular-dependencies</div></div>
+<div class="depth">Depth <span>1</span><span class="on">2</span><span>3</span><span>all</span></div>
+</aside></section></main></body></html>

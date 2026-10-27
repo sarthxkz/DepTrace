@@ -15,6 +15,10 @@ analysis:
 layers:
   - name: cli
     files: ['src/index.ts', 'src/cli/**']
+  - name: dashboard-server
+    files: ['src/dashboard/**']
+  - name: baseline
+    files: ['src/baseline/**']
   - name: rules
     files: ['src/rules/**']
   - name: analysis
@@ -23,24 +27,39 @@ layers:
     files: ['src/config/**']
   - name: core
     files: ['src/core/**', 'src/utils/**']
+  # The browser app talks to the analyzer only through the JSON report.
+  - name: dashboard-app
+    files: ['dashboard/**']
 
 rules:
   layer-boundaries:
     severity: error
     # importer layer -> layers it may import
     allowed:
-      cli: [rules, analysis, config, core]
+      cli: [dashboard-server, baseline, rules, analysis, config, core]
+      dashboard-server: [core]
+      baseline: [rules, core]
       rules: [analysis, core]
       analysis: [core]
       config: [rules, core]
       core: []
+      dashboard-app: []
 
   forbidden-packages:
     - name: fast-startup
       description: Modules loaded by every command must not load the TypeScript compiler
       severity: error
       from:
-        ['src/index.ts', 'src/core/**', 'src/config/**', 'src/cli/index.ts', 'src/cli/options.ts']
+        [
+          'src/index.ts',
+          'src/core/**',
+          'src/config/**',
+          'src/baseline/**',
+          'src/dashboard/**',
+          'src/cli/commands/dashboard.ts',
+          'src/cli/index.ts',
+          'src/cli/options.ts',
+        ]
       packages: ['typescript']
 
   circular-dependencies:

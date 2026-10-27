@@ -1,0 +1,126 @@
+# DepTrace architecture check for pull requests and pushes.
+#
+# Copy to .github/workflows/deptrace.yml in your repository, then set
+# DEPTRACE_REPOSITORY and DEPTRACE_REF below. DepTrace is not published to npm
+# or the GitHub Marketplace, so this workflow builds it from a pinned commit of
+# its Git repository. See docs/github-actions.md for setup, permissions and the
+# baseline review process.
+
+name: Architecture
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Read-only: the check needs no write access. Summaries, annotations and
+# artifacts work without extra permissions, also for pull requests from forks.
+permissions:
+  contents: read
+
+concurrency:
+  group: deptrace-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Where to get DepTrace: a repository and a full 40-character commit SHA.
+  DEPTRACE_REPOSITORY: your-org/deptrace
+  DEPTRACE_REF: 0000000000000000000000000000000000000000
+  NODE_VERSION: '24'
+  # The directory with deptrace.yml, relative to the repository root.
+  DEPTRACE_DIRECTORY: .
+  # Baseline-aware mode: set to the committed baseline file (relative to the
+  # repository root). Empty = full check, every violation counts.
+  DEPTRACE_BASELINE: ''
+  # 'true' makes warning violations fail too.
+  DEPTRACE_STRICT: 'false'
+
+jobs:
+  check:
+    name: Architecture check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Validate settings
+        run: |
+          if ! [[ "$DEPTRACE_REF" =~ ^[0-9a-f]{40}$ ]] || [ "$DEPTRACE_REF" = 0000000000000000000000000000000000000000 ]; then
+            echo "::error::Set DEPTRACE_REF to the full commit SHA of the DepTrace version to use."
+            exit 1
+          fi
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # Two commits: for a pull request, HEAD^1 is the base branch (baseline change detection).
+          fetch-depth: 2
+
+      - name: Check out DepTrace
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ env.DEPTRACE_REPOSITORY }}
+          ref: ${{ env.DEPTRACE_REF }}
+          path: .deptrace-tool
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: .deptrace-tool/package-lock.json
+
+      - name: Build DepTrace
+        run: |
+          # Outside the workspace, so it is never analyzed as part of your code.
+          mv .deptrace-tool "$RUNNER_TEMP/deptrace-tool"
+          cd "$RUNNER_TEMP/deptrace-tool"
+          npm ci --ignore-scripts
+          npm run build
+
+      # Optional: install your dependencies (without running their install
+      # scripts) when tsconfig files extend packages or resolution needs them.
+      # - run: npm ci --ignore-scripts
+
+      - name: Flag baseline changes
+        if: github.event_name == 'pull_request' && env.DEPTRACE_BASELINE != ''
+        run: |
+          if ! git rev-parse --verify --quiet 'HEAD^1' > /dev/null; then
+            echo "::notice::Could not compare the baseline with the base branch (history not available)."
+          elif ! git diff --quiet 'HEAD^1' HEAD -- "$DEPTRACE_BASELINE"; then
+            echo "::warning::This pull request changes the architecture baseline. Every added entry accepts a violation; review it like code."
+            {
+              echo "> [!WARNING]"
+              echo "> This pull request changes the architecture baseline. Every added entry accepts a violation; review it like code."
+              echo
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Check architecture
+        run: |
+          mkdir -p "$RUNNER_TEMP/deptrace"
+          args=(check "$DEPTRACE_DIRECTORY" --format github
+            --report "$RUNNER_TEMP/deptrace/deptrace-report.json"
+            --summary "$GITHUB_STEP_SUMMARY")
+          if [ -n "$DEPTRACE_BASELINE" ]; then args+=(--baseline "$DEPTRACE_BASELINE"); fi
+          if [ "$DEPTRACE_STRICT" = 'true' ]; then args+=(--strict); fi
+          set +e
+          node "$RUNNER_TEMP/deptrace-tool/dist/index.js" "${args[@]}"
+          code=$?
+          set -e
+          # 3 = rule violations (already summarized); anything else means the check did not run.
+          if [ "$code" -ne 0 ] && [ "$code" -ne 3 ]; then
+            {
+              echo "## DepTrace architecture check: error (exit code $code)"
+              echo "The configuration or baseline is invalid, or the analysis failed. See the step log."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit "$code"
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: deptrace-report
+          path: ${{ runner.temp }}/deptrace/deptrace-report.json
+          if-no-files-found: ignore
+          retention-days: 14

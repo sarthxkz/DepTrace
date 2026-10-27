@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "tool": {
+    "name": "deptrace",
+    "version": "0.4.0"
+  },
+  "fingerprintVersion": 1,
+  "configuration": {
+    "analysis": "728e7b148c34dae3",
+    "rules": {
+      "circular-dependencies": "2c7a0902159a2933",
+      "forbidden-imports/no-test-doubles": "4458f3e0e443ab62",
+      "forbidden-packages/pure-domain": "d7e4a6000a8c812b",
+      "layer-boundaries": "d19f146160c8b36d"
+    }
+  },
+  "violations": [
+    {
+      "fingerprint": "a5746c76067abaac",
+      "ruleId": "circular-dependencies",
+      "file": "src/application/cart-service.ts",
+      "target": {
+        "kind": "cycle",
+        "files": [
+          "src/application/cart-service.ts",
+          "src/application/checkout.ts",
+          "src/application/payment.ts"
+        ]
+      },
+      "message": "Circular dependency between 3 file(s): src/application/cart-service.ts -> src/application/checkout.ts -> src/application/payment.ts -> src/application/cart-service.ts (one representative cycle; see the component files)."
+    },
+    {
+      "fingerprint": "d27f1dc68552bf64",
+      "ruleId": "forbidden-imports/no-test-doubles",
+      "file": "src/application/catalog-service.ts",
+      "target": {
+        "kind": "file",
+        "path": "src/testing/fake-store.ts"
+      },
+      "message": "src/application/catalog-service.ts must not import src/testing/fake-store.ts (rule \"forbidden-imports/no-test-doubles\": Production code must not import test doubles)."
+    },
+    {
+      "fingerprint": "5f0c2a9e41d7b386",
+      "ruleId": "layer-boundaries",
+      "file": "src/application/report-export.ts",
+      "target": {
+        "kind": "file",
+        "path": "src/infrastructure/db/client.ts"
+      },
+      "message": "Layer \"application\" must not depend on layer \"infrastructure\" (allowed for \"application\": domain, shared). src/application/report-export.ts imports src/infrastructure/db/client.ts."
+    },
+    {
+      "fingerprint": "161397c95a60227c",
+      "ruleId": "forbidden-packages/pure-domain",
+      "file": "src/domain/pricing.ts",
+      "target": {
+        "kind": "package",
+        "name": "fs",
+        "resolved": true
+      },
+      "message": "src/domain/pricing.ts must not import the package \"fs\" (rule \"forbidden-packages/pure-domain\")."
+    },
+    {
+      "fingerprint": "c989df0aab6bd343",
+      "ruleId": "layer-boundaries",
+      "file": "src/domain/pricing.ts",
+      "target": {
+        "kind": "file",
+        "path": "src/infrastructure/db/client.ts"
+      },
+      "message": "Layer \"domain\" must not depend on layer \"infrastructure\" (allowed for \"domain\": shared). src/domain/pricing.ts imports src/infrastructure/db/client.ts."
+    }
+  ]
+}

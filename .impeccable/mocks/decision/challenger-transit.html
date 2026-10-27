@@ -1,0 +1,39 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Night Network</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font:14px/1.45 system-ui,sans-serif;color:#F4F2EC;background:#0E1A33;display:grid;grid-template-columns:72px 1fr}
+.rail{border-right:1px solid #22345A;display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:18px}
+.rail i{width:36px;height:36px;border-radius:50%;border:2px solid #3A5185;display:block}.rail i.on{border-color:#F4F2EC;background:#1B2C52}
+main{display:grid;grid-template-rows:64px 1fr 168px;min-width:0}
+header{display:flex;align-items:center;gap:18px;padding:0 28px;border-bottom:1px solid #22345A}
+header h1{font-size:24px;font-weight:650}
+.pill{border:1px solid #3A5185;border-radius:99px;padding:3px 12px;font-size:12px}
+.stage{display:grid;grid-template-columns:1fr 360px;min-height:0}
+.graph{position:relative}
+svg{position:absolute;inset:0}
+.legend{position:absolute;left:24px;bottom:20px;display:flex;gap:16px;font-size:12px}
+.legend b{display:inline-block;width:22px;height:5px;border-radius:3px;margin-right:6px;vertical-align:middle}
+aside{border-left:1px solid #22345A;padding:22px}
+aside h2{font-size:22px;margin-bottom:10px}
+.kv{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #22345A}
+.strip{border-top:1px solid #22345A;padding:20px 28px;background:#0A1428}
+.strip h3{font-size:22px;margin-bottom:22px}
+.line{position:relative;height:10px;border-radius:5px;background:linear-gradient(90deg,#E0402F 0 25%,#2F6FDE 25% 50%,#E8A33B 50% 75%,#2E9E5B 75%)}
+.st{position:absolute;top:-7px;width:24px;height:24px;border-radius:50%;background:#F4F2EC;border:5px solid #0E1A33;box-shadow:0 0 0 3px #F4F2EC}
+.names{display:flex;justify-content:space-between;margin-top:18px;font:12px ui-monospace,monospace}
+</style></head><body>
+<nav class="rail"><i></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i></nav>
+<main>
+<header><h1>layered-shop</h1><span class="pill">completed</span><span class="pill">deptrace 0.4.0</span><span class="pill">5 errors · 2 warnings</span></header>
+<section class="stage"><div class="graph">
+<svg width="100%" height="100%"><g fill="none" stroke-width="5" stroke-linecap="round">
+<path d="M120 140 H340 L420 220 H640" stroke="#E0402F"/><path d="M420 220 V420 H700" stroke="#2F6FDE"/><path d="M700 420 L800 320 H960" stroke="#E8A33B"/><path d="M300 520 H700" stroke="#2E9E5B" opacity=".35"/></g>
+<g fill="#F4F2EC" stroke="#0E1A33" stroke-width="4"><circle cx="120" cy="140" r="9"/><circle cx="420" cy="220" r="13"/><circle cx="640" cy="220" r="9"/><circle cx="700" cy="420" r="13"/><circle cx="960" cy="320" r="9"/></g></svg>
+<div class="legend"><span><b style="background:#E0402F"></b>presentation</span><span><b style="background:#2F6FDE"></b>application</span><span><b style="background:#E8A33B"></b>domain</span><span><b style="background:#2E9E5B"></b>infrastructure</span></div>
+</div>
+<aside><h2>src/domain/pricing.ts</h2><div class="kv"><span>Layer</span><span>domain</span></div><div class="kv"><span>Imports</span><span>3</span></div><div class="kv"><span>Imported by</span><span>2</span></div><div class="kv"><span>Violations</span><span>2 errors</span></div></aside></section>
+<section class="strip"><h3>Path · presentation/cli.ts → infrastructure/db/connection.ts</h3>
+<div class="line"><span class="st" style="left:0"></span><span class="st" style="left:32%"></span><span class="st" style="left:64%"></span><span class="st" style="left:calc(100% - 24px)"></span></div>
+<div class="names"><span>src/presentation/cli.ts</span><span>src/application/place-order.ts</span><span>src/domain/pricing.ts</span><span>src/infrastructure/db/connection.ts</span></div></section>
+</main></body></html>

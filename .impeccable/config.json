@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "skipped-heading",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-10-27T03:26:36.087Z",
+        "reason": "Claude: throwaway direction-round sketch, never shipped"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-transit.html"
+        ],
+        "createdAt": "2026-10-27T03:26:36.359Z",
+        "reason": "Claude: throwaway direction-round sketch, never shipped"
+      }
+    ]
+  }
+}

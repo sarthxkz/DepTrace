@@ -1,0 +1,1230 @@
+{
+  "schemaVersion": 1,
+  "tool": {
+    "name": "deptrace",
+    "version": "0.5.0"
+  },
+  "status": "completed-with-diagnostics",
+  "repository": {
+    "packageName": "storefront",
+    "packageVersion": "2.3.0",
+    "git": false
+  },
+  "settings": {
+    "configFile": "deptrace.yml",
+    "include": ["src/**/*"],
+    "exclude": [],
+    "builtinExcludedDirectories": [
+      ".git",
+      ".next",
+      ".turbo",
+      "build",
+      "coverage",
+      "dist",
+      "node_modules"
+    ],
+    "builtinExcludedFiles": ["**/*.min.js"],
+    "extensions": [".ts", ".tsx", ".js", ".jsx", ".mts", ".cts", ".mjs", ".cjs"],
+    "tsconfigs": ["tsconfig.json"]
+  },
+  "summary": {
+    "filesDiscovered": 23,
+    "directoriesExcluded": 1,
+    "filesExcluded": 0,
+    "symlinksSkipped": 0,
+    "unreadableDirectories": 0,
+    "filesParsed": 23,
+    "filesWithParseErrors": 0,
+    "filesUnreadable": 0,
+    "importReferences": 41,
+    "internalReferences": 35,
+    "externalReferences": 4,
+    "externalPackages": 3,
+    "excludedReferences": 0,
+    "unresolvedReferences": 2,
+    "unanalyzableImports": 0,
+    "nodes": 23,
+    "edges": 35,
+    "typeOnlyEdges": 12,
+    "stronglyConnectedComponents": 20,
+    "cyclicComponents": 2,
+    "runtimeCycles": 1,
+    "errors": 0,
+    "warnings": 2,
+    "durationMs": 0
+  },
+  "nodes": [
+    {
+      "id": "src/application/cart-service.ts",
+      "path": "src/application/cart-service.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/application/catalog-service.ts",
+      "path": "src/application/catalog-service.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/application/checkout.ts",
+      "path": "src/application/checkout.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/application/payment.ts",
+      "path": "src/application/payment.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/domain/cart.ts",
+      "path": "src/domain/cart.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/domain/discount.ts",
+      "path": "src/domain/discount.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/domain/invoice.ts",
+      "path": "src/domain/invoice.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/domain/order.ts",
+      "path": "src/domain/order.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/domain/pricing.ts",
+      "path": "src/domain/pricing.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/domain/product-repository.ts",
+      "path": "src/domain/product-repository.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/domain/product.ts",
+      "path": "src/domain/product.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/infrastructure/db/client.ts",
+      "path": "src/infrastructure/db/client.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/infrastructure/db/product-store.ts",
+      "path": "src/infrastructure/db/product-store.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/infrastructure/http/server.ts",
+      "path": "src/infrastructure/http/server.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/main.ts",
+      "path": "src/main.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/shared/format.ts",
+      "path": "src/shared/format.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/shared/ids.ts",
+      "path": "src/shared/ids.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/shared/money.ts",
+      "path": "src/shared/money.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/testing/fake-store.ts",
+      "path": "src/testing/fake-store.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/ui/analytics.ts",
+      "path": "src/ui/analytics.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/ui/app.ts",
+      "path": "src/ui/app.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/ui/cart-view.ts",
+      "path": "src/ui/cart-view.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    },
+    {
+      "id": "src/ui/product-list.ts",
+      "path": "src/ui/product-list.ts",
+      "extension": ".ts",
+      "status": "parsed",
+      "tsconfig": "tsconfig.json"
+    }
+  ],
+  "edges": [
+    {
+      "from": "src/application/cart-service.ts",
+      "to": "src/application/checkout.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./checkout",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 2,
+          "column": 26
+        }
+      ]
+    },
+    {
+      "from": "src/application/cart-service.ts",
+      "to": "src/domain/cart.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../domain/cart",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 22
+        }
+      ]
+    },
+    {
+      "from": "src/application/catalog-service.ts",
+      "to": "src/domain/product-repository.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "../domain/product-repository",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 2,
+          "column": 40
+        }
+      ]
+    },
+    {
+      "from": "src/application/catalog-service.ts",
+      "to": "src/domain/product.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../domain/product",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 25
+        }
+      ]
+    },
+    {
+      "from": "src/application/catalog-service.ts",
+      "to": "src/testing/fake-store.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../testing/fake-store",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 4,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "from": "src/application/checkout.ts",
+      "to": "src/application/payment.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./payment",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 3,
+          "column": 24
+        }
+      ]
+    },
+    {
+      "from": "src/application/checkout.ts",
+      "to": "src/domain/cart.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "../domain/cart",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 1,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "from": "src/application/checkout.ts",
+      "to": "src/domain/order.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../domain/order",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 2,
+          "column": 23
+        }
+      ]
+    },
+    {
+      "from": "src/application/payment.ts",
+      "to": "src/application/cart-service.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./cart-service",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 2,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "from": "src/domain/cart.ts",
+      "to": "src/domain/product.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "./product",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 1,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "from": "src/domain/cart.ts",
+      "to": "src/shared/money.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../shared/money",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 2,
+          "column": 21
+        }
+      ]
+    },
+    {
+      "from": "src/domain/discount.ts",
+      "to": "src/domain/pricing.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./pricing",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 28
+        }
+      ]
+    },
+    {
+      "from": "src/domain/invoice.ts",
+      "to": "src/domain/order.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "./order",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 2,
+          "column": 28
+        }
+      ]
+    },
+    {
+      "from": "src/domain/order.ts",
+      "to": "src/domain/cart.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "./cart",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 1,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "from": "src/domain/order.ts",
+      "to": "src/domain/invoice.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "./invoice",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 2,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "from": "src/domain/pricing.ts",
+      "to": "src/infrastructure/db/client.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../infrastructure/db/client",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 3,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "from": "src/domain/pricing.ts",
+      "to": "src/shared/money.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../shared/money",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 4,
+          "column": 23
+        }
+      ]
+    },
+    {
+      "from": "src/domain/product-repository.ts",
+      "to": "src/domain/product.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "./product",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 1,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "from": "src/domain/product.ts",
+      "to": "src/shared/money.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "../shared/money",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 1,
+          "column": 28
+        }
+      ]
+    },
+    {
+      "from": "src/infrastructure/db/product-store.ts",
+      "to": "src/domain/product-repository.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "../../domain/product-repository",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 2,
+          "column": 40
+        }
+      ]
+    },
+    {
+      "from": "src/infrastructure/db/product-store.ts",
+      "to": "src/domain/product.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "../../domain/product",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 1,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "from": "src/infrastructure/db/product-store.ts",
+      "to": "src/infrastructure/db/client.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./client",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 3,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "from": "src/infrastructure/http/server.ts",
+      "to": "src/application/cart-service.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../../application/cart-service",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 3,
+          "column": 28
+        }
+      ]
+    },
+    {
+      "from": "src/main.ts",
+      "to": "src/infrastructure/db/client.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./infrastructure/db/client",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 4,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "from": "src/main.ts",
+      "to": "src/infrastructure/http/server.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./infrastructure/http/server",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 3,
+          "column": 29
+        }
+      ]
+    },
+    {
+      "from": "src/main.ts",
+      "to": "src/ui/app.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./ui/app",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 2,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "from": "src/shared/format.ts",
+      "to": "src/shared/money.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./money",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 35
+        }
+      ]
+    },
+    {
+      "from": "src/testing/fake-store.ts",
+      "to": "src/domain/product-repository.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "../domain/product-repository",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 2,
+          "column": 40
+        }
+      ]
+    },
+    {
+      "from": "src/testing/fake-store.ts",
+      "to": "src/domain/product.ts",
+      "typeOnly": true,
+      "references": [
+        {
+          "specifier": "../domain/product",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 1,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "from": "src/ui/app.ts",
+      "to": "src/ui/cart-view.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./cart-view",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 28
+        }
+      ]
+    },
+    {
+      "from": "src/ui/app.ts",
+      "to": "src/ui/product-list.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./product-list",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 2,
+          "column": 32
+        }
+      ]
+    },
+    {
+      "from": "src/ui/cart-view.ts",
+      "to": "src/application/cart-service.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../application/cart-service",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "from": "src/ui/cart-view.ts",
+      "to": "src/shared/format.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../shared/format",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 2,
+          "column": 29
+        }
+      ]
+    },
+    {
+      "from": "src/ui/product-list.ts",
+      "to": "src/application/catalog-service.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../application/catalog-service",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "from": "src/ui/product-list.ts",
+      "to": "src/infrastructure/db/client.ts",
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../infrastructure/db/client",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 3,
+          "column": 30
+        }
+      ]
+    }
+  ],
+  "cycles": [
+    {
+      "nodes": [
+        "src/application/cart-service.ts",
+        "src/application/checkout.ts",
+        "src/application/payment.ts"
+      ],
+      "representativePath": [
+        "src/application/cart-service.ts",
+        "src/application/checkout.ts",
+        "src/application/payment.ts",
+        "src/application/cart-service.ts"
+      ],
+      "edges": [
+        {
+          "from": "src/application/cart-service.ts",
+          "to": "src/application/checkout.ts",
+          "typeOnly": false,
+          "references": [
+            {
+              "specifier": "./checkout",
+              "kind": "import",
+              "typeOnly": false,
+              "line": 2,
+              "column": 26
+            }
+          ]
+        },
+        {
+          "from": "src/application/checkout.ts",
+          "to": "src/application/payment.ts",
+          "typeOnly": false,
+          "references": [
+            {
+              "specifier": "./payment",
+              "kind": "import",
+              "typeOnly": false,
+              "line": 3,
+              "column": 24
+            }
+          ]
+        },
+        {
+          "from": "src/application/payment.ts",
+          "to": "src/application/cart-service.ts",
+          "typeOnly": false,
+          "references": [
+            {
+              "specifier": "./cart-service",
+              "kind": "import",
+              "typeOnly": false,
+              "line": 2,
+              "column": 27
+            }
+          ]
+        }
+      ],
+      "runtime": true
+    },
+    {
+      "nodes": ["src/domain/invoice.ts", "src/domain/order.ts"],
+      "representativePath": [
+        "src/domain/invoice.ts",
+        "src/domain/order.ts",
+        "src/domain/invoice.ts"
+      ],
+      "edges": [
+        {
+          "from": "src/domain/invoice.ts",
+          "to": "src/domain/order.ts",
+          "typeOnly": true,
+          "references": [
+            {
+              "specifier": "./order",
+              "kind": "import",
+              "typeOnly": true,
+              "line": 2,
+              "column": 28
+            }
+          ]
+        },
+        {
+          "from": "src/domain/order.ts",
+          "to": "src/domain/invoice.ts",
+          "typeOnly": true,
+          "references": [
+            {
+              "specifier": "./invoice",
+              "kind": "import",
+              "typeOnly": true,
+              "line": 2,
+              "column": 30
+            }
+          ]
+        }
+      ],
+      "runtime": false
+    }
+  ],
+  "externalDependencies": [
+    {
+      "packageName": "express",
+      "builtin": false,
+      "references": [
+        {
+          "file": "src/infrastructure/http/server.ts",
+          "specifier": "express",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 21
+        }
+      ]
+    },
+    {
+      "packageName": "fs",
+      "builtin": true,
+      "references": [
+        {
+          "file": "src/domain/pricing.ts",
+          "specifier": "fs",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 2,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "packageName": "pg",
+      "builtin": false,
+      "references": [
+        {
+          "file": "src/infrastructure/db/client.ts",
+          "specifier": "pg",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 1,
+          "column": 22
+        },
+        {
+          "file": "src/infrastructure/http/server.ts",
+          "specifier": "pg",
+          "kind": "import",
+          "typeOnly": true,
+          "line": 2,
+          "column": 27
+        }
+      ]
+    }
+  ],
+  "unresolvedDependencies": [
+    {
+      "file": "src/infrastructure/http/server.ts",
+      "specifier": "../../config/env",
+      "kind": "import",
+      "typeOnly": false,
+      "line": 5,
+      "column": 22,
+      "reason": "file-not-found"
+    },
+    {
+      "file": "src/ui/analytics.ts",
+      "specifier": "analytics-sdk",
+      "kind": "import",
+      "typeOnly": false,
+      "line": 2,
+      "column": 23,
+      "reason": "package-not-found"
+    }
+  ],
+  "excludedDependencies": [],
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "code": "unresolved-import",
+      "message": "Cannot resolve \"../../config/env\": no matching file exists.",
+      "file": "src/infrastructure/http/server.ts",
+      "line": 5,
+      "column": 22
+    },
+    {
+      "severity": "warning",
+      "code": "unresolved-import",
+      "message": "Cannot resolve \"analytics-sdk\": the package is not installed or not resolvable from this file.",
+      "file": "src/ui/analytics.ts",
+      "line": 2,
+      "column": 23
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "name": "ui",
+        "patterns": ["src/ui/**"],
+        "files": [
+          "src/ui/analytics.ts",
+          "src/ui/app.ts",
+          "src/ui/cart-view.ts",
+          "src/ui/product-list.ts"
+        ]
+      },
+      {
+        "name": "application",
+        "patterns": ["src/application/**"],
+        "files": [
+          "src/application/cart-service.ts",
+          "src/application/catalog-service.ts",
+          "src/application/checkout.ts",
+          "src/application/payment.ts"
+        ]
+      },
+      {
+        "name": "domain",
+        "patterns": ["src/domain/**"],
+        "files": [
+          "src/domain/cart.ts",
+          "src/domain/discount.ts",
+          "src/domain/invoice.ts",
+          "src/domain/order.ts",
+          "src/domain/pricing.ts",
+          "src/domain/product-repository.ts",
+          "src/domain/product.ts"
+        ]
+      },
+      {
+        "name": "infrastructure",
+        "patterns": ["src/infrastructure/**"],
+        "files": [
+          "src/infrastructure/db/client.ts",
+          "src/infrastructure/db/product-store.ts",
+          "src/infrastructure/http/server.ts"
+        ]
+      },
+      {
+        "name": "shared",
+        "patterns": ["src/shared/**"],
+        "files": ["src/shared/format.ts", "src/shared/ids.ts", "src/shared/money.ts"]
+      }
+    ],
+    "unlayeredFiles": ["src/main.ts", "src/testing/fake-store.ts"],
+    "layerDependencies": [
+      {
+        "from": "ui",
+        "to": "application",
+        "edges": 2,
+        "typeOnlyEdges": 0
+      },
+      {
+        "from": "ui",
+        "to": "infrastructure",
+        "edges": 1,
+        "typeOnlyEdges": 0
+      },
+      {
+        "from": "ui",
+        "to": "shared",
+        "edges": 1,
+        "typeOnlyEdges": 0
+      },
+      {
+        "from": "application",
+        "to": "domain",
+        "edges": 5,
+        "typeOnlyEdges": 2
+      },
+      {
+        "from": "domain",
+        "to": "infrastructure",
+        "edges": 1,
+        "typeOnlyEdges": 0
+      },
+      {
+        "from": "domain",
+        "to": "shared",
+        "edges": 3,
+        "typeOnlyEdges": 1
+      },
+      {
+        "from": "infrastructure",
+        "to": "application",
+        "edges": 1,
+        "typeOnlyEdges": 0
+      },
+      {
+        "from": "infrastructure",
+        "to": "domain",
+        "edges": 2,
+        "typeOnlyEdges": 2
+      }
+    ],
+    "layerRule": {
+      "id": "layer-boundaries",
+      "severity": "error",
+      "allowed": {
+        "ui": ["application", "shared"],
+        "application": ["domain", "shared"],
+        "domain": ["shared"],
+        "infrastructure": ["application", "domain", "shared"],
+        "shared": []
+      }
+    },
+    "rules": [
+      {
+        "id": "layer-boundaries",
+        "type": "layer-boundaries",
+        "description": "Layers may only import the layers they are allowed to: ui -> [application, shared]; application -> [domain, shared]; domain -> [shared]; infrastructure -> [application, domain, shared]; shared -> []",
+        "severity": "error",
+        "violations": 2
+      },
+      {
+        "id": "forbidden-imports/no-test-doubles",
+        "type": "forbidden-imports",
+        "description": "Production code must not import test doubles",
+        "severity": "warning",
+        "violations": 1
+      },
+      {
+        "id": "forbidden-packages/pure-domain",
+        "type": "forbidden-packages",
+        "description": "The domain layer does not use Node.js APIs or web frameworks",
+        "severity": "error",
+        "violations": 1
+      },
+      {
+        "id": "circular-dependencies",
+        "type": "circular-dependencies",
+        "description": "Files must not form circular dependencies (type-only imports ignored)",
+        "severity": "error",
+        "violations": 1
+      }
+    ],
+    "violations": [
+      {
+        "ruleId": "circular-dependencies",
+        "ruleType": "circular-dependencies",
+        "ruleDescription": "Files must not form circular dependencies (type-only imports ignored)",
+        "severity": "error",
+        "file": "src/application/cart-service.ts",
+        "line": 2,
+        "column": 26,
+        "target": {
+          "kind": "cycle",
+          "files": [
+            "src/application/cart-service.ts",
+            "src/application/checkout.ts",
+            "src/application/payment.ts"
+          ]
+        },
+        "dependencyKinds": ["import"],
+        "typeOnly": false,
+        "references": [
+          {
+            "specifier": "./checkout",
+            "kind": "import",
+            "typeOnly": false,
+            "line": 2,
+            "column": 26
+          }
+        ],
+        "message": "Circular dependency between 3 file(s): src/application/cart-service.ts -> src/application/checkout.ts -> src/application/payment.ts -> src/application/cart-service.ts (one representative cycle; see the component files).",
+        "path": [
+          "src/application/cart-service.ts",
+          "src/application/checkout.ts",
+          "src/application/payment.ts",
+          "src/application/cart-service.ts"
+        ],
+        "fingerprint": "a5746c76067abaac",
+        "metadata": {
+          "componentSize": "3",
+          "edges": "3"
+        },
+        "baselineStatus": "existing"
+      },
+      {
+        "ruleId": "forbidden-imports/no-test-doubles",
+        "ruleType": "forbidden-imports",
+        "ruleDescription": "Production code must not import test doubles",
+        "severity": "warning",
+        "file": "src/application/catalog-service.ts",
+        "line": 4,
+        "column": 27,
+        "target": {
+          "kind": "file",
+          "path": "src/testing/fake-store.ts"
+        },
+        "dependencyKinds": ["import"],
+        "typeOnly": false,
+        "references": [
+          {
+            "specifier": "../testing/fake-store",
+            "kind": "import",
+            "typeOnly": false,
+            "line": 4,
+            "column": 27
+          }
+        ],
+        "message": "src/application/catalog-service.ts must not import src/testing/fake-store.ts (rule \"forbidden-imports/no-test-doubles\": Production code must not import test doubles).",
+        "path": ["src/application/catalog-service.ts", "src/testing/fake-store.ts"],
+        "fingerprint": "d27f1dc68552bf64",
+        "metadata": {},
+        "baselineStatus": "existing"
+      },
+      {
+        "ruleId": "forbidden-packages/pure-domain",
+        "ruleType": "forbidden-packages",
+        "ruleDescription": "The domain layer does not use Node.js APIs or web frameworks",
+        "severity": "error",
+        "file": "src/domain/pricing.ts",
+        "line": 2,
+        "column": 30,
+        "target": {
+          "kind": "package",
+          "name": "fs",
+          "resolved": true
+        },
+        "dependencyKinds": ["import"],
+        "typeOnly": false,
+        "references": [
+          {
+            "specifier": "fs",
+            "kind": "import",
+            "typeOnly": false,
+            "line": 2,
+            "column": 30
+          }
+        ],
+        "message": "src/domain/pricing.ts must not import the package \"fs\" (rule \"forbidden-packages/pure-domain\").",
+        "path": null,
+        "fingerprint": "161397c95a60227c",
+        "metadata": {},
+        "baselineStatus": "existing"
+      },
+      {
+        "ruleId": "layer-boundaries",
+        "ruleType": "layer-boundaries",
+        "ruleDescription": "Layers may only import the layers they are allowed to: ui -> [application, shared]; application -> [domain, shared]; domain -> [shared]; infrastructure -> [application, domain, shared]; shared -> []",
+        "severity": "error",
+        "file": "src/domain/pricing.ts",
+        "line": 3,
+        "column": 30,
+        "target": {
+          "kind": "file",
+          "path": "src/infrastructure/db/client.ts"
+        },
+        "dependencyKinds": ["import"],
+        "typeOnly": false,
+        "references": [
+          {
+            "specifier": "../infrastructure/db/client",
+            "kind": "import",
+            "typeOnly": false,
+            "line": 3,
+            "column": 30
+          }
+        ],
+        "message": "Layer \"domain\" must not depend on layer \"infrastructure\" (allowed for \"domain\": shared). src/domain/pricing.ts imports src/infrastructure/db/client.ts.",
+        "path": ["src/domain/pricing.ts", "src/infrastructure/db/client.ts"],
+        "fingerprint": "c989df0aab6bd343",
+        "metadata": {
+          "fromLayer": "domain",
+          "toLayer": "infrastructure"
+        },
+        "baselineStatus": "existing"
+      },
+      {
+        "ruleId": "layer-boundaries",
+        "ruleType": "layer-boundaries",
+        "ruleDescription": "Layers may only import the layers they are allowed to: ui -> [application, shared]; application -> [domain, shared]; domain -> [shared]; infrastructure -> [application, domain, shared]; shared -> []",
+        "severity": "error",
+        "file": "src/ui/product-list.ts",
+        "line": 3,
+        "column": 30,
+        "target": {
+          "kind": "file",
+          "path": "src/infrastructure/db/client.ts"
+        },
+        "dependencyKinds": ["import"],
+        "typeOnly": false,
+        "references": [
+          {
+            "specifier": "../infrastructure/db/client",
+            "kind": "import",
+            "typeOnly": false,
+            "line": 3,
+            "column": 30
+          }
+        ],
+        "message": "Layer \"ui\" must not depend on layer \"infrastructure\" (allowed for \"ui\": application, shared). src/ui/product-list.ts imports src/infrastructure/db/client.ts.",
+        "path": ["src/ui/product-list.ts", "src/infrastructure/db/client.ts"],
+        "fingerprint": "9bb66c25fc937745",
+        "metadata": {
+          "fromLayer": "ui",
+          "toLayer": "infrastructure"
+        },
+        "baselineStatus": "new"
+      }
+    ],
+    "errors": 4,
+    "warnings": 1,
+    "baseline": {
+      "file": "deptrace-baseline.json",
+      "new": 1,
+      "existing": 4,
+      "resolved": 1,
+      "resolvedViolations": [
+        {
+          "fingerprint": "5f0c2a9e41d7b386",
+          "ruleId": "layer-boundaries",
+          "file": "src/application/report-export.ts",
+          "target": {
+            "kind": "file",
+            "path": "src/infrastructure/db/client.ts"
+          },
+          "message": "Layer \"application\" must not depend on layer \"infrastructure\" (allowed for \"application\": domain, shared). src/application/report-export.ts imports src/infrastructure/db/client.ts."
+        }
+      ]
+    }
+  }
+}

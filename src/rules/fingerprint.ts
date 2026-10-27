@@ -1,6 +1,13 @@
 import { createHash } from 'node:crypto';
 
 /**
+ * Version of the fingerprint algorithm below. Baselines record it; bump it
+ * whenever any fingerprint input changes, so old baselines are rejected
+ * instead of silently mismatching.
+ */
+export const FINGERPRINT_VERSION = 1;
+
+/**
  * Stable violation identity: SHA-256 (first 16 hex characters) of the rule id
  * and repository-relative identities. Line numbers and absolute paths are
  * deliberately excluded, so moving code within a file or relocating the

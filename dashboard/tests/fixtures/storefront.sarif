@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "DepTrace",
+          "version": "0.5.0",
+          "rules": [
+            {
+              "id": "layer-boundaries",
+              "shortDescription": {
+                "text": "Layers may only import the layers they are allowed to: ui -> [application, shared]; application -> [domain, shared]; domain -> [shared]; infrastructure -> [application, domain, shared]; shared -> []"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": ["architecture", "layer-boundaries"]
+              }
+            },
+            {
+              "id": "forbidden-imports/no-test-doubles",
+              "shortDescription": {
+                "text": "Production code must not import test doubles"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "tags": ["architecture", "forbidden-imports"]
+              }
+            },
+            {
+              "id": "forbidden-packages/pure-domain",
+              "shortDescription": {
+                "text": "The domain layer does not use Node.js APIs or web frameworks"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": ["architecture", "forbidden-packages"]
+              }
+            },
+            {
+              "id": "circular-dependencies",
+              "shortDescription": {
+                "text": "Files must not form circular dependencies (type-only imports ignored)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "tags": ["architecture", "circular-dependencies"]
+              }
+            }
+          ]
+        }
+      },
+      "columnKind": "utf16CodeUnits",
+      "results": [
+        {
+          "ruleId": "circular-dependencies",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Circular dependency between 3 file(s): src/application/cart-service.ts -> src/application/checkout.ts -> src/application/payment.ts -> src/application/cart-service.ts (one representative cycle; see the component files)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/application/cart-service.ts"
+                },
+                "region": {
+                  "startLine": 2,
+                  "startColumn": 26
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "deptrace/v1": "a5746c76067abaac"
+          },
+          "baselineState": "unchanged"
+        },
+        {
+          "ruleId": "forbidden-imports/no-test-doubles",
+          "ruleIndex": 1,
+          "level": "warning",
+          "message": {
+            "text": "src/application/catalog-service.ts must not import src/testing/fake-store.ts (rule \"forbidden-imports/no-test-doubles\": Production code must not import test doubles)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/application/catalog-service.ts"
+                },
+                "region": {
+                  "startLine": 4,
+                  "startColumn": 27
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "id": 0,
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/testing/fake-store.ts"
+                }
+              },
+              "message": {
+                "text": "Imported file"
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "deptrace/v1": "d27f1dc68552bf64"
+          },
+          "baselineState": "unchanged"
+        },
+        {
+          "ruleId": "forbidden-packages/pure-domain",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "src/domain/pricing.ts must not import the package \"fs\" (rule \"forbidden-packages/pure-domain\")."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/domain/pricing.ts"
+                },
+                "region": {
+                  "startLine": 2,
+                  "startColumn": 30
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "deptrace/v1": "161397c95a60227c"
+          },
+          "baselineState": "unchanged"
+        },
+        {
+          "ruleId": "layer-boundaries",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Layer \"domain\" must not depend on layer \"infrastructure\" (allowed for \"domain\": shared). src/domain/pricing.ts imports src/infrastructure/db/client.ts."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/domain/pricing.ts"
+                },
+                "region": {
+                  "startLine": 3,
+                  "startColumn": 30
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "id": 0,
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/infrastructure/db/client.ts"
+                }
+              },
+              "message": {
+                "text": "Imported file"
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "deptrace/v1": "c989df0aab6bd343"
+          },
+          "baselineState": "unchanged"
+        },
+        {
+          "ruleId": "layer-boundaries",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "Layer \"ui\" must not depend on layer \"infrastructure\" (allowed for \"ui\": application, shared). src/ui/product-list.ts imports src/infrastructure/db/client.ts."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/ui/product-list.ts"
+                },
+                "region": {
+                  "startLine": 3,
+                  "startColumn": 30
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "id": 0,
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/infrastructure/db/client.ts"
+                }
+              },
+              "message": {
+                "text": "Imported file"
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "deptrace/v1": "9bb66c25fc937745"
+          },
+          "baselineState": "new"
+        }
+      ]
+    }
+  ]
+}

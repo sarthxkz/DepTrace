@@ -1,0 +1,68 @@
+# DepTrace checking its own architecture (rules in deptrace.yml) on every push
+# and pull request. It builds DepTrace from this checkout, so it needs no
+# published package. Copyable workflows for other repositories are in
+# docs/examples/github-actions/; see docs/github-actions.md.
+
+name: Architecture
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: architecture-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '24'
+
+jobs:
+  check:
+    name: Architecture check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Build DepTrace
+        run: |
+          npm ci --ignore-scripts
+          npm run build
+
+      - name: Check architecture
+        run: |
+          mkdir -p "$RUNNER_TEMP/deptrace"
+          set +e
+          node dist/index.js check . --format github \
+            --report "$RUNNER_TEMP/deptrace/deptrace-report.json" \
+            --summary "$GITHUB_STEP_SUMMARY"
+          code=$?
+          set -e
+          # 3 = rule violations (already summarized); anything else means the check did not run.
+          if [ "$code" -ne 0 ] && [ "$code" -ne 3 ]; then
+            {
+              echo "## DepTrace architecture check: error (exit code $code)"
+              echo "The configuration or baseline is invalid, or the analysis failed. See the step log."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit "$code"
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: deptrace-report
+          path: ${{ runner.temp }}/deptrace/deptrace-report.json
+          if-no-files-found: ignore
+          retention-days: 14

@@ -18,13 +18,15 @@ npm run dev -- scan .
 | Script                  | Command                    | Purpose                                                   |
 | ----------------------- | -------------------------- | --------------------------------------------------------- |
 | `npm run dev -- <args>` | `tsx src/index.ts`         | Run the CLI from source                                   |
-| `npm run build`         | `tsup`                     | Bundle to `dist/index.js` (ESM, shebang)                  |
+| `npm run build`         | `tsup && vite build …`     | CLI to `dist/index.js`, dashboard to `dist/dashboard`     |
+| `npm run dashboard:dev` | `vite …`                   | Dashboard with hot reload ([dashboard.md](dashboard.md))  |
+| `npm run test:e2e`      | `playwright test …`        | Dashboard end-to-end tests in the installed Chrome        |
 | `npm start -- <args>`   | `node dist/index.js`       | Run the built CLI                                         |
 | `npm test`              | `vitest run`               | Build, then run all tests                                 |
 | `npm run test:watch`    | `vitest`                   | Watch mode                                                |
 | `npm run lint`          | `eslint .`                 | Lint (typescript-eslint strict, type-checked)             |
 | `npm run lint:fix`      | `eslint . --fix`           | Lint and auto-fix                                         |
-| `npm run typecheck`     | `tsc --noEmit`             | Strict type check of sources and tests                    |
+| `npm run typecheck`     | `tsc --noEmit && tsc -p …` | Strict type check of CLI, dashboard and tests             |
 | `npm run format`        | `prettier --write .`       | Format                                                    |
 | `npm run format:check`  | `prettier --check .`       | Verify formatting                                         |
 | `npm run bench`         | `tsx scripts/benchmark.ts` | Reproducible benchmark ([performance.md](performance.md)) |
@@ -43,10 +45,27 @@ npm run dev -- scan .
 - `docs/examples/scan-output.json` is checked against the current output by a test. Regenerate it
   with `node dist/index.js scan tests/fixtures/app --format json > docs/examples/scan-output.json`.
 - `tests/integration/` spawns the built `dist/index.js` and checks stdout, stderr and exit codes.
-- `tests/global-setup.ts` builds the CLI once before the run, so `npm test` always tests a fresh
-  build.
+  `baseline-cli.test.ts` runs baseline scenarios in temporary Git repositories (including a
+  shallow clone). `workflows.test.ts` validates every workflow file against SchemaStore's GitHub
+  workflow schema, enforces the security rules (SHA-pinned actions, no `${{ }}` in `run:`,
+  least privilege, no `pull_request_target`) and runs the example workflow's shell steps with
+  `bash` against the built CLI.
+- `tests/fixtures/schemas/` holds the official OASIS SARIF 2.1.0 schema and SchemaStore's
+  `github-workflow.json`, used with `ajv` (dev dependency) by `tests/schemas.ts`. Sources:
+  <https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/schemas/sarif-schema-2.1.0.json>
+  and <https://json.schemastore.org/github-workflow.json> (downloaded 2026-10-27).
+- `tests/global-setup.ts` builds the CLI and the dashboard once before the run, so `npm test`
+  always tests a fresh build. Vitest runs two projects: `cli` (Node) and `dashboard` (jsdom).
+- `tests/fixtures/storefront` is the realistic dashboard fixture (layers, cycles, forbidden imports
+  and packages, external packages, unresolved imports, clean files, a baseline with one new and one
+  resolved entry). `dashboard/tests/fixtures/` holds its real report, check report and SARIF output;
+  `tests/integration/dashboard-cli.test.ts` fails when they drift. See [dashboard.md](dashboard.md)
+  for the dashboard tests and how to regenerate the fixtures.
+- `npm run test:e2e` needs a build (`npm run build`) and Google Chrome (or set
+  `PLAYWRIGHT_CHANNEL`, e.g. `msedge`); it starts `deptrace dashboard` on port 7398 itself.
 - Every test works in its own temporary directory (`makeTempDir` in `tests/helpers.ts`), removed
-  after each test. Tests do not depend on Git being installed or configured.
+  after each test file. Baseline and workflow tests need `git` and `bash` on the `PATH` (Git for
+  Windows provides both); they set the Git identity locally.
 
 Not covered by automated tests: Ctrl+C handling (signals cannot be sent reliably to child processes
 on Windows) and the "not inside a Git repository" case (the system temp directory could itself be

@@ -50,3 +50,9 @@ export async function writeTree(root: string, files: Record<string, string>): Pr
 afterAll(async () => {
   await Promise.all(created.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
 });
+
+/** Narrows away null and undefined, failing the test when the value is missing. */
+export function defined<T>(value: T | null | undefined): T {
+  if (value === undefined || value === null) throw new Error('Expected a value');
+  return value;
+}

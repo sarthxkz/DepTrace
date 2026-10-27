@@ -1,0 +1,54 @@
+# Optional: uploads DepTrace violations to GitHub code scanning as SARIF.
+# Kept separate from the architecture check because it needs write access to
+# security events. It never runs for pull requests, so code from forks never
+# runs with this permission. Code scanning must be available for the repository
+# (public repositories, or GitHub Advanced Security).
+
+name: Architecture code scanning
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  sarif:
+    name: Upload SARIF
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
+      # Needed by upload-sarif to read workflow run information in private repositories.
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Build DepTrace
+        run: |
+          npm ci --ignore-scripts
+          npm run build
+
+      - name: Write SARIF
+        run: |
+          set +e
+          node dist/index.js check . --sarif "$RUNNER_TEMP/deptrace.sarif"
+          code=$?
+          set -e
+          # Violations (3) are what code scanning shows; any other failure is real.
+          if [ "$code" -ne 0 ] && [ "$code" -ne 3 ]; then exit "$code"; fi
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          sarif_file: ${{ runner.temp }}/deptrace.sarif
+          category: deptrace

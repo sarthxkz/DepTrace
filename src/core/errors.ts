@@ -35,3 +35,15 @@ export function fromFsError(error: unknown, target: string, action: string): Dep
     },
   );
 }
+
+/**
+ * Escapes control characters (newlines included) in untrusted text, so a
+ * value from a repository cannot start a new output line, e.g. a forged CI
+ * workflow command.
+ */
+export function printable(text: string): string {
+  // eslint-disable-next-line no-control-regex
+  return text.replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g, (char) => {
+    return `\\u${char.charCodeAt(0).toString(16).padStart(4, '0')}`;
+  });
+}

@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 1,
+  "tool": {
+    "name": "deptrace",
+    "version": "0.5.0"
+  },
+  "result": "failed",
+  "strict": false,
+  "summary": {
+    "rules": 4,
+    "enabledRules": 4,
+    "errors": 4,
+    "warnings": 1,
+    "failing": 1
+  },
+  "analysis": {
+    "status": "completed-with-diagnostics",
+    "errors": 0,
+    "warnings": 2,
+    "unresolvedReferences": 2,
+    "filesWithParseErrors": 0
+  },
+  "rules": [
+    {
+      "id": "layer-boundaries",
+      "type": "layer-boundaries",
+      "description": "Layers may only import the layers they are allowed to: ui -> [application, shared]; application -> [domain, shared]; domain -> [shared]; infrastructure -> [application, domain, shared]; shared -> []",
+      "severity": "error",
+      "violations": 2
+    },
+    {
+      "id": "forbidden-imports/no-test-doubles",
+      "type": "forbidden-imports",
+      "description": "Production code must not import test doubles",
+      "severity": "warning",
+      "violations": 1
+    },
+    {
+      "id": "forbidden-packages/pure-domain",
+      "type": "forbidden-packages",
+      "description": "The domain layer does not use Node.js APIs or web frameworks",
+      "severity": "error",
+      "violations": 1
+    },
+    {
+      "id": "circular-dependencies",
+      "type": "circular-dependencies",
+      "description": "Files must not form circular dependencies (type-only imports ignored)",
+      "severity": "error",
+      "violations": 1
+    }
+  ],
+  "violations": [
+    {
+      "ruleId": "circular-dependencies",
+      "ruleType": "circular-dependencies",
+      "ruleDescription": "Files must not form circular dependencies (type-only imports ignored)",
+      "severity": "error",
+      "file": "src/application/cart-service.ts",
+      "line": 2,
+      "column": 26,
+      "target": {
+        "kind": "cycle",
+        "files": [
+          "src/application/cart-service.ts",
+          "src/application/checkout.ts",
+          "src/application/payment.ts"
+        ]
+      },
+      "dependencyKinds": ["import"],
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "./checkout",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 2,
+          "column": 26
+        }
+      ],
+      "message": "Circular dependency between 3 file(s): src/application/cart-service.ts -> src/application/checkout.ts -> src/application/payment.ts -> src/application/cart-service.ts (one representative cycle; see the component files).",
+      "path": [
+        "src/application/cart-service.ts",
+        "src/application/checkout.ts",
+        "src/application/payment.ts",
+        "src/application/cart-service.ts"
+      ],
+      "fingerprint": "a5746c76067abaac",
+      "metadata": {
+        "componentSize": "3",
+        "edges": "3"
+      },
+      "baselineStatus": "existing"
+    },
+    {
+      "ruleId": "forbidden-imports/no-test-doubles",
+      "ruleType": "forbidden-imports",
+      "ruleDescription": "Production code must not import test doubles",
+      "severity": "warning",
+      "file": "src/application/catalog-service.ts",
+      "line": 4,
+      "column": 27,
+      "target": {
+        "kind": "file",
+        "path": "src/testing/fake-store.ts"
+      },
+      "dependencyKinds": ["import"],
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../testing/fake-store",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 4,
+          "column": 27
+        }
+      ],
+      "message": "src/application/catalog-service.ts must not import src/testing/fake-store.ts (rule \"forbidden-imports/no-test-doubles\": Production code must not import test doubles).",
+      "path": ["src/application/catalog-service.ts", "src/testing/fake-store.ts"],
+      "fingerprint": "d27f1dc68552bf64",
+      "metadata": {},
+      "baselineStatus": "existing"
+    },
+    {
+      "ruleId": "forbidden-packages/pure-domain",
+      "ruleType": "forbidden-packages",
+      "ruleDescription": "The domain layer does not use Node.js APIs or web frameworks",
+      "severity": "error",
+      "file": "src/domain/pricing.ts",
+      "line": 2,
+      "column": 30,
+      "target": {
+        "kind": "package",
+        "name": "fs",
+        "resolved": true
+      },
+      "dependencyKinds": ["import"],
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "fs",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 2,
+          "column": 30
+        }
+      ],
+      "message": "src/domain/pricing.ts must not import the package \"fs\" (rule \"forbidden-packages/pure-domain\").",
+      "path": null,
+      "fingerprint": "161397c95a60227c",
+      "metadata": {},
+      "baselineStatus": "existing"
+    },
+    {
+      "ruleId": "layer-boundaries",
+      "ruleType": "layer-boundaries",
+      "ruleDescription": "Layers may only import the layers they are allowed to: ui -> [application, shared]; application -> [domain, shared]; domain -> [shared]; infrastructure -> [application, domain, shared]; shared -> []",
+      "severity": "error",
+      "file": "src/domain/pricing.ts",
+      "line": 3,
+      "column": 30,
+      "target": {
+        "kind": "file",
+        "path": "src/infrastructure/db/client.ts"
+      },
+      "dependencyKinds": ["import"],
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../infrastructure/db/client",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 3,
+          "column": 30
+        }
+      ],
+      "message": "Layer \"domain\" must not depend on layer \"infrastructure\" (allowed for \"domain\": shared). src/domain/pricing.ts imports src/infrastructure/db/client.ts.",
+      "path": ["src/domain/pricing.ts", "src/infrastructure/db/client.ts"],
+      "fingerprint": "c989df0aab6bd343",
+      "metadata": {
+        "fromLayer": "domain",
+        "toLayer": "infrastructure"
+      },
+      "baselineStatus": "existing"
+    },
+    {
+      "ruleId": "layer-boundaries",
+      "ruleType": "layer-boundaries",
+      "ruleDescription": "Layers may only import the layers they are allowed to: ui -> [application, shared]; application -> [domain, shared]; domain -> [shared]; infrastructure -> [application, domain, shared]; shared -> []",
+      "severity": "error",
+      "file": "src/ui/product-list.ts",
+      "line": 3,
+      "column": 30,
+      "target": {
+        "kind": "file",
+        "path": "src/infrastructure/db/client.ts"
+      },
+      "dependencyKinds": ["import"],
+      "typeOnly": false,
+      "references": [
+        {
+          "specifier": "../infrastructure/db/client",
+          "kind": "import",
+          "typeOnly": false,
+          "line": 3,
+          "column": 30
+        }
+      ],
+      "message": "Layer \"ui\" must not depend on layer \"infrastructure\" (allowed for \"ui\": application, shared). src/ui/product-list.ts imports src/infrastructure/db/client.ts.",
+      "path": ["src/ui/product-list.ts", "src/infrastructure/db/client.ts"],
+      "fingerprint": "9bb66c25fc937745",
+      "metadata": {
+        "fromLayer": "ui",
+        "toLayer": "infrastructure"
+      },
+      "baselineStatus": "new"
+    }
+  ],
+  "baseline": {
+    "file": "deptrace-baseline.json",
+    "new": 1,
+    "existing": 4,
+    "resolved": 1,
+    "resolvedViolations": [
+      {
+        "fingerprint": "5f0c2a9e41d7b386",
+        "ruleId": "layer-boundaries",
+        "file": "src/application/report-export.ts",
+        "target": {
+          "kind": "file",
+          "path": "src/infrastructure/db/client.ts"
+        },
+        "message": "Layer \"application\" must not depend on layer \"infrastructure\" (allowed for \"application\": domain, shared). src/application/report-export.ts imports src/infrastructure/db/client.ts."
+      }
+    ]
+  }
+}

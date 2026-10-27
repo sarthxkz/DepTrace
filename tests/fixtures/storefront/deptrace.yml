@@ -1,0 +1,56 @@
+version: 1
+
+# Sample storefront used by the dashboard tests and documentation. It has
+# five layers, clean modules, and deliberate problems: layer violations, a
+# forbidden package, a forbidden import, a runtime cycle, a type-only cycle,
+# external packages and unresolved imports.
+
+project:
+  name: "storefront"
+
+analysis:
+  include:
+    - "src/**/*"
+  exclude: []
+
+layers:
+  - name: ui
+    files: ["src/ui/**"]
+  - name: application
+    files: ["src/application/**"]
+  - name: domain
+    files: ["src/domain/**"]
+  - name: infrastructure
+    files: ["src/infrastructure/**"]
+  - name: shared
+    files: ["src/shared/**"]
+
+rules:
+  layer-boundaries:
+    severity: error
+    allowed:
+      ui: [application, shared]
+      application: [domain, shared]
+      domain: [shared]
+      infrastructure: [application, domain, shared]
+      shared: []
+
+  forbidden-packages:
+    - name: pure-domain
+      description: The domain layer does not use Node.js APIs or web frameworks
+      severity: error
+      from: ["src/domain/**"]
+      packages: ["express", "fs"]
+
+  forbidden-imports:
+    - name: no-test-doubles
+      description: Production code must not import test doubles
+      severity: warning
+      from: ["src/**"]
+      to: ["src/testing/**"]
+      exclude: ["src/testing/**"]
+
+  circular-dependencies:
+    severity: error
+    # Type-only cycles are erased at runtime; they are reported but not violations.
+    ignore-type-only: true

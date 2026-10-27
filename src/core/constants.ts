@@ -8,7 +8,7 @@ export const ExitCode = {
   Success: 0,
   OperationalError: 1,
   UsageError: 2,
-  /** Reserved for future policy violations; never returned yet. */
+  /** `check` found failing architecture violations. */
   ArchitectureViolations: 3,
   /** Functionality not implemented. No command returns it today. */
   NotImplemented: 4,

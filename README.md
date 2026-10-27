@@ -7,9 +7,10 @@ repositories. It builds a static dependency graph of your source files, finds ci
 dependencies, lets you inspect who depends on what, and checks the graph against architecture
 rules you define (layers, forbidden imports and packages, module boundaries, cycle policies).
 
-> **Status: Phase 3 (architecture rules).** Dependency analysis, dependency inspection, the rules
-> engine (`check`) and architecture reports (`report`) work. Baselines, SARIF and CI integrations
-> are not implemented yet. See [Roadmap](#roadmap).
+> **Status: Phase 5 (architecture dashboard).** Dependency analysis, dependency inspection, the
+> rules engine (`check`), architecture reports (`report`), baselines, SARIF output, GitHub Actions
+> workflows and a local browser dashboard (`dashboard`) work. The package is not published to npm
+> and there is no published GitHub Action. See [Roadmap](#roadmap).
 
 ## What works today
 
@@ -22,6 +23,10 @@ rules you define (layers, forbidden imports and packages, module boundaries, cyc
 | `deptrace --help`, `--version` | Working |                                                                                |
 | `deptrace check [directory]`   | Working | Evaluates the rules in `deptrace.yml`; exit code `3` on violations             |
 | `deptrace report [directory]`  | Working | Layers, layer dependencies, rule results and cycles (text or JSON)             |
+| `deptrace baseline create`     | Working | Records the current violations in `deptrace-baseline.json`; never overwrites   |
+| `deptrace baseline update`     | Working | Replaces an existing baseline (explicit, atomic)                               |
+| `deptrace check --baseline`    | Working | Fails only on violations not in the baseline; reports new/existing/resolved    |
+| `deptrace dashboard`           | Working | Graph, layers, cycles, modules and violations in the browser (127.0.0.1 only)  |
 
 The analysis is **static**: DepTrace parses files with the TypeScript compiler and never runs your
 code. It cannot see imports computed at runtime, dependency injection, reflection or other
@@ -32,6 +37,9 @@ enforces rules, and only the rules you configure.
 Documentation:
 
 - [docs/rules.md](docs/rules.md): rule catalog, `check` and `report`, violations, troubleshooting
+- [docs/baseline.md](docs/baseline.md): baselines, fingerprints, compatibility, approval process
+- [docs/github-actions.md](docs/github-actions.md): GitHub Actions setup, SARIF, security model
+- [docs/dashboard.md](docs/dashboard.md): the dashboard, supported reports, graph limits, security
 - [docs/configuration.md](docs/configuration.md): `deptrace.yml` reference
 - [docs/analysis.md](docs/analysis.md): recognized imports, resolution, cycles, JSON schema,
   diagnostics, limitations
@@ -212,11 +220,64 @@ says so.
 A complete sample project with every rule type and seven deliberate violations is in
 [tests/fixtures/layered](tests/fixtures/layered): `deptrace check tests/fixtures/layered`.
 
+| Option              | Description                                                                        |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| `--format`          | `text` (default), `json`, or `github` (text plus GitHub annotations)               |
+| `--strict`          | Warning violations fail too                                                        |
+| `--baseline <file>` | Fail only on violations not in the baseline ([docs/baseline.md](docs/baseline.md)) |
+| `--report <file>`   | Also write the JSON report to a file                                               |
+| `--sarif <file>`    | Also write a SARIF 2.1.0 log (for code scanning)                                   |
+| `--summary <file>`  | Append a Markdown summary, e.g. to `"$GITHUB_STEP_SUMMARY"`                        |
+| `--verbose`         | Show violation fingerprints                                                        |
+
+### Baselines
+
+To adopt DepTrace in a codebase that already has violations, accept them in a baseline and fail
+only on new ones:
+
+```sh
+deptrace baseline create                        # writes deptrace-baseline.json; review and commit it
+deptrace check --baseline deptrace-baseline.json
+deptrace baseline update                        # after review: accept changes, drop resolved entries
+```
+
+Existing violations are still reported (marked `existing`), resolved ones are listed, and a
+missing, invalid or incompatible baseline (for example after a rule changed) fails with exit code
+`2` instead of being treated as empty. See [docs/baseline.md](docs/baseline.md).
+
+### GitHub Actions
+
+A copyable workflow is in
+[docs/examples/github-actions/deptrace.yml](docs/examples/github-actions/deptrace.yml): full or
+baseline-aware checks on pull requests and pushes, a job summary, annotations at the offending
+imports, the JSON report as an artifact, read-only permissions. An optional second workflow
+uploads SARIF to GitHub code scanning. Setup, permissions and the security model are in
+[docs/github-actions.md](docs/github-actions.md). The workflows have not yet run on GitHub.
+
 ### `deptrace report [directory]`
 
 An architecture overview: analysis summary, layers with file counts, dependencies between layers
 (marked allowed / NOT ALLOWED), rule results, violations and cycles. Always exits `0` when the
 analysis completes; `--format json` adds an `architecture` section to the `scan` JSON document.
+`--baseline <file>` marks each violation as new or accepted and lists resolved baseline entries.
+
+### `deptrace dashboard [directory]`
+
+Analyzes the directory and serves an interactive dashboard on `http://127.0.0.1:7341/` (local only;
+`--port 0` picks a free port): an overview of what was found and where to start, the dependency
+graph (search, highlight dependencies, dependents, paths, cycles and violations, filters, folder
+grouping), the layer matrix from your `deptrace.yml`, module cards with every import location,
+cycles, and violations with fingerprints and baseline status. `--baseline <file>` adds new /
+accepted / resolved; `--report <file>` shows a saved `report --format json` file instead. The
+dashboard can also import check reports and SARIF logs (findings only). Nothing leaves your machine.
+
+```sh
+deptrace dashboard --baseline deptrace-baseline.json
+deptrace report --format json > report.json && deptrace dashboard --report report.json
+```
+
+See [docs/dashboard.md](docs/dashboard.md) for every page, the data contract, large-graph behavior
+and the security model.
 
 ### `deptrace init`
 
@@ -235,14 +296,14 @@ The full format is described in [docs/configuration.md](docs/configuration.md); 
 
 ## Exit codes
 
-| Code  | Meaning                                                                                                                                                                      |
-| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `0`   | Success. For `scan`/`deps`/`path`: the analysis completed, even if it found cycles or diagnostics                                                                            |
-| `1`   | Operational error (e.g. permission denied, `deptrace.yml` already exists for `init`)                                                                                         |
-| `2`   | Invalid usage or configuration (unknown command/option, missing directory, invalid `deptrace.yml`, `check` without rules, file argument that is not an analyzed source file) |
-| `3`   | `check`: architecture rule violations (errors; with `--strict` also warnings)                                                                                                |
-| `4`   | Reserved for functionality that is not implemented (no command returns it today)                                                                                             |
-| `130` | Interrupted with Ctrl+C                                                                                                                                                      |
+| Code  | Meaning                                                                                                                                                                                                                 |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`   | Success. For `scan`/`deps`/`path`: the analysis completed, even if it found cycles or diagnostics                                                                                                                       |
+| `1`   | Operational error (e.g. permission denied, `deptrace.yml` or the baseline already exists for `init` / `baseline create`)                                                                                                |
+| `2`   | Invalid usage or configuration (unknown command/option, missing directory, invalid `deptrace.yml`, `check` without rules, file argument that is not an analyzed source file, missing, invalid or incompatible baseline) |
+| `3`   | `check`: architecture rule violations (errors; with `--strict` also warnings; with `--baseline` only new ones)                                                                                                          |
+| `4`   | Reserved for functionality that is not implemented (no command returns it today)                                                                                                                                        |
+| `130` | Interrupted with Ctrl+C                                                                                                                                                                                                 |
 
 Whether an analysis was complete is reported in the output (`status` in JSON, the last line in
 text), not in the exit code.
@@ -254,7 +315,9 @@ npm ci                 # install from the lockfile
 npm run dev -- scan .  # run from source with tsx
 npm run build          # bundle to dist/ with tsup
 npm start -- --help    # run the built CLI
-npm test               # build, then run unit and integration tests (Vitest)
+npm test               # build, then run unit, component and integration tests (Vitest)
+npm run test:e2e       # dashboard end-to-end tests in the installed Chrome (Playwright)
+npm run dashboard:dev  # dashboard with hot reload (needs a running "deptrace dashboard")
 npm run lint           # ESLint (typescript-eslint strict, type-checked)
 npm run typecheck      # tsc --noEmit
 npm run format:check   # Prettier
@@ -267,5 +330,7 @@ See [docs/development.md](docs/development.md) and [docs/architecture.md](docs/a
 
 Planned, **not available** in this release:
 
-- Baselines (accepting existing violations and failing only on new ones, using the fingerprints).
-- SARIF output and CI integrations such as GitHub code scanning annotations.
+- Publishing to npm and a reusable, versioned GitHub Action (today each repository copies the
+  workflow and pins DepTrace by commit).
+- Pull request comments.
+- History across runs: stored snapshots and trends in the dashboard (today it shows one report).

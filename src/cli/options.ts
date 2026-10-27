@@ -2,8 +2,8 @@ import { Option } from 'commander';
 
 export type OutputFormat = 'text' | 'json';
 
-export const formatOption = () =>
-  new Option('--format <format>', 'output format').choices(['text', 'json']).default('text');
+export const formatOption = (choices: string[] = ['text', 'json']) =>
+  new Option('--format <format>', 'output format').choices(choices).default('text');
 
 export const rootOption = () =>
   new Option('-r, --root <directory>', 'repository root to analyze').default('.');

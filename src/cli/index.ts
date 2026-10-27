@@ -2,7 +2,9 @@ import { Command, CommanderError } from 'commander';
 import { CLI_NAME, ExitCode, PRODUCT_NAME, TAGLINE } from '../core/constants.js';
 import { DepTraceError } from '../core/errors.js';
 import { logger } from '../utils/logger.js';
+import { registerBaselineCommand } from './commands/baseline.js';
 import { registerCheckCommand } from './commands/check.js';
+import { registerDashboardCommand } from './commands/dashboard.js';
 import { registerDepsCommand } from './commands/deps.js';
 import { registerInitCommand } from './commands/init.js';
 import { registerPathCommand } from './commands/path.js';
@@ -19,6 +21,10 @@ Examples:
   $ ${CLI_NAME} path src/index.ts src/db.ts       Shortest import path between two files
   $ ${CLI_NAME} check                             Enforce the rules in deptrace.yml (exit 3 on violations)
   $ ${CLI_NAME} report --format json              Layers, rule results and the full graph
+  $ ${CLI_NAME} baseline create                   Accept today's violations in deptrace-baseline.json
+  $ ${CLI_NAME} check --baseline deptrace-baseline.json
+                                               Fail only on violations not in the baseline
+  $ ${CLI_NAME} dashboard                         Explore the graph and findings in the browser
 
 Run "${CLI_NAME} <command> --help" for details about a command.`;
 
@@ -42,6 +48,8 @@ export function createProgram(version: string): Command {
   registerPathCommand(program);
   registerCheckCommand(program);
   registerReportCommand(program);
+  registerBaselineCommand(program);
+  registerDashboardCommand(program);
   return program;
 }
 

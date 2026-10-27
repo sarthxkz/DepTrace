@@ -2,13 +2,18 @@ import { JSON_SCHEMA_VERSION } from '../analysis/json.js';
 import type { AnalysisResult } from '../analysis/types.js';
 import { CLI_NAME } from '../core/constants.js';
 import { summarizeLayers } from './evaluate.js';
-import type { Policy, PolicyEvaluation } from './types.js';
+import type { LayerBoundariesRule, Policy, PolicyEvaluation, Violation } from './types.js';
 
 export type CheckOutcome = 'passed' | 'failed';
 
+/** Violations that fail a check: errors, and with strict also warnings. */
+export function failingViolations(violations: Violation[], strict: boolean): Violation[] {
+  return violations.filter((violation) => strict || violation.severity === 'error');
+}
+
 /** Whether a check fails: any error violation, or (strict) any warning violation. */
 export function checkOutcome(evaluation: PolicyEvaluation, strict: boolean): CheckOutcome {
-  return evaluation.errors > 0 || (strict && evaluation.warnings > 0) ? 'failed' : 'passed';
+  return failingViolations(evaluation.violations, strict).length > 0 ? 'failed' : 'passed';
 }
 
 function analysisSummary(result: AnalysisResult) {
@@ -38,6 +43,7 @@ export function toCheckDocument(
       enabledRules: evaluation.rules.filter((rule) => rule.severity !== 'off').length,
       errors: evaluation.errors,
       warnings: evaluation.warnings,
+      failing: failingViolations(evaluation.violations, strict).length,
     },
     analysis: analysisSummary(result),
     rules: evaluation.rules,
@@ -52,6 +58,9 @@ export function toArchitectureSection(
   evaluation: PolicyEvaluation,
 ) {
   const { layers, unlayered, dependencies } = summarizeLayers(result, policy);
+  const layerRule = policy.rules.find(
+    (rule): rule is LayerBoundariesRule => rule.type === 'layer-boundaries',
+  );
   return {
     layers: layers.map((layer) => ({
       name: layer.name,
@@ -60,6 +69,10 @@ export function toArchitectureSection(
     })),
     unlayeredFiles: unlayered,
     layerDependencies: dependencies,
+    /** The configured layer policy (importer layer → layers it may import), or null. */
+    layerRule: layerRule
+      ? { id: layerRule.id, severity: layerRule.severity, allowed: layerRule.allowed }
+      : null,
     rules: evaluation.rules,
     violations: evaluation.violations,
     errors: evaluation.errors,

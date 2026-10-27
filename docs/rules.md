@@ -175,20 +175,25 @@ Violations are sorted by file, line, column, rule id and fingerprint, so output 
 
 ### `deptrace check [directory]`
 
-| Option          | Meaning                                       |
-| --------------- | --------------------------------------------- |
-| `--format json` | Machine-readable result on stdout             |
-| `--strict`      | Warning violations also fail the check        |
-| `--verbose`     | Show each violation's fingerprint (text mode) |
+| Option              | Meaning                                                                                                |
+| ------------------- | ------------------------------------------------------------------------------------------------------ |
+| `--format json`     | Machine-readable result on stdout                                                                      |
+| `--format github`   | Text report plus GitHub annotations ([github-actions.md](github-actions.md))                           |
+| `--strict`          | Warning violations also fail the check                                                                 |
+| `--baseline <file>` | Only violations not in the baseline fail ([baseline.md](baseline.md))                                  |
+| `--report <file>`   | Also write the JSON document below to a file                                                           |
+| `--sarif <file>`    | Also write a SARIF 2.1.0 log ([github-actions.md](github-actions.md#sarif-and-code-scanning-optional)) |
+| `--summary <file>`  | Append a Markdown summary (for `$GITHUB_STEP_SUMMARY`)                                                 |
+| `--verbose`         | Show each violation's fingerprint (text mode)                                                          |
 
 Exit codes:
 
-| Code | Meaning                                                                                                 |
-| ---- | ------------------------------------------------------------------------------------------------------- |
-| `0`  | No failing violations (warnings are allowed unless `--strict`). Also when every rule has severity `off` |
-| `3`  | At least one error violation (with `--strict`: or warning). The reason is printed to stderr             |
-| `2`  | No `deptrace.yml`, invalid configuration, or no rules configured (a check with nothing to check fails)  |
-| `1`  | Operational error                                                                                       |
+| Code | Meaning                                                                                                                                             |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`  | No failing violations (warnings are allowed unless `--strict`). Also when every rule has severity `off`                                             |
+| `3`  | At least one error violation (with `--strict`: or warning; with `--baseline`: only new ones count). The reason is printed to stderr                 |
+| `2`  | No `deptrace.yml`, invalid configuration, no rules configured (a check with nothing to check fails), or a missing, invalid or incompatible baseline |
+| `1`  | Operational error                                                                                                                                   |
 
 Example (the sample project in `tests/fixtures/layered`):
 
@@ -222,7 +227,7 @@ error: Architecture check failed: 5 failing violations.
   "tool": { "name": "deptrace", "version": "..." },
   "result": "failed",
   "strict": false,
-  "summary": { "rules": 5, "enabledRules": 5, "errors": 5, "warnings": 2 },
+  "summary": { "rules": 5, "enabledRules": 5, "errors": 5, "warnings": 2, "failing": 5 },
   "analysis": {
     "status": "completed",
     "errors": 0,
@@ -243,6 +248,12 @@ error: Architecture check failed: 5 failing violations.
 }
 ```
 
+`summary.failing` counts the violations that make the check fail. With `--baseline`, each
+violation also has `baselineStatus` (`new` or `existing`), `result` and `summary.failing` count
+only new violations, and a `baseline` object is added: `file` (relative to the analyzed
+directory, or only its name when it is outside), `new`, `existing`, `resolved` and `resolvedViolations` (the baseline entries no
+longer found).
+
 ### `deptrace report [directory]`
 
 Prints an analysis summary, layers with their file counts, dependencies between layers (marked
@@ -252,9 +263,17 @@ and **always exits 0** when the analysis completes: it informs, `check` enforces
 
 `report --format json` prints the `scan --format json` document plus an `architecture` object:
 `layers` (`name`, `patterns`, `files`), `unlayeredFiles`, `layerDependencies` (`from`, `to`, `edges`,
-`typeOnlyEdges`), `rules`, `violations`, `errors`, `warnings`.
+`typeOnlyEdges`), `layerRule` (the `layer-boundaries` rule's `id`, `severity` and `allowed` map, or
+`null` when there is none), `rules`, `violations`, `errors`, `warnings`. This document is what
+`deptrace dashboard` shows ([dashboard.md](dashboard.md)).
 
-SARIF output is not implemented.
+`report --baseline <file>` compares the violations with a baseline exactly like
+`check --baseline` (an invalid or incompatible baseline is exit code `2`): the text report marks
+each violation `new` or `existing` and lists resolved entries, and the JSON adds
+`baselineStatus` to each violation and `architecture.baseline` (`file`, `new`, `existing`,
+`resolved`, `resolvedViolations`). The exit code stays `0`.
+
+SARIF output is available with `check --sarif <file>`.
 
 ## Sample project
 
@@ -291,7 +310,7 @@ layering of this repository and passes.
 - Rules see only static imports (see [analysis.md](analysis.md#what-the-analysis-is-and-is-not)).
 - `layer-boundaries` does not check files outside all layers, and allowed directions are not
   transitive.
-- There are no per-violation suppressions or baselines yet; use `exclude` for exemptions.
+- There are no per-violation suppressions; use `exclude` for exemptions, or a
+  [baseline](baseline.md) to accept existing violations.
 - `to` in `forbidden-imports` cannot target packages, and `forbidden-packages` cannot target
   files.
-- SARIF and other report formats are not implemented.

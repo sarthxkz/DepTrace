@@ -7,7 +7,13 @@ interface CheckJson {
   schemaVersion: number;
   result: 'passed' | 'failed';
   strict: boolean;
-  summary: { rules: number; enabledRules: number; errors: number; warnings: number };
+  summary: {
+    rules: number;
+    enabledRules: number;
+    errors: number;
+    warnings: number;
+    failing: number;
+  };
   analysis: { status: string };
   rules: { id: string; severity: string; violations: number }[];
   violations: {
@@ -46,7 +52,7 @@ describe('check on the sample layered project', async () => {
     expect(json.violations.map((v) => `${v.severity} ${v.ruleId} ${v.file}`)).toEqual(
       EXPECTED_LAYERED_VIOLATIONS,
     );
-    expect(json.summary).toEqual({ rules: 5, enabledRules: 5, errors: 5, warnings: 2 });
+    expect(json.summary).toEqual({ rules: 5, enabledRules: 5, errors: 5, warnings: 2, failing: 5 });
     expect(stderr).toContain('Architecture check failed: 5 failing violations.');
   });
 

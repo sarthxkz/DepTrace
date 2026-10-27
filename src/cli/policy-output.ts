@@ -1,5 +1,6 @@
 import type { AnalysisResult } from '../analysis/types.js';
-import { PRODUCT_NAME } from '../core/constants.js';
+import type { BaselineComparison } from '../baseline/baseline.js';
+import { CLI_NAME, PRODUCT_NAME } from '../core/constants.js';
 import { summarizeLayers } from '../rules/evaluate.js';
 import type { Policy, PolicyEvaluation, Violation } from '../rules/types.js';
 import { formatReference } from './output.js';
@@ -7,13 +8,19 @@ import { formatReference } from './output.js';
 const plural = (count: number, word: string, many = `${word}s`) =>
   `${String(count)} ${count === 1 ? word : many}`;
 
-function formatViolation(violation: Violation, verbose: boolean): string[] {
+/** A baseline comparison, with the baseline file as displayed to the user. */
+export interface BaselineView {
+  file: string;
+  comparison: BaselineComparison;
+}
+
+function formatViolation(violation: Violation, verbose: boolean, status: string): string[] {
   const location =
     violation.line === null
       ? violation.file
       : `${violation.file}:${String(violation.line)}:${String(violation.column ?? 1)}`;
   const lines = [
-    `  ${violation.severity.padEnd(8)}${location}  [${violation.ruleId}]`,
+    `  ${violation.severity.padEnd(8)}${status}${location}  [${violation.ruleId}]`,
     `          ${violation.message}`,
   ];
   if (violation.target.kind !== 'cycle' && violation.references.length > 0) {
@@ -36,12 +43,37 @@ export function formatRules(evaluation: PolicyEvaluation): string[] {
   ];
 }
 
-export function formatViolations(evaluation: PolicyEvaluation, verbose: boolean): string[] {
+export function formatViolations(
+  evaluation: PolicyEvaluation,
+  verbose: boolean,
+  baseline?: BaselineView,
+): string[] {
   if (evaluation.violations.length === 0) return ['Violations: none'];
+  const isNew = new Set(baseline?.comparison.new.map((violation) => violation.fingerprint));
+  const status = (violation: Violation) =>
+    baseline ? (isNew.has(violation.fingerprint) ? 'new       ' : 'existing  ') : '';
   return [
     `Violations: ${plural(evaluation.errors, 'error')}, ${plural(evaluation.warnings, 'warning')}`,
-    ...evaluation.violations.flatMap((violation) => formatViolation(violation, verbose)),
+    ...evaluation.violations.flatMap((violation) =>
+      formatViolation(violation, verbose, status(violation)),
+    ),
   ];
+}
+
+function formatBaseline({ file, comparison }: BaselineView): string[] {
+  const { resolved } = comparison;
+  const lines = [
+    `Baseline: ${file} (${String(comparison.new.length)} new, ${String(comparison.existing.length)} existing, ${String(resolved.length)} resolved)`,
+  ];
+  for (const entry of resolved) {
+    lines.push(`  resolved  ${entry.file}  [${entry.ruleId}]`, `          ${entry.message}`);
+  }
+  if (resolved.length > 0) {
+    lines.push(
+      `  Remove resolved entries with "${CLI_NAME} baseline update" so they cannot return.`,
+    );
+  }
+  return lines;
 }
 
 /** A note that rules only see what the analysis could resolve. */
@@ -56,14 +88,16 @@ export function formatCheck(
   result: AnalysisResult,
   evaluation: PolicyEvaluation,
   verbose: boolean,
+  baseline?: BaselineView,
 ): string {
   return [
     `${PRODUCT_NAME} architecture check`,
     '',
     ...formatRules(evaluation),
     '',
-    ...formatViolations(evaluation, verbose),
+    ...formatViolations(evaluation, verbose, baseline),
     '',
+    ...(baseline ? [...formatBaseline(baseline), ''] : []),
     formatAnalysisNote(result),
   ].join('\n');
 }
@@ -73,6 +107,7 @@ export function formatReport(
   policy: Policy,
   evaluation: PolicyEvaluation,
   verbose: boolean,
+  baseline?: BaselineView,
 ): string {
   const { summary } = result;
   const { layers, unlayered, dependencies } = summarizeLayers(result, policy);
@@ -117,7 +152,14 @@ export function formatReport(
     }
   }
 
-  lines.push('', ...formatRules(evaluation), '', ...formatViolations(evaluation, verbose), '');
+  lines.push(
+    '',
+    ...formatRules(evaluation),
+    '',
+    ...formatViolations(evaluation, verbose, baseline),
+    '',
+    ...(baseline ? [...formatBaseline(baseline), ''] : []),
+  );
   if (result.cycles.length === 0) {
     lines.push('Circular dependencies: none found');
   } else {

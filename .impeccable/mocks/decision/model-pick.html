@@ -1,0 +1,44 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Survey Strata</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font:14px/1.45 system-ui,sans-serif;color:#20231F;background:#F1F2EE;display:grid;grid-template-columns:220px 1fr}
+.rail{background:#20231F;color:#E7E8E2;padding:20px 0}
+.brand{font:600 22px/1 system-ui;padding:0 20px 24px}
+.rail a{display:block;padding:9px 20px}.rail a.on{background:#343832;box-shadow:inset 3px 0 #D9A441}
+main{display:grid;grid-template-rows:60px 1fr;min-width:0}
+header{display:flex;align-items:center;gap:16px;padding:0 28px;border-bottom:1px solid #C9CBC2}
+header h1{font-size:24px}
+.body{display:grid;grid-template-columns:520px 1fr;gap:0}
+.column{padding:28px;border-right:1px solid #C9CBC2;position:relative}
+.column h2{font-size:26px;margin-bottom:16px}
+.stratum{height:104px;border-bottom:1px solid #20231F;display:flex;justify-content:space-between;align-items:end;padding:10px 14px;font-weight:600}
+.s1{background:#D9A441}.s2{background:#8FAF7E}.s3{background:#C98579}.s4{background:#6C7A89;color:#fff}.s5{background:repeating-linear-gradient(45deg,#E4E5DF 0 6px,#D3D5CC 6px 12px)}
+.fault{position:absolute;left:250px;top:120px;width:4px;height:380px;background:#B3261E;transform:rotate(14deg)}
+.fault2{position:absolute;left:380px;top:200px;width:4px;height:300px;background:#B3261E;transform:rotate(-10deg)}
+.right{padding:28px;display:grid;grid-template-rows:auto 1fr;gap:24px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid #C9CBC2}
+.m{padding:16px;border-right:1px solid #C9CBC2}.m b{display:block;font-size:34px}
+.m.f b{color:#B3261E}
+table{width:100%;border-collapse:collapse;background:#fff}
+td,th{padding:10px 12px;border-bottom:1px solid #E1E2DC;text-align:left}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.sev{color:#B3261E;font-weight:600}
+</style></head><body>
+<nav class="rail"><div class="brand">deptrace</div><a>Overview</a><a>Dependency graph</a><a class="on">Layers</a><a>Violations</a><a>Cycles</a><a>Modules</a><a>Reports</a><a>Configuration</a></nav>
+<main><header><h1>layered-shop</h1><span>completed · deptrace 0.4.0</span></header>
+<div class="body">
+<section class="column"><h2>Layer column</h2>
+<div class="stratum s1">presentation<span>2 files</span></div>
+<div class="stratum s2">application<span>2 files</span></div>
+<div class="stratum s3">domain<span>6 files</span></div>
+<div class="stratum s4">infrastructure<span>3 files</span></div>
+<div class="stratum s5">unclassified<span>7 files</span></div>
+<div class="fault"></div><div class="fault2"></div></section>
+<section class="right">
+<div class="metrics"><div class="m"><b>4</b>layers</div><div class="m"><b>6</b>cross-layer deps</div><div class="m f"><b>3</b>boundary faults</div><div class="m"><b>7</b>unclassified</div></div>
+<table><tr><th>Fault</th><th>From</th><th>To</th><th>Severity</th></tr>
+<tr><td>domain → infrastructure</td><td>src/domain/pricing.ts</td><td>src/infrastructure/db/connection.ts</td><td class="sev">error</td></tr>
+<tr><td>infrastructure → presentation</td><td>src/infrastructure/http/server.ts</td><td>src/presentation/http/order-controller.ts</td><td class="sev">error</td></tr>
+<tr><td>presentation → infrastructure</td><td>src/presentation/cli.ts</td><td>src/infrastructure/db/order-repository.ts</td><td class="sev">error</td></tr></table>
+</section></div></main></body></html>

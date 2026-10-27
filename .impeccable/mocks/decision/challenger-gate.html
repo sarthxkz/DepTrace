@@ -1,0 +1,33 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Gate Board</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;font:14px/1.45 system-ui,sans-serif;color:#F2F2EE;background:#15171A;display:grid;grid-template-rows:60px 1fr}
+header{display:flex;align-items:center;gap:28px;padding:0 28px;border-bottom:1px solid #2A2D33}
+header h1{font-size:22px}nav{display:flex;gap:20px}nav a.on{border-bottom:2px solid #F5B301;padding-bottom:4px}
+.wrap{display:grid;grid-template-columns:1fr 380px}
+.board{padding:28px}
+.board h2{font:600 30px/1 ui-monospace,monospace;margin-bottom:18px;letter-spacing:.04em}
+.row{display:grid;grid-template-columns:110px 120px 1fr 1fr 220px;gap:0;border-bottom:1px solid #2A2D33;font:15px ui-monospace,monospace}
+.row div{padding:14px 10px}
+.row.h{color:#8B8F98;font-size:12px;text-transform:uppercase}
+.row.new{background:#2B2410}.row.new .st{color:#F5B301;font-weight:700}
+.err{color:#E5484D}.warn{color:#F5B301}
+.pass{border-left:1px solid #2A2D33;padding:28px}
+.pass .seg{border:1px solid #3A3E46;padding:16px;margin-bottom:-1px}
+.pass b{display:block;font:600 40px ui-monospace,monospace}
+.code{height:90px;margin-top:20px;background:repeating-linear-gradient(90deg,#F2F2EE 0 2px,transparent 2px 5px,#F2F2EE 5px 6px,transparent 6px 9px)}
+</style></head><body>
+<header><h1>deptrace · layered-shop</h1><nav><a>Overview</a><a>Graph</a><a>Layers</a><a class="on">Violations</a><a>Cycles</a><a>Modules</a><a>Reports</a></nav></header>
+<div class="wrap"><section class="board"><h2>FINDINGS 7</h2>
+<div class="row h"><div>Status</div><div>Severity</div><div>From</div><div>To</div><div>Rule</div></div>
+<div class="row new"><div class="st">NEW</div><div class="err">error</div><div>src/domain/pricing.ts</div><div>infrastructure/db/connection.ts</div><div>layer-boundaries</div></div>
+<div class="row"><div>existing</div><div class="err">error</div><div>src/domain/pricing.ts</div><div>express</div><div>forbidden-packages</div></div>
+<div class="row"><div>existing</div><div class="err">error</div><div>features/catalog/ui/catalog-page.ts</div><div>features/cart/internal/state.ts</div><div>module-boundaries</div></div>
+<div class="row"><div>existing</div><div class="err">error</div><div>src/infrastructure/http/server.ts</div><div>presentation/http/order-controller.ts</div><div>layer-boundaries</div></div>
+<div class="row"><div>existing</div><div class="err">error</div><div>src/presentation/cli.ts</div><div>infrastructure/db/order-repository.ts</div><div>layer-boundaries</div></div>
+<div class="row"><div>existing</div><div class="warn">warning</div><div>src/application/notify.ts</div><div>cycle of 2 files</div><div>circular-dependencies</div></div>
+<div class="row"><div>existing</div><div class="warn">warning</div><div>src/presentation/cli.ts</div><div>src/legacy/format.ts</div><div>forbidden-imports</div></div>
+</section>
+<aside class="pass"><div class="seg">Baseline<b>1 new</b></div><div class="seg">Accepted<b>6</b></div><div class="seg">Resolved<b>0</b></div><div class="code"></div></aside></div>
+</body></html>
