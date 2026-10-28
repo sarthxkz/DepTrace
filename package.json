@@ -9,6 +9,16 @@
     "javascript",
     "dependencies"
   ],
+  "license": "MIT",
+  "author": "Sarthak Kumar",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sarthxkz/DepTrace.git"
+  },
+  "homepage": "https://github.com/sarthxkz/DepTrace#readme",
+  "bugs": {
+    "url": "https://github.com/sarthxkz/DepTrace/issues"
+  },
   "type": "module",
   "bin": {
     "deptrace": "dist/index.js"
@@ -32,7 +42,8 @@
     "typecheck": "tsc --noEmit && tsc -p dashboard --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "bench": "tsx scripts/benchmark.ts"
+    "bench": "tsx scripts/benchmark.ts",
+    "prepublishOnly": "npm run build && npm test"
   },
   "dependencies": {
     "commander": "^15.0.0",

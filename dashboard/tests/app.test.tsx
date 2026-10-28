@@ -212,6 +212,7 @@ describe('violations', () => {
   it('filters, counts and opens a finding with its evidence', async () => {
     await open('#/violations');
     expect(screen.getByText('5 violations')).toBeTruthy();
+    expect(screen.getByText(/They are not security vulnerabilities/)).toBeTruthy();
     await userEvent.selectOptions(screen.getByLabelText('Severity'), 'warning');
     expect(screen.getByText('1 violation of 5')).toBeTruthy();
     await userEvent.selectOptions(screen.getByLabelText('Severity'), '');

@@ -142,7 +142,8 @@ none configured, the page explains how to configure them.
 when the report has a baseline) and module filters, sorting, pages of 50. A violation's card shows
 the rule and its description, the message, source, target, location, the imports that cause it,
 the dependency path, the fingerprint and what its baseline status means. Resolved baseline entries
-are listed separately. Line numbers come from the report; nothing else (such as code snippets) is
+are listed separately. These are architecture rule violations, not security vulnerabilities, and the
+page says so. Line numbers come from the report; nothing else (such as code snippets) is
 shown.
 
 **Reports.** What is loaded (source, format, schema version, producer, analysis time), file import

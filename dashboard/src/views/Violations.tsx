@@ -122,6 +122,15 @@ export function Violations({ ready, params }: { ready: Ready; params: URLSearchP
             ` Compared with ${baseline.file}: ${plural(baseline.new, 'new violation')}, ${String(baseline.existing)} accepted, ${String(baseline.resolved)} resolved.`}
           {!hasBaseline && findings.length > 0 && ' No baseline comparison in this report.'}
         </p>
+        {(loaded.kind === 'report' ||
+          loaded.format === 'check' ||
+          loaded.tool.name === 'DepTrace') && (
+          <p className="muted">
+            These are architecture rule violations in the analyzed code, from the rules in
+            deptrace.yml. They are not security vulnerabilities, and DepTrace does not scan for
+            those.
+          </p>
+        )}
 
         {findings.length > 0 && (
           <div className="filters" role="search">

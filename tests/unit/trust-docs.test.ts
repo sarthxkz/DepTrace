@@ -12,6 +12,7 @@ const TRUST_DOCS = [
   'docs/trust/README.md',
   'docs/trust/data-inventory.md',
   'docs/trust/threat-model.md',
+  'docs/trust/operations.md',
 ];
 
 const placeholders = (text: string) =>

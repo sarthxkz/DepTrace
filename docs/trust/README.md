@@ -11,6 +11,7 @@ and the tests for each claim. It covers DepTrace 0.5.0 as implemented in this re
 | [TERMS.md](../../TERMS.md)             | Terms of use (draft, legal review required; no license yet)    |
 | [data-inventory.md](data-inventory.md) | Every piece of data: source, destination, retention, deletion  |
 | [threat-model.md](threat-model.md)     | Assets, trust boundaries, threats, mitigations, residual risks |
+| [operations.md](operations.md)         | Security operations: why there is no admin panel, runbooks     |
 
 ## Deployment model
 
@@ -131,3 +132,5 @@ Every `[[PLACEHOLDER: …]]` in these documents must appear in this list (a test
 - [ ] `acceptable-use rules` (TERMS.md)
 - [ ] `governing law` (TERMS.md)
 - [ ] `review owner and cadence` (docs/trust/threat-model.md)
+- [ ] `incident communication channel and maintainer roster` (docs/trust/operations.md)
+- [ ] `access review cadence` (docs/trust/operations.md)
