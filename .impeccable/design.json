@@ -1,1251 +1,177 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-27T03:46:00.026Z",
+  "generatedAt": "2026-10-28T15:30:00.000Z",
   "title": "Design System: DepTrace",
   "extensions": {
     "colorMeta": {
-      "ground": {
-        "role": "neutral",
-        "displayName": "Ruling Ground",
-        "canonical": "#edf1f5",
-        "oklch": "oklch(95.6% 0.007 247.9)",
-        "tonalRamp": [
-          "#090b0e",
-          "#222528",
-          "#3f4246",
-          "#5e6265",
-          "#7f8386",
-          "#a2a5a9",
-          "#c6cacd",
-          "#ebeff3"
-        ]
-      },
-      "stock": {
-        "role": "neutral",
-        "displayName": "Index Stock",
-        "canonical": "#ffffff",
-        "oklch": "oklch(100.0% 0.000 89.9)",
-        "tonalRamp": [
-          "#0b0b0b",
-          "#252525",
-          "#424242",
-          "#616161",
-          "#828282",
-          "#a5a5a5",
-          "#c9c9c9",
-          "#eeeeee"
-        ]
-      },
-      "stock-2": {
-        "role": "neutral",
-        "displayName": "Index Stock Shade",
-        "canonical": "#f5f7fa",
-        "oklch": "oklch(97.5% 0.005 258.3)",
-        "tonalRamp": [
-          "#0a0b0d",
-          "#242527",
-          "#404244",
-          "#606164",
-          "#818285",
-          "#a3a5a8",
-          "#c7c9cc",
-          "#edeff1"
-        ]
-      },
-      "ink": {
-        "role": "neutral",
-        "displayName": "Ink",
-        "canonical": "#1b1e23",
-        "oklch": "oklch(23.4% 0.011 260.7)",
-        "tonalRamp": [
-          "#090b10",
-          "#22252a",
-          "#3f4248",
-          "#5e6167",
-          "#7f8289",
-          "#a1a5ac",
-          "#c5c9d0",
-          "#eaeff6"
-        ]
-      },
-      "ink-2": {
-        "role": "neutral",
-        "displayName": "Secondary Ink",
-        "canonical": "#48505b",
-        "oklch": "oklch(42.8% 0.021 256.4)",
-        "tonalRamp": [
-          "#060b14",
-          "#1e262f",
-          "#3b434d",
-          "#5a626d",
-          "#7a838f",
-          "#9da6b2",
-          "#c1cad7",
-          "#e6effd"
-        ]
-      },
-      "ink-3": {
-        "role": "neutral",
-        "displayName": "Receding Ink",
-        "canonical": "#626b77",
-        "oklch": "oklch(52.4% 0.022 255.6)",
-        "tonalRamp": [
-          "#060b14",
-          "#1e2630",
-          "#3a434e",
-          "#59626e",
-          "#7a8390",
-          "#9ca6b3",
-          "#c0cad8",
-          "#e5f0fd"
-        ]
-      },
-      "rule": {
-        "role": "neutral",
-        "displayName": "Ruling",
-        "canonical": "#cdd8e4",
-        "oklch": "oklch(87.7% 0.020 250.4)",
-        "tonalRamp": [
-          "#050c13",
-          "#1e262f",
-          "#3a434d",
-          "#59626d",
-          "#79848e",
-          "#9ca6b2",
-          "#c0cad6",
-          "#e5f0fc"
-        ]
-      },
-      "rule-soft": {
-        "role": "neutral",
-        "displayName": "Soft Ruling",
-        "canonical": "#e2e9f0",
-        "oklch": "oklch(93.1% 0.012 248.0)",
-        "tonalRamp": [
-          "#070c10",
-          "#21262b",
-          "#3d4348",
-          "#5c6268",
-          "#7d8389",
-          "#9fa6ac",
-          "#c3cad1",
-          "#e8eff6"
-        ]
-      },
-      "rule-strong": {
-        "role": "neutral",
-        "displayName": "Strong Ruling",
-        "canonical": "#9fb2c7",
-        "oklch": "oklch(75.6% 0.037 250.9)",
-        "tonalRamp": [
-          "#010c1a",
-          "#172636",
-          "#334455",
-          "#526376",
-          "#728498",
-          "#94a7bc",
-          "#b8cbe1",
-          "#ddf1ff"
-        ]
-      },
-      "rail": {
-        "role": "secondary",
-        "displayName": "Oak Drawer",
-        "canonical": "#5e4429",
-        "oklch": "oklch(40.8% 0.054 66.4)",
-        "tonalRamp": [
-          "#190500",
-          "#361f03",
-          "#563c21",
-          "#765b40",
-          "#997c60",
-          "#bd9f81",
-          "#e2c3a4",
-          "#ffe8c9"
-        ]
-      },
-      "rail-2": {
-        "role": "secondary",
-        "displayName": "Open Drawer Face",
-        "canonical": "#4e381f",
-        "oklch": "oklch(35.9% 0.049 68.7)",
-        "tonalRamp": [
-          "#180600",
-          "#352006",
-          "#533d24",
-          "#745c42",
-          "#967d62",
-          "#baa084",
-          "#dfc4a7",
-          "#ffe9cc"
-        ]
-      },
-      "rail-ink": {
-        "role": "secondary",
-        "displayName": "Drawer Lettering",
-        "canonical": "#f6efe3",
-        "oklch": "oklch(95.4% 0.018 81.3)",
-        "tonalRamp": [
-          "#0f0a04",
-          "#29241b",
-          "#474138",
-          "#666056",
-          "#888177",
-          "#aba499",
-          "#cfc8bd",
-          "#f5eee2"
-        ]
-      },
-      "rail-ink-2": {
-        "role": "secondary",
-        "displayName": "Drawer Hairline",
-        "canonical": "#e2d3bb",
-        "oklch": "oklch(87.3% 0.036 79.7)",
-        "tonalRamp": [
-          "#130900",
-          "#2e230f",
-          "#4c402c",
-          "#6c5f4a",
-          "#8e806a",
-          "#b1a38c",
-          "#d6c7af",
-          "#fcecd4"
-        ]
-      },
-      "index-red": {
-        "role": "secondary",
-        "displayName": "Index-Card Red",
-        "canonical": "#c2362f",
-        "oklch": "oklch(54.4% 0.178 27.6)",
-        "tonalRamp": [
-          "#3a0000",
-          "#610000",
-          "#880000",
-          "#b0221f",
-          "#d84c42",
-          "#ff7164",
-          "#ff9687",
-          "#ffbcab"
-        ]
-      },
-      "accent": {
-        "role": "primary",
-        "displayName": "Ruling Blue Ink",
-        "canonical": "#2f5d8c",
-        "oklch": "oklch(46.9% 0.092 250.8)",
-        "tonalRamp": [
-          "#00062f",
-          "#00254f",
-          "#144471",
-          "#366494",
-          "#5786b8",
-          "#79a9dd",
-          "#9cceff",
-          "#c1f4ff"
-        ]
-      },
-      "accent-ink": {
-        "role": "primary",
-        "displayName": "Ink on Accent",
-        "canonical": "#ffffff",
-        "oklch": "oklch(100.0% 0.000 89.9)",
-        "tonalRamp": [
-          "#0b0b0b",
-          "#252525",
-          "#424242",
-          "#616161",
-          "#828282",
-          "#a5a5a5",
-          "#c9c9c9",
-          "#eeeeee"
-        ]
-      },
-      "accent-wash": {
-        "role": "primary",
-        "displayName": "Selection Wash",
-        "canonical": "#e3ecf6",
-        "oklch": "oklch(93.9% 0.017 250.8)",
-        "tonalRamp": [
-          "#060c12",
-          "#1f262d",
-          "#3c434b",
-          "#5a626b",
-          "#7b838c",
-          "#9ea6af",
-          "#c1cad4",
-          "#e7f0fa"
-        ]
-      },
-      "critical": {
-        "role": "tertiary",
-        "displayName": "Status Red",
-        "canonical": "#d03b3b",
-        "oklch": "oklch(57.5% 0.186 25.2)",
-        "tonalRamp": [
-          "#3c0000",
-          "#640000",
-          "#8b0000",
-          "#b31923",
-          "#dc4645",
-          "#ff6d66",
-          "#ff9289",
-          "#ffb8ad"
-        ]
-      },
-      "critical-ink": {
-        "role": "tertiary",
-        "displayName": "Status Red Ink",
-        "canonical": "#b42318",
-        "oklch": "oklch(50.0% 0.182 29.5)",
-        "tonalRamp": [
-          "#3b0000",
-          "#620000",
-          "#8a0000",
-          "#b12015",
-          "#da4a3b",
-          "#ff705e",
-          "#ff9681",
-          "#ffbba5"
-        ]
-      },
-      "critical-wash": {
-        "role": "tertiary",
-        "displayName": "Status Red Wash",
-        "canonical": "#fbe9e7",
-        "oklch": "oklch(94.8% 0.020 25.2)",
-        "tonalRamp": [
-          "#130807",
-          "#2e2120",
-          "#4c3e3d",
-          "#6c5d5b",
-          "#8e7e7c",
-          "#b1a19f",
-          "#d6c5c3",
-          "#fceae8"
-        ]
-      },
-      "forbidden-wash": {
-        "role": "tertiary",
-        "displayName": "Forbidden Wash",
-        "canonical": "#fdf4f3",
-        "oklch": "oklch(97.4% 0.010 25.1)",
-        "tonalRamp": [
-          "#0f0a09",
-          "#2a2323",
-          "#47403f",
-          "#675f5e",
-          "#88807f",
-          "#aba3a2",
-          "#cfc7c6",
-          "#f5eceb"
-        ]
-      },
-      "same-wash": {
-        "role": "tertiary",
-        "displayName": "Same-Layer Wash",
-        "canonical": "#f0f4f9",
-        "oklch": "oklch(96.6% 0.008 253.9)",
-        "tonalRamp": [
-          "#090b0e",
-          "#222529",
-          "#3f4246",
-          "#5e6266",
-          "#7f8387",
-          "#a2a5aa",
-          "#c6c9ce",
-          "#ebeff4"
-        ]
-      },
-      "warning": {
-        "role": "tertiary",
-        "displayName": "Status Amber",
-        "canonical": "#fab219",
-        "oklch": "oklch(81.1% 0.164 78.5)",
-        "tonalRamp": [
-          "#2a0000",
-          "#4c0800",
-          "#6e2e00",
-          "#924f00",
-          "#b67200",
-          "#dc9500",
-          "#ffba2a",
-          "#ffe05c"
-        ]
-      },
-      "warning-ink": {
-        "role": "tertiary",
-        "displayName": "Status Amber Ink",
-        "canonical": "#8a5300",
-        "oklch": "oklch(49.4% 0.109 66.9)",
-        "tonalRamp": [
-          "#250000",
-          "#451300",
-          "#673300",
-          "#8a5300",
-          "#ae7431",
-          "#d39756",
-          "#f9bb7a",
-          "#ffe19e"
-        ]
-      },
-      "warning-wash": {
-        "role": "tertiary",
-        "displayName": "Status Amber Wash",
-        "canonical": "#fff4dc",
-        "oklch": "oklch(96.9% 0.034 86.3)",
-        "tonalRamp": [
-          "#110a00",
-          "#2c2411",
-          "#4a412d",
-          "#6a604c",
-          "#8b816c",
-          "#aea48e",
-          "#d3c8b1",
-          "#f8eed6"
-        ]
-      },
-      "good-ink": {
-        "role": "tertiary",
-        "displayName": "Clean Green",
-        "canonical": "#006300",
-        "oklch": "oklch(43.3% 0.147 142.5)",
-        "tonalRamp": [
-          "#001500",
-          "#003300",
-          "#005300",
-          "#1f751b",
-          "#469841",
-          "#6abc64",
-          "#8ee187",
-          "#b3ffab"
-        ]
-      },
-      "cycle": {
-        "role": "tertiary",
-        "displayName": "Cycle Magenta",
-        "canonical": "#a3296f",
-        "oklch": "oklch(49.5% 0.171 350.1)",
-        "tonalRamp": [
-          "#310014",
-          "#570030",
-          "#7c004e",
-          "#a2286e",
-          "#c94e90",
-          "#f172b4",
-          "#ff97d9",
-          "#ffbcfe"
-        ]
-      },
-      "layer-1": {
-        "role": "tertiary",
-        "displayName": "Layer 1",
-        "canonical": "#2a78d6",
-        "oklch": "oklch(57.5% 0.163 255.5)",
-        "tonalRamp": [
-          "#00004d",
-          "#001670",
-          "#003c95",
-          "#055fba",
-          "#3582e1",
-          "#59a6ff",
-          "#7eccff",
-          "#a2f2ff"
-        ]
-      },
-      "layer-2": {
-        "role": "tertiary",
-        "displayName": "Layer 2",
-        "canonical": "#eb6834",
-        "oklch": "oklch(67.1% 0.175 40.6)",
-        "tonalRamp": [
-          "#390000",
-          "#5f0000",
-          "#860000",
-          "#ad2d00",
-          "#d5531b",
-          "#fd7845",
-          "#ff9d6b",
-          "#ffc390"
-        ]
-      },
-      "layer-3": {
-        "role": "tertiary",
-        "displayName": "Layer 3",
-        "canonical": "#1baf7a",
-        "oklch": "oklch(66.9% 0.141 162.1)",
-        "tonalRamp": [
-          "#001800",
-          "#00360b",
-          "#005729",
-          "#007848",
-          "#009b68",
-          "#37c08a",
-          "#65e5ad",
-          "#8dffd2"
-        ]
-      },
-      "layer-4": {
-        "role": "tertiary",
-        "displayName": "Layer 4",
-        "canonical": "#eda100",
-        "oklch": "oklch(76.4% 0.161 75.1)",
-        "tonalRamp": [
-          "#2b0000",
-          "#4d0400",
-          "#702b00",
-          "#944d00",
-          "#b97000",
-          "#de9300",
-          "#ffb835",
-          "#ffde63"
-        ]
-      },
-      "layer-5": {
-        "role": "tertiary",
-        "displayName": "Layer 5",
-        "canonical": "#e87ba4",
-        "oklch": "oklch(71.6% 0.141 357.4)",
-        "tonalRamp": [
-          "#2e000b",
-          "#520025",
-          "#771042",
-          "#9c3762",
-          "#c35a83",
-          "#ea7da6",
-          "#ffa1ca",
-          "#ffc6ef"
-        ]
-      },
-      "layer-6": {
-        "role": "tertiary",
-        "displayName": "Layer 6",
-        "canonical": "#008300",
-        "oklch": "oklch(52.9% 0.180 142.5)",
-        "tonalRamp": [
-          "#001600",
-          "#003500",
-          "#005600",
-          "#007800",
-          "#2e9c29",
-          "#57c051",
-          "#7de675",
-          "#a2ff9a"
-        ]
-      },
-      "layer-7": {
-        "role": "tertiary",
-        "displayName": "Layer 7",
-        "canonical": "#6250d6",
-        "oklch": "oklch(52.7% 0.197 283.4)",
-        "tonalRamp": [
-          "#190059",
-          "#28007e",
-          "#3e1ba4",
-          "#5945ca",
-          "#786af2",
-          "#988eff",
-          "#bbb4ff",
-          "#dfdaff"
-        ]
-      },
-      "layer-8": {
-        "role": "tertiary",
-        "displayName": "Layer 8",
-        "canonical": "#e34948",
-        "oklch": "oklch(62.3% 0.191 24.9)",
-        "tonalRamp": [
-          "#3d0000",
-          "#650000",
-          "#8d0000",
-          "#b51221",
-          "#dd4443",
-          "#ff6a65",
-          "#ff9088",
-          "#ffb6ac"
-        ]
-      },
-      "layer-none": {
-        "role": "tertiary",
-        "displayName": "Unlayered Gray",
-        "canonical": "#b4bcc6",
-        "oklch": "oklch(79.2% 0.017 253.9)",
-        "tonalRamp": [
-          "#070c12",
-          "#20262d",
-          "#3c434b",
-          "#5b626b",
-          "#7c838c",
-          "#9ea6b0",
-          "#c2cad4",
-          "#e7effa"
-        ]
-      },
-      "graph-ground": {
-        "role": "neutral",
-        "displayName": "Canvas",
-        "canonical": "#ffffff",
-        "oklch": "oklch(100.0% 0.000 89.9)",
-        "tonalRamp": [
-          "#0b0b0b",
-          "#252525",
-          "#424242",
-          "#616161",
-          "#828282",
-          "#a5a5a5",
-          "#c9c9c9",
-          "#eeeeee"
-        ]
-      },
-      "graph-edge": {
-        "role": "neutral",
-        "displayName": "Default Edge",
-        "canonical": "#8d9bab",
-        "oklch": "oklch(68.4% 0.029 251.8)",
-        "tonalRamp": [
-          "#030c17",
-          "#1b2633",
-          "#374351",
-          "#566371",
-          "#768493",
-          "#98a7b7",
-          "#bccbdc",
-          "#e1f0ff"
-        ]
-      },
-      "graph-node-ring": {
-        "role": "neutral",
-        "displayName": "Node Ring",
-        "canonical": "#3b434d",
-        "oklch": "oklch(37.9% 0.020 254.1)",
-        "tonalRamp": [
-          "#060c14",
-          "#1e262f",
-          "#3b434d",
-          "#5a626d",
-          "#7a838f",
-          "#9da6b2",
-          "#c0cad6",
-          "#e6f0fc"
-        ]
-      },
-      "graph-package": {
-        "role": "neutral",
-        "displayName": "Package Umber",
-        "canonical": "#7b6a55",
-        "oklch": "oklch(53.5% 0.038 72.7)",
-        "tonalRamp": [
-          "#150800",
-          "#30220f",
-          "#4f3f2b",
-          "#6f5e49",
-          "#917f6a",
-          "#b4a28b",
-          "#d9c6af",
-          "#ffebd3"
-        ]
-      },
-      "ground-dark": {
-        "role": "neutral",
-        "displayName": "Ruling Ground (Dark)",
-        "canonical": "#111317",
-        "oklch": "oklch(18.6% 0.009 264.3)",
-        "theme": "dark",
-        "lightCounterpart": "ground"
-      },
-      "stock-dark": {
-        "role": "neutral",
-        "displayName": "Index Stock (Dark)",
-        "canonical": "#1a1d22",
-        "oklch": "oklch(23.0% 0.011 260.7)",
-        "theme": "dark",
-        "lightCounterpart": "stock"
-      },
-      "stock-2-dark": {
-        "role": "neutral",
-        "displayName": "Index Stock Shade (Dark)",
-        "canonical": "#21252b",
-        "oklch": "oklch(26.3% 0.013 258.4)",
-        "theme": "dark",
-        "lightCounterpart": "stock-2"
-      },
-      "ink-dark": {
-        "role": "neutral",
-        "displayName": "Ink (Dark)",
-        "canonical": "#e9ecef",
-        "oklch": "oklch(94.2% 0.005 247.9)",
-        "theme": "dark",
-        "lightCounterpart": "ink"
-      },
-      "ink-2-dark": {
-        "role": "neutral",
-        "displayName": "Secondary Ink (Dark)",
-        "canonical": "#b8c0ca",
-        "oklch": "oklch(80.5% 0.017 253.9)",
-        "theme": "dark",
-        "lightCounterpart": "ink-2"
-      },
-      "ink-3-dark": {
-        "role": "neutral",
-        "displayName": "Receding Ink (Dark)",
-        "canonical": "#959eaa",
-        "oklch": "oklch(69.6% 0.020 255.6)",
-        "theme": "dark",
-        "lightCounterpart": "ink-3"
-      },
-      "rule-dark": {
-        "role": "neutral",
-        "displayName": "Ruling (Dark)",
-        "canonical": "#2e343c",
-        "oklch": "oklch(32.3% 0.016 255.6)",
-        "theme": "dark",
-        "lightCounterpart": "rule"
-      },
-      "rule-soft-dark": {
-        "role": "neutral",
-        "displayName": "Soft Ruling (Dark)",
-        "canonical": "#262b32",
-        "oklch": "oklch(28.7% 0.015 256.8)",
-        "theme": "dark",
-        "lightCounterpart": "rule-soft"
-      },
-      "rule-strong-dark": {
-        "role": "neutral",
-        "displayName": "Strong Ruling (Dark)",
-        "canonical": "#4a545f",
-        "oklch": "oklch(44.1% 0.022 250.8)",
-        "theme": "dark",
-        "lightCounterpart": "rule-strong"
-      },
-      "rail-dark": {
-        "role": "secondary",
-        "displayName": "Oak Drawer (Dark)",
-        "canonical": "#2b2016",
-        "oklch": "oklch(25.4% 0.025 63.6)",
-        "theme": "dark",
-        "lightCounterpart": "rail"
-      },
-      "rail-2-dark": {
-        "role": "secondary",
-        "displayName": "Open Drawer Face (Dark)",
-        "canonical": "#3a2c1e",
-        "oklch": "oklch(30.5% 0.031 66.2)",
-        "theme": "dark",
-        "lightCounterpart": "rail-2"
-      },
-      "rail-ink-dark": {
-        "role": "secondary",
-        "displayName": "Drawer Lettering (Dark)",
-        "canonical": "#efe5d5",
-        "oklch": "oklch(92.5% 0.024 79.7)",
-        "theme": "dark",
-        "lightCounterpart": "rail-ink"
-      },
-      "rail-ink-2-dark": {
-        "role": "secondary",
-        "displayName": "Drawer Hairline (Dark)",
-        "canonical": "#c9b89e",
-        "oklch": "oklch(79.0% 0.041 78.5)",
-        "theme": "dark",
-        "lightCounterpart": "rail-ink-2"
-      },
-      "index-red-dark": {
-        "role": "secondary",
-        "displayName": "Index-Card Red (Dark)",
-        "canonical": "#e2675f",
-        "oklch": "oklch(66.2% 0.155 25.9)",
-        "theme": "dark",
-        "lightCounterpart": "index-red"
-      },
-      "accent-dark": {
-        "role": "primary",
-        "displayName": "Ruling Blue Ink (Dark)",
-        "canonical": "#8db4e2",
-        "oklch": "oklch(75.8% 0.079 252.9)",
-        "theme": "dark",
-        "lightCounterpart": "accent"
-      },
-      "accent-ink-dark": {
-        "role": "primary",
-        "displayName": "Ink on Accent (Dark)",
-        "canonical": "#0d1520",
-        "oklch": "oklch(19.4% 0.025 256.5)",
-        "theme": "dark",
-        "lightCounterpart": "accent-ink"
-      },
-      "accent-wash-dark": {
-        "role": "primary",
-        "displayName": "Selection Wash (Dark)",
-        "canonical": "#1d2a3a",
-        "oklch": "oklch(28.1% 0.035 254.0)",
-        "theme": "dark",
-        "lightCounterpart": "accent-wash"
-      },
-      "critical-ink-dark": {
-        "role": "tertiary",
-        "displayName": "Status Red Ink (Dark)",
-        "canonical": "#f08a84",
-        "oklch": "oklch(74.1% 0.125 24.1)",
-        "theme": "dark",
-        "lightCounterpart": "critical-ink"
-      },
-      "critical-wash-dark": {
-        "role": "tertiary",
-        "displayName": "Status Red Wash (Dark)",
-        "canonical": "#3a1d1c",
-        "oklch": "oklch(27.0% 0.046 22.6)",
-        "theme": "dark",
-        "lightCounterpart": "critical-wash"
-      },
-      "forbidden-wash-dark": {
-        "role": "tertiary",
-        "displayName": "Forbidden Wash (Dark)",
-        "canonical": "#251b1c",
-        "oklch": "oklch(23.5% 0.016 11.6)",
-        "theme": "dark",
-        "lightCounterpart": "forbidden-wash"
-      },
-      "same-wash-dark": {
-        "role": "tertiary",
-        "displayName": "Same-Layer Wash (Dark)",
-        "canonical": "#1f2530",
-        "oklch": "oklch(26.4% 0.022 262.5)",
-        "theme": "dark",
-        "lightCounterpart": "same-wash"
-      },
-      "warning-ink-dark": {
-        "role": "tertiary",
-        "displayName": "Status Amber Ink (Dark)",
-        "canonical": "#f5c35a",
-        "oklch": "oklch(84.2% 0.134 83.5)",
-        "theme": "dark",
-        "lightCounterpart": "warning-ink"
-      },
-      "warning-wash-dark": {
-        "role": "tertiary",
-        "displayName": "Status Amber Wash (Dark)",
-        "canonical": "#3a2e14",
-        "oklch": "oklch(30.8% 0.044 84.9)",
-        "theme": "dark",
-        "lightCounterpart": "warning-wash"
-      },
-      "good-ink-dark": {
-        "role": "tertiary",
-        "displayName": "Clean Green (Dark)",
-        "canonical": "#4cc24c",
-        "oklch": "oklch(72.2% 0.190 143.3)",
-        "theme": "dark",
-        "lightCounterpart": "good-ink"
-      },
-      "cycle-dark": {
-        "role": "tertiary",
-        "displayName": "Cycle Magenta (Dark)",
-        "canonical": "#e07ab8",
-        "oklch": "oklch(71.2% 0.146 344.1)",
-        "theme": "dark",
-        "lightCounterpart": "cycle"
-      },
-      "layer-1-dark": {
-        "role": "tertiary",
-        "displayName": "Layer 1 (Dark)",
-        "canonical": "#3987e5",
-        "oklch": "oklch(62.2% 0.161 255.1)",
-        "theme": "dark",
-        "lightCounterpart": "layer-1"
-      },
-      "layer-2-dark": {
-        "role": "tertiary",
-        "displayName": "Layer 2 (Dark)",
-        "canonical": "#d95926",
-        "oklch": "oklch(62.2% 0.173 40.1)",
-        "theme": "dark",
-        "lightCounterpart": "layer-2"
-      },
-      "layer-3-dark": {
-        "role": "tertiary",
-        "displayName": "Layer 3 (Dark)",
-        "canonical": "#199e70",
-        "oklch": "oklch(62.1% 0.128 163.1)",
-        "theme": "dark",
-        "lightCounterpart": "layer-3"
-      },
-      "layer-4-dark": {
-        "role": "tertiary",
-        "displayName": "Layer 4 (Dark)",
-        "canonical": "#c98500",
-        "oklch": "oklch(67.0% 0.143 73.2)",
-        "theme": "dark",
-        "lightCounterpart": "layer-4"
-      },
-      "layer-5-dark": {
-        "role": "tertiary",
-        "displayName": "Layer 5 (Dark)",
-        "canonical": "#d55181",
-        "oklch": "oklch(62.2% 0.171 0.8)",
-        "theme": "dark",
-        "lightCounterpart": "layer-5"
-      },
-      "layer-6-dark": {
-        "role": "tertiary",
-        "displayName": "Layer 6 (Dark)",
-        "canonical": "#008300",
-        "oklch": "oklch(52.9% 0.180 142.5)",
-        "theme": "dark",
-        "lightCounterpart": "layer-6"
-      },
-      "layer-7-dark": {
-        "role": "tertiary",
-        "displayName": "Layer 7 (Dark)",
-        "canonical": "#9085e9",
-        "oklch": "oklch(67.0% 0.145 286.8)",
-        "theme": "dark",
-        "lightCounterpart": "layer-7"
-      },
-      "layer-8-dark": {
-        "role": "tertiary",
-        "displayName": "Layer 8 (Dark)",
-        "canonical": "#e66767",
-        "oklch": "oklch(66.9% 0.159 22.3)",
-        "theme": "dark",
-        "lightCounterpart": "layer-8"
-      },
-      "layer-none-dark": {
-        "role": "tertiary",
-        "displayName": "Unlayered Gray (Dark)",
-        "canonical": "#6b7480",
-        "oklch": "oklch(55.6% 0.022 255.6)",
-        "theme": "dark",
-        "lightCounterpart": "layer-none"
-      },
-      "graph-ground-dark": {
-        "role": "neutral",
-        "displayName": "Canvas (Dark)",
-        "canonical": "#1a1d22",
-        "oklch": "oklch(23.0% 0.011 260.7)",
-        "theme": "dark",
-        "lightCounterpart": "graph-ground"
-      },
-      "graph-edge-dark": {
-        "role": "neutral",
-        "displayName": "Default Edge (Dark)",
-        "canonical": "#66727f",
-        "oklch": "oklch(54.7% 0.025 250.4)",
-        "theme": "dark",
-        "lightCounterpart": "graph-edge"
-      },
-      "graph-node-ring-dark": {
-        "role": "neutral",
-        "displayName": "Node Ring (Dark)",
-        "canonical": "#0d0f12",
-        "oklch": "oklch(16.8% 0.007 258.4)",
-        "theme": "dark",
-        "lightCounterpart": "graph-node-ring"
-      },
-      "graph-package-dark": {
-        "role": "neutral",
-        "displayName": "Package Umber (Dark)",
-        "canonical": "#a8957b",
-        "oklch": "oklch(68.0% 0.043 75.6)",
-        "theme": "dark",
-        "lightCounterpart": "graph-package"
-      }
+      "tone-0": { "role": "neutral", "displayName": "Rail Black", "canonical": "#0a0d12", "tonalRamp": ["#0a0d12", "#0d1117", "#151a22", "#1b212b", "#262c36", "#39414d", "#8b949e", "#e6edf3"] },
+      "tone-1": { "role": "neutral", "displayName": "Graphite Ground", "canonical": "#0d1117", "tonalRamp": ["#0a0d12", "#0d1117", "#151a22", "#1b212b", "#262c36", "#39414d", "#8b949e", "#e6edf3"] },
+      "tone-2": { "role": "neutral", "displayName": "Panel", "canonical": "#151a22", "tonalRamp": ["#0a0d12", "#0d1117", "#151a22", "#1b212b", "#262c36", "#39414d", "#8b949e", "#e6edf3"] },
+      "tone-3": { "role": "neutral", "displayName": "Elevated Panel", "canonical": "#1b212b", "tonalRamp": ["#0a0d12", "#0d1117", "#151a22", "#1b212b", "#262c36", "#39414d", "#8b949e", "#e6edf3"] },
+      "tone-4": { "role": "neutral", "displayName": "Seam", "canonical": "#262c36", "tonalRamp": ["#0a0d12", "#0d1117", "#151a22", "#1b212b", "#262c36", "#39414d", "#8b949e", "#e6edf3"] },
+      "tone-5": { "role": "neutral", "displayName": "Strong Seam", "canonical": "#39414d", "tonalRamp": ["#0a0d12", "#0d1117", "#151a22", "#1b212b", "#262c36", "#39414d", "#8b949e", "#e6edf3"] },
+      "tone-6": { "role": "neutral", "displayName": "Muted Ink", "canonical": "#8b949e", "tonalRamp": ["#0a0d12", "#0d1117", "#151a22", "#1b212b", "#262c36", "#39414d", "#8b949e", "#e6edf3"] },
+      "tone-7": { "role": "neutral", "displayName": "Secondary Ink", "canonical": "#b1bac4", "tonalRamp": ["#0d1117", "#151a22", "#262c36", "#39414d", "#8b949e", "#b1bac4", "#d0d7de", "#e6edf3"] },
+      "tone-8": { "role": "neutral", "displayName": "Ink", "canonical": "#e6edf3", "tonalRamp": ["#0d1117", "#151a22", "#262c36", "#39414d", "#8b949e", "#b1bac4", "#d0d7de", "#e6edf3"] },
+      "rule-soft": { "role": "neutral", "displayName": "Row Seam", "canonical": "#1f252e" },
+      "accent": { "role": "primary", "displayName": "Keyword Blue", "canonical": "#79c0ff", "tonalRamp": ["#0a1a2c", "#12243a", "#0c3a6b", "#0969da", "#388bfd", "#58a6ff", "#79c0ff", "#cae8ff"] },
+      "accent-wash": { "role": "primary", "displayName": "Selection Wash", "canonical": "#12243a" },
+      "good-ink": { "role": "secondary", "displayName": "String Green", "canonical": "#56d364", "tonalRamp": ["#0a1c12", "#10261a", "#0f5323", "#1a7f37", "#2ea043", "#3fb950", "#56d364", "#aff5b4"] },
+      "cycle": { "role": "secondary", "displayName": "Number Purple", "canonical": "#d2a8ff", "tonalRamp": ["#1a1226", "#231a33", "#3c1e70", "#6e40c9", "#8250df", "#a371f7", "#d2a8ff", "#eddeff"] },
+      "warning": { "role": "secondary", "displayName": "Warning Amber", "canonical": "#e3b341", "tonalRamp": ["#1f1a0c", "#2a2312", "#4b3a00", "#8a5c00", "#bf8700", "#d29922", "#e3b341", "#f8e3a1"] },
+      "critical": { "role": "secondary", "displayName": "Error Red", "canonical": "#f85149", "tonalRamp": ["#1f0f10", "#2a1416", "#67060c", "#a40e26", "#cf222e", "#f85149", "#ff7b72", "#ffc1ba"] },
+      "layer-1": { "role": "tertiary", "displayName": "Layer 1 Blue", "canonical": "#3987e5" },
+      "layer-2": { "role": "tertiary", "displayName": "Layer 2 Orange", "canonical": "#d95926" },
+      "layer-3": { "role": "tertiary", "displayName": "Layer 3 Teal", "canonical": "#199e70" },
+      "layer-4": { "role": "tertiary", "displayName": "Layer 4 Ochre", "canonical": "#c98500" },
+      "layer-5": { "role": "tertiary", "displayName": "Layer 5 Pink", "canonical": "#d55181" },
+      "layer-6": { "role": "tertiary", "displayName": "Layer 6 Green", "canonical": "#008300" },
+      "layer-7": { "role": "tertiary", "displayName": "Layer 7 Violet", "canonical": "#9085e9" },
+      "layer-8": { "role": "tertiary", "displayName": "Layer 8 Coral", "canonical": "#e66767" },
+      "layer-none": { "role": "tertiary", "displayName": "Unclassified", "canonical": "#6b7480" },
+      "graph-edge": { "role": "neutral", "displayName": "Graph Edge", "canonical": "#4d5664" },
+      "graph-package": { "role": "neutral", "displayName": "Package Bronze", "canonical": "#a8957b" }
     },
     "typographyMeta": {
-      "headline": {
-        "displayName": "Headline",
-        "purpose": "Page titles (h1)."
-      },
-      "title": {
-        "displayName": "Title",
-        "purpose": "Panel headings and the catalog card call."
-      },
-      "wordmark": {
-        "displayName": "Wordmark",
-        "purpose": "Rail wordmark and header project name."
-      },
-      "figure": {
-        "displayName": "Figure",
-        "purpose": "Ledger counts, tabular."
-      },
-      "body": {
-        "displayName": "Body",
-        "purpose": "All UI text."
-      },
-      "subhead": {
-        "displayName": "Subhead",
-        "purpose": "h3 inside panels."
-      },
-      "label": {
-        "displayName": "Label",
-        "purpose": "Field labels, legends, tags, table heads."
-      },
-      "card-section-label": {
-        "displayName": "Card Section Label",
-        "purpose": "Uppercase heading of each catalog card section (Imports, Imported by)."
-      },
-      "mono": {
-        "displayName": "Mono",
-        "purpose": "Paths, fingerprints, rule IDs, import kinds."
-      },
-      "mono-small": {
-        "displayName": "Mono Small",
-        "purpose": "line:column refs, chain steps, graph tooltip."
-      }
+      "headline": { "displayName": "Headline", "purpose": "Page titles (h1) only." },
+      "wordmark": { "displayName": "Wordmark", "purpose": "The rail wordmark; the top bar project name uses 650." },
+      "title": { "displayName": "Title", "purpose": "h2 headings and the detail card's call." },
+      "body": { "displayName": "Body", "purpose": "All UI text, tabular figures, prose capped at 70-75ch." },
+      "small": { "displayName": "Small", "purpose": "Meta, finding messages, panel links, legends." },
+      "label": { "displayName": "Panel Label", "purpose": "Tracked uppercase panel headers, strip-cell labels and card section headings, in tone-6." },
+      "figure": { "displayName": "Health Figure", "purpose": "Health-strip counts in their state colour." },
+      "figure-ledger": { "displayName": "Ledger Figure", "purpose": "Right-aligned analysis ledger values." },
+      "mono": { "displayName": "Mono", "purpose": "Paths and finding locations." },
+      "mono-small": { "displayName": "Mono Small", "purpose": "Fingerprints, rail counts, refs, graph tooltip." }
     },
     "shadows": [],
-    "hairlines": [
-      {
-        "name": "container",
-        "value": "1px solid var(--rule)",
-        "purpose": "Around panels, cards, tables, lists."
-      },
-      {
-        "name": "row",
-        "value": "1px solid var(--rule-soft)",
-        "purpose": "Between rows inside a container."
-      },
-      {
-        "name": "control-overlay",
-        "value": "1px solid var(--rule-strong)",
-        "purpose": "Controls and overlays (search results, filter drawer, open mobile rail)."
-      },
-      {
-        "name": "open-drawer",
-        "value": "inset 0 0 0 1px var(--rail-ink-2)",
-        "purpose": "Active nav item label holder (inset hairline, not elevation)."
-      },
-      {
-        "name": "index-red-rule",
-        "value": "2px solid var(--index-red)",
-        "purpose": "Pulled catalog card header only."
-      },
-      {
-        "name": "mobile-oak-band",
-        "value": "4px solid var(--rail)",
-        "purpose": "Top of header at 860px and narrower."
-      }
-    ],
-    "focus": {
-      "value": "2px solid var(--accent)",
-      "offset": "2px",
-      "rail": "2px solid var(--rail-ink)"
-    },
     "motion": [
-      {
-        "name": "state",
-        "value": "150ms ease-out",
-        "purpose": "Background and border colour changes; disclosure rotation."
-      },
-      {
-        "name": "drawer",
-        "value": "200ms ease-out",
-        "purpose": "Mobile rail slide-in."
-      },
-      {
-        "name": "busy-spin",
-        "value": "900ms linear infinite",
-        "purpose": "Icon inside a busy button."
-      },
-      {
-        "name": "shimmer",
-        "value": "1.4s ease-in-out infinite",
-        "purpose": "Skeleton placeholders."
-      },
-      {
-        "name": "reduced-motion",
-        "value": "1ms",
-        "purpose": "All animation and transition under prefers-reduced-motion."
-      }
+      { "name": "state-change", "value": "150ms ease-out", "purpose": "Background, border, colour and opacity changes on controls, rows and graph elements." },
+      { "name": "drawer", "value": "200ms ease-out", "purpose": "The mobile rail drawer slide." },
+      { "name": "unfold", "value": "260ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "A fix strip row opening into its body; the chevron turns at 200ms on the same curve." },
+      { "name": "reduced-motion", "value": "1ms", "purpose": "All animation and transition durations under prefers-reduced-motion." }
     ],
     "breakpoints": [
-      {
-        "name": "phone",
-        "value": "520px",
-        "purpose": "Module tables become list rows; header actions full width."
-      },
-      {
-        "name": "drawer",
-        "value": "860px",
-        "purpose": "Rail becomes a drawer; header gets oak band and stops sticking."
-      },
-      {
-        "name": "stack-detail",
-        "value": "1080px",
-        "purpose": "Pulled card stacks under the list."
-      },
-      {
-        "name": "ledger-wide",
-        "value": "1240px",
-        "purpose": "Ledger runs four columns (min-width)."
-      },
-      {
-        "name": "graph-stack",
-        "value": "1280px",
-        "purpose": "Graph side column drops below the canvas."
-      }
+      { "name": "wide-facts", "value": "1399px" },
+      { "name": "graph-stack", "value": "1280px" },
+      { "name": "console-stack", "value": "1080px" },
+      { "name": "rail-drawer", "value": "860px" },
+      { "name": "strip-two", "value": "560px" },
+      { "name": "phone", "value": "520px" }
     ],
-    "layout": {
-      "railWidth": "216px",
-      "topbarHeight": "60px",
-      "detailColumn": "minmax(360px, 440px)",
-      "graphSideColumn": "minmax(320px, 400px)"
-    },
-    "graphEncoding": {
-      "fill": "layer colour; layer-none when unclassified or past eight layers",
-      "ring": "1px graph-node-ring; 3px critical/warning on violation source; 3px accent when selected",
-      "size": "min(64, 18 + 7*sqrt(direct degree)) px",
-      "edges": {
-        "default": "1.25px graph-edge",
-        "typeOnly": "dashed 5/4",
-        "external": "dotted graph-package",
-        "cycle": "2px cycle",
-        "violation": "2.5px critical"
-      },
-      "focusDim": 0.12,
-      "shapes": {
-        "module": "ellipse",
-        "package": "diamond",
-        "folder": "round-rectangle"
-      }
-    },
-    "icons": {
-      "grid": "24px",
-      "stroke": 1.75,
-      "linecap": "round",
-      "linejoin": "round",
-      "color": "currentColor"
-    },
     "themes": {
-      "mode": "OS preference by default; System / Light / Dark switch in the rail sets data-theme",
-      "darkKeysSuffix": "-dark"
+      "default": "dark",
+      "light": "Full variant via prefers-color-scheme: light (unless data-theme='dark') or data-theme='light'; same roles, ramp remapped; see the -light keys in DESIGN.md frontmatter."
     }
   },
   "components": [
     {
-      "name": "Button",
-      "kind": "button",
-      "refersTo": "button",
-      "description": "Default ruled control for actions.",
-      "html": "<button class=\"ds-btn\">Copy path</button>",
-      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:0 12px;border:1px solid var(--rule-strong);border-radius:3px;background:var(--stock);color:var(--ink);font:550 14px/1.5 system-ui,sans-serif;cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out;} .ds-btn:hover{background:var(--stock-2);border-color:var(--ink-3);} .ds-btn:active{background:var(--rule-soft);} .ds-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}"
-    },
-    {
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "The one main action, such as Re-analyze.",
-      "html": "<button class=\"ds-btn-primary\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 12a9 9 0 1 1-3-6.7L21 8\"/><path d=\"M21 3v5h-5\"/></svg>Re-analyze</button>",
-      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:0 12px;border:1px solid var(--rule-strong);border-radius:3px;background:var(--stock);color:var(--ink);font:550 14px/1.5 system-ui,sans-serif;cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out;background:var(--accent);border-color:var(--accent);color:var(--accent-ink);} .ds-btn-primary:hover{border-color:var(--ink);} .ds-btn-primary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}"
+      "description": "The one primary action per view (Re-analyze).",
+      "html": "<button class=\"ds-btn ds-btn-primary\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 12a8 8 0 1 1-2.34-5.66L20 8.5\"/><path d=\"M20 3v5.5h-5.5\"/></svg>Re-analyze</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 14px; border: 1px solid var(--rule-strong, #39414d); border-radius: 6px; background: var(--stock, #151a22); color: var(--ink, #e6edf3); font: 550 14px system-ui, sans-serif; cursor: pointer; transition: background-color 150ms ease-out, border-color 150ms ease-out; } .ds-btn-primary { background: var(--accent, #79c0ff); border-color: var(--accent, #79c0ff); color: var(--accent-ink, #0a0d12); } .ds-btn-primary:hover { background: color-mix(in srgb, var(--accent, #79c0ff) 86%, var(--ink, #e6edf3)); border-color: transparent; } .ds-btn:focus-visible { outline: 2px solid var(--accent, #79c0ff); outline-offset: 2px; }"
     },
     {
-      "name": "Ghost Button",
+      "name": "Default Button",
       "kind": "button",
-      "refersTo": "button-ghost",
-      "description": "Low-emphasis action inside cards (close, copy).",
-      "html": "<button class=\"ds-btn-ghost\">Close</button>",
-      "css": ".ds-btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:0 12px;border:1px solid var(--rule-strong);border-radius:3px;background:var(--stock);color:var(--ink);font:550 14px/1.5 system-ui,sans-serif;cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out;min-height:26px;padding:0 8px;font-size:13px;background:transparent;border-color:transparent;} .ds-btn-ghost:hover{background:var(--stock-2);border-color:var(--rule);} .ds-btn-ghost:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}"
+      "refersTo": "button",
+      "description": "Secondary actions: Import report, Details, Show in graph.",
+      "html": "<button class=\"ds-btn-default\">Import report</button>",
+      "css": ".ds-btn-default { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 14px; border: 1px solid var(--rule-strong, #39414d); border-radius: 6px; background: var(--stock, #151a22); color: var(--ink, #e6edf3); font: 550 14px system-ui, sans-serif; cursor: pointer; transition: background-color 150ms ease-out, border-color 150ms ease-out; } .ds-btn-default:hover { background: var(--stock-2, #1b212b); border-color: var(--ink-3, #8b949e); } .ds-btn-default:active { background: var(--rule-soft, #1f252e); } .ds-btn-default:focus-visible { outline: 2px solid var(--accent, #79c0ff); outline-offset: 2px; }"
     },
     {
       "name": "Search Input",
       "kind": "input",
       "refersTo": "input",
-      "description": "Ruled field with a leading icon.",
-      "html": "<label class=\"ds-search\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-3.5-3.5\"/></svg><input type=\"search\" placeholder=\"Find a module\" aria-label=\"Find a module\"></label>",
-      "css": ".ds-search{position:relative;display:flex;align-items:center;max-width:320px;} .ds-search svg{position:absolute;left:9px;color:var(--ink-3);pointer-events:none;} .ds-search input{width:100%;min-height:32px;padding:0 8px 0 30px;border:1px solid var(--rule-strong);border-radius:3px;background:var(--stock);color:var(--ink);font:14px system-ui,sans-serif;} .ds-search input::placeholder{color:var(--ink-3);} .ds-search input:hover{border-color:var(--ink-3);} .ds-search input:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}"
+      "description": "Text and search fields; 32px, strong seam border.",
+      "html": "<input class=\"ds-input\" type=\"search\" placeholder=\"Find a file (/)\">",
+      "css": ".ds-input { min-height: 32px; padding: 0 8px; border: 1px solid var(--rule-strong, #39414d); border-radius: 6px; background: var(--stock, #151a22); color: var(--ink, #e6edf3); font: 14px system-ui, sans-serif; } .ds-input::placeholder { color: var(--ink-3, #8b949e); } .ds-input:hover { border-color: var(--ink-3, #8b949e); } .ds-input:focus-visible { outline: 2px solid var(--accent, #79c0ff); outline-offset: 2px; }"
     },
     {
-      "name": "Drawer Rail Navigation",
+      "name": "Rail Navigation",
       "kind": "nav",
       "refersTo": "nav-item",
-      "description": "Oak rail; the active item is the open drawer, not red.",
-      "html": "<nav class=\"ds-rail\"><div class=\"ds-brand\"><span class=\"ds-mark\"></span>DepTrace</div><a href=\"#\" aria-current=\"page\">Overview</a><a href=\"#\">Modules</a><a href=\"#\">Graph</a><a href=\"#\">Violations</a></nav>",
-      "css": ".ds-rail{display:flex;flex-direction:column;gap:1px;width:216px;padding:14px 0 12px;background:var(--rail);color:var(--rail-ink);font:14px/1.5 system-ui,sans-serif;} .ds-brand{display:flex;align-items:center;gap:10px;padding:2px 18px 18px;font:650 17px/1 system-ui,sans-serif;letter-spacing:-0.01em;} .ds-mark{width:22px;height:16px;background:var(--stock);border-radius:2px;box-shadow:inset 0 -5px 0 -4px var(--rule-strong);} .ds-rail a{margin:0 8px;padding:8px 10px;border-radius:3px;color:var(--rail-ink);text-decoration:none;transition:background-color 150ms ease-out;} .ds-rail a:hover{background:var(--rail-2);} .ds-rail a[aria-current=page]{background:var(--rail-2);font-weight:600;box-shadow:inset 0 0 0 1px var(--rail-ink-2);} .ds-rail a:focus-visible{outline:2px solid var(--rail-ink);outline-offset:2px;}"
+      "description": "The tone-0 rail with live mono counts; active item one step up with an accent icon.",
+      "html": "<nav class=\"ds-rail\"><a class=\"ds-rail-item\" aria-current=\"page\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"4\" width=\"7\" height=\"7\"/><rect x=\"13\" y=\"4\" width=\"7\" height=\"7\"/><rect x=\"4\" y=\"13\" width=\"7\" height=\"7\"/><rect x=\"13\" y=\"13\" width=\"7\" height=\"7\"/></svg><span class=\"ds-rail-label\">Overview</span></a><a class=\"ds-rail-item\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 4 3 20h18z\"/><path d=\"M12 10v4\"/></svg><span class=\"ds-rail-label\">Violations</span><span class=\"ds-rail-count\">5</span></a></nav>",
+      "css": ".ds-rail { display: grid; gap: 1px; width: 228px; padding: 16px 0; background: var(--rail, #0a0d12); border-right: 1px solid var(--rule, #262c36); } .ds-rail-item { display: flex; align-items: center; gap: 10px; margin: 0 10px; padding: 8px 10px; border-radius: 6px; color: var(--ink-2, #b1bac4); text-decoration: none; font: 14px system-ui, sans-serif; transition: background-color 150ms ease-out, color 150ms ease-out; } .ds-rail-item:hover { background: var(--rail-2, #151a22); color: var(--rail-ink, #e6edf3); } .ds-rail-item[aria-current='page'] { background: var(--stock-2, #1b212b); color: var(--rail-ink, #e6edf3); font-weight: 650; } .ds-rail-item[aria-current='page'] svg { color: var(--accent, #79c0ff); } .ds-rail-label { flex: 1; } .ds-rail-count { font: 12px/1 ui-monospace, monospace; color: var(--ink-3, #8b949e); } .ds-rail-item:focus-visible { outline: 2px solid var(--rail-ink, #e6edf3); outline-offset: 2px; }"
     },
     {
       "name": "Severity and Baseline Badges",
       "kind": "chip",
       "refersTo": "badge-error",
-      "description": "Status always carries an icon and a label.",
-      "html": "<span class=\"ds-badge ds-err\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 8v4M12 16h.01\"/></svg>error</span> <span class=\"ds-badge ds-warn\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 3 2 21h20L12 3Z\"/><path d=\"M12 10v4M12 18h.01\"/></svg>warning</span> <span class=\"ds-badge ds-new\">new</span> <span class=\"ds-badge ds-existing\">existing</span> <span class=\"ds-badge\">layer: domain</span>",
-      "css": ".ds-badge{display:inline-flex;align-items:center;gap:4px;padding:0 7px;min-height:21px;border:1px solid var(--rule);border-radius:3px;background:var(--stock-2);color:var(--ink-2);font:12px system-ui,sans-serif;white-space:nowrap;} .ds-badge svg{width:13px;height:13px;} .ds-err{border-color:var(--critical);background:var(--critical-wash);color:var(--critical-ink);font-weight:600;} .ds-warn{border-color:var(--warning);background:var(--warning-wash);color:var(--warning-ink);font-weight:600;} .ds-new{border-color:var(--ink);background:var(--ink);color:var(--stock);font-weight:600;} .ds-existing{border-style:dashed;}"
+      "description": "4px badges; severity always carries an icon and the word.",
+      "html": "<span class=\"ds-badge ds-badge-error\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"m9 9 6 6M15 9l-6 6\"/></svg>error</span> <span class=\"ds-badge ds-badge-warning\">warning</span> <span class=\"ds-badge ds-badge-new\">new</span> <span class=\"ds-badge\">accepted</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; gap: 4px; padding: 0 7px; min-height: 22px; border: 1px solid var(--rule, #262c36); border-radius: 4px; background: var(--stock-2, #1b212b); color: var(--ink-2, #b1bac4); font: 12px system-ui, sans-serif; white-space: nowrap; } .ds-badge-error { border-color: var(--critical, #f85149); background: var(--critical-wash, #2a1416); color: var(--critical-ink, #ff7b72); font-weight: 600; } .ds-badge-warning { border-color: var(--warning, #e3b341); background: var(--warning-wash, #2a2312); color: var(--warning-ink, #e3b341); font-weight: 600; } .ds-badge-new { border-color: var(--accent, #79c0ff); background: var(--accent-wash, #12243a); color: var(--accent, #79c0ff); font-weight: 650; }"
     },
     {
-      "name": "Catalog Card",
+      "name": "Panel with Label Head",
       "kind": "card",
-      "refersTo": "catalog-card",
-      "description": "The pulled card: call-number path, index-red header rule, cross-reference sections.",
-      "html": "<article class=\"ds-card\"><header class=\"ds-card-head\"><h2 class=\"ds-call\"><span class=\"ds-dir\">src/domain/<wbr></span>pricing.ts</h2><div class=\"ds-meta\"><span class=\"ds-tag\"><span class=\"ds-swatch\"></span>domain</span></div></header><section class=\"ds-sec\"><h3>Imports <span class=\"ds-count\">2</span></h3><ul><li><a href=\"#\"><span class=\"ds-dir\">src/domain/<wbr></span>money.ts</a><span class=\"ds-ref\">3:1</span></li><li><a href=\"#\"><span class=\"ds-dir\">src/shared/<wbr></span>round.ts</a><span class=\"ds-ref\">4:1 type</span></li></ul></section><section class=\"ds-sec\"><h3>Imported by <span class=\"ds-count\">1</span></h3><ul><li><a href=\"#\"><span class=\"ds-dir\">src/application/<wbr></span>cart-service.ts</a><span class=\"ds-ref\">7:1</span></li></ul></section></article>",
-      "css": ".ds-card{max-width:400px;background:var(--stock);border:1px solid var(--rule);border-radius:2px;color:var(--ink);font:14px/1.5 system-ui,sans-serif;} .ds-card-head{display:flex;flex-direction:column;gap:8px;padding:14px 16px 12px;border-bottom:2px solid var(--index-red);} .ds-call{margin:0;font:650 15px/1.25 ui-monospace,Consolas,monospace;} .ds-dir{color:var(--ink-3);} a:hover .ds-dir{color:inherit;} .ds-tag{display:inline-flex;align-items:center;gap:7px;padding:0 7px;min-height:21px;border:1px solid var(--rule);border-radius:3px;background:var(--stock-2);font-size:12px;color:var(--ink);} .ds-swatch{width:10px;height:10px;border-radius:50%;border:1px solid var(--graph-node-ring);background:var(--layer-1);} .ds-sec{display:flex;flex-direction:column;gap:8px;padding:12px 16px;border-bottom:1px solid var(--rule-soft);} .ds-sec:last-child{border-bottom:0;} .ds-sec h3{display:flex;align-items:center;gap:8px;margin:0;font-size:12px;font-weight:650;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-2);} .ds-count{font-size:11px;font-weight:600;letter-spacing:0;padding:0 6px;border-radius:9px;background:var(--stock-2);border:1px solid var(--rule);font-variant-numeric:tabular-nums;} .ds-sec ul{list-style:none;margin:0;padding:0;} .ds-sec li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;padding:4px 0;border-bottom:1px solid var(--rule-soft);} .ds-sec li:last-child{border-bottom:0;} .ds-sec a{font:13px ui-monospace,Consolas,monospace;color:var(--accent);text-underline-offset:2px;} .ds-sec a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;} .ds-ref{margin-left:auto;font:12px ui-monospace,Consolas,monospace;color:var(--ink-3);}"
+      "refersTo": "panel",
+      "description": "A tone-2 panel whose head is a tracked uppercase label band closed by a seam.",
+      "html": "<section class=\"ds-panel\"><header class=\"ds-panel-head\"><h2>Layers</h2><a href=\"#\">Matrix &rarr;</a></header><p>6 allowed directions in use.</p></section>",
+      "css": ".ds-panel { display: flex; flex-direction: column; gap: 14px; padding: 18px; background: var(--stock, #151a22); border: 1px solid var(--rule, #262c36); border-radius: 6px; color: var(--ink, #e6edf3); font: 14px/1.6 system-ui, sans-serif; } .ds-panel-head { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 10px 18px; margin: -18px -18px 4px; border-bottom: 1px solid var(--rule, #262c36); } .ds-panel-head h2 { margin: 0; font-size: 12px; font-weight: 650; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3, #8b949e); } .ds-panel-head a { font-size: 13px; color: var(--accent, #79c0ff); text-decoration: none; } .ds-panel-head a:hover { text-decoration: underline; } .ds-panel p { margin: 0; color: var(--ink-2, #b1bac4); }"
     },
     {
-      "name": "Summary Ledger",
+      "name": "Health Strip",
       "kind": "custom",
-      "refersTo": "panel",
-      "description": "Ruled ledger of real counts, in place of KPI tiles.",
-      "html": "<dl class=\"ds-ledger\"><div><dt>Modules</dt><dd class=\"ds-val\">412</dd><dd class=\"ds-det\">source files analysed</dd></div><div><dt>Cycles</dt><dd class=\"ds-val\">3</dd><dd class=\"ds-det\">strongly connected groups</dd></div></dl>",
-      "css": ".ds-ledger{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));background:var(--stock);border:1px solid var(--rule);border-radius:3px;color:var(--ink);font:14px/1.5 system-ui,sans-serif;} .ds-ledger div{display:grid;grid-template-columns:minmax(140px,1fr) auto;grid-template-areas:\"l v\" \"d d\";column-gap:12px;padding:10px 16px;border-bottom:1px solid var(--rule-soft);} .ds-ledger dt{grid-area:l;font-weight:600;} .ds-val{grid-area:v;margin:0;font-size:18px;font-weight:650;font-variant-numeric:tabular-nums;text-align:right;} .ds-det{grid-area:d;margin:0;color:var(--ink-3);font-size:13px;}"
+      "refersTo": "strip-cell",
+      "description": "Seamed cells in one surface: label, mono figure in its state colour, detail.",
+      "html": "<dl class=\"ds-strip\"><div class=\"ds-strip-cell\"><dt>Errors</dt><dd class=\"ds-strip-value ds-tone-error\">4</dd></div><div class=\"ds-strip-cell\"><dt>Warnings</dt><dd class=\"ds-strip-value ds-tone-warning\">1</dd></div><div class=\"ds-strip-cell\"><dt>Runtime cycles</dt><dd class=\"ds-strip-value ds-tone-cycle\">1</dd></div></dl>",
+      "css": ".ds-strip { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); background: var(--stock, #151a22); border: 1px solid var(--rule, #262c36); border-radius: 6px; overflow: hidden; } .ds-strip-cell { display: grid; gap: 4px; padding: 16px 20px 18px; border-left: 1px solid var(--rule, #262c36); margin-left: -1px; } .ds-strip-cell dt { font: 650 12px system-ui, sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3, #8b949e); } .ds-strip-value { margin: 0; font: 600 30px/1.15 ui-monospace, monospace; color: var(--ink, #e6edf3); } .ds-tone-error { color: var(--critical-ink, #ff7b72); } .ds-tone-warning { color: var(--warning-ink, #e3b341); } .ds-tone-cycle { color: var(--cycle, #d2a8ff); }"
+    },
+    {
+      "name": "Fix Strip Row",
+      "kind": "custom",
+      "refersTo": "fix-summary",
+      "description": "A ranked finding that opens in place into its message and monospaced fix line.",
+      "html": "<div class=\"ds-fix\"><button class=\"ds-fix-summary\" aria-expanded=\"true\"><span class=\"ds-fix-badge\">error</span><code>src/ui/product-list.ts:3:30</code><span class=\"ds-fix-rule\">layer-boundaries <span>9bb66c25fc937745</span></span></button><div class=\"ds-fix-body\"><p>Layer \"ui\" must not depend on layer \"infrastructure\".</p><div class=\"ds-fix-line\"><code>import \"../infrastructure/db/client\"</code> Invert the dependency.</div></div></div>",
+      "css": ".ds-fix { background: var(--stock, #151a22); border: 1px solid var(--rule, #262c36); border-radius: 6px; overflow: hidden; color: var(--ink, #e6edf3); font: 14px/1.6 system-ui, sans-serif; } .ds-fix-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; width: 100%; min-height: 48px; padding: 10px 18px; border: 0; background: var(--stock-2, #1b212b); color: inherit; font: inherit; text-align: left; cursor: pointer; transition: background-color 150ms ease-out; } .ds-fix-summary code { font: 13px ui-monospace, monospace; } .ds-fix-badge { padding: 0 7px; border: 1px solid var(--critical, #f85149); border-radius: 4px; background: var(--critical-wash, #2a1416); color: var(--critical-ink, #ff7b72); font-size: 12px; font-weight: 600; } .ds-fix-rule { flex: 1 0 100%; font: 12.5px ui-monospace, monospace; color: var(--ink-3, #8b949e); } .ds-fix-summary:focus-visible { outline: 2px solid var(--accent, #79c0ff); outline-offset: -2px; } .ds-fix-body { display: grid; gap: 12px; padding: 4px 18px 18px; background: var(--stock-2, #1b212b); color: var(--ink-2, #b1bac4); } .ds-fix-body p { margin: 0; } .ds-fix-line { padding: 10px 12px; border: 1px solid var(--rule, #262c36); border-radius: 6px; background: var(--stock, #151a22); color: var(--ink, #e6edf3); } .ds-fix-line code { font: 13px ui-monospace, monospace; }"
     }
   ],
   "narrative": {
-    "northStar": "The Card Catalog",
-    "overview": "Every module is a catalog card. The dashboard is a card catalog of the codebase: a file path is a call number, its imports and importers are cross-references, and selecting anything pulls its card. White ruled index stock sits on a pale ruling-blue ground, the shell is an oak drawer rail, and one index-card red rule marks the card that has been pulled. Everything structural is drawn the way a library card is printed: with thin blue ruling, never with depth.\n\nDensity is that of a working tool used next to the editor: 14px body, 32px controls, tables and ruled lists rather than tiles. Colour is reserved for meaning. The oak rail and the red rule are the only material colours; blue is the interaction accent; layer hues, status hues and the cycle magenta each encode one thing in data and never decorate. The world refuses the category default of a dark KPI-tile wall with a glowing graph.\n\nBoth themes are first-class. The light theme is the catalog in daylight; the dark theme keeps the same structure with a darker oak and ruling, and follows the OS unless the reader picks Light or Dark in the rail.",
+    "northStar": "The Dark Developer Console",
+    "overview": "DepTrace reads like the tooling a developer already lives in: a graphite ground, persistent panels one tonal step up, and structure drawn with 1px seams instead of depth. Health, the ranked fix list and the architecture sit on one surface at once, divided by seams rather than gutters, so the first screen answers \"how healthy is this, and what do I fix first\".\n\nColour is state, and state borrows from syntax highlighting: keyword blue for selection and the primary action, string green for passing, number purple for cycles, amber for warnings, red for errors and vulnerabilities. Every neutral comes from a single nine-step tonal ramp. Rank is carried by weight and case at a few working sizes, not by a type scale; every literal the analyzer prints (paths, fingerprints, rule IDs, figures) is set in the platform monospace. The world refuses the glowing KPI-tile wall and the light SaaS card grid.\n\nDark is the default. Light is a full variant, not an afterthought: the same ramp and accent roles, remapped, followed from the OS unless the reader picks Light or Dark in the rail.",
     "keyCharacteristics": [
-      "Hairline structure: 1px ruling carries every boundary, no shadows anywhere.",
-      "An oak drawer rail as the shell; the open drawer is a lighter face with a hairline label holder.",
-      "One red rule, on the pulled catalog card's header only.",
-      "Paths lettered as call numbers: folder recedes, file name reads first, breaks only after \"/\".",
-      "Monospace only for literal identifiers the CLI prints; everything else is system sans.",
-      "Data colour is categorical, validated and never cycled."
+      "One tonal ramp (`tone-0` to `tone-8`) supplies every neutral; surfaces differ by one step.",
+      "1px seams, no shadows; panels share seams inside one bordered surface.",
+      "Syntax-derived accents encode state only, never decoration.",
+      "System sans for UI; `ui-monospace` for paths, fingerprints, rule IDs and every figure.",
+      "Tracked uppercase 12px labels head every panel.",
+      "Gently squared 6px corners; badges 4px.",
+      "The fix strip: a finding opens in place into its rule, its cause and a monospaced fix line."
     ],
     "rules": [
-      {
-        "name": "The One Red Rule",
-        "body": "`index-red` appears only as the 2px rule on the header of a pulled catalog card. The active nav item is the open-drawer face (`rail-2` plus a 1px inset `rail-ink-2` hairline), never red.",
-        "section": "colors"
-      },
-      {
-        "name": "The Never-Cycled Rule",
-        "body": "Layers take `layer-1`..`layer-8` in configured order, the categorical order validated with the dataviz palette validator against white and `#1c1f24`. A ninth layer and beyond, and unclassified files, share `layer-none`. Hues are never reused for a second layer.",
-        "section": "colors"
-      },
-      {
-        "name": "The Signed Status Rule",
-        "body": "Error and warning always use the fixed status palette and always appear with an icon and a text label. Colour alone never carries a severity.",
-        "section": "colors"
-      },
-      {
-        "name": "The Typed Identifier Rule",
-        "body": "Monospace is used for paths, fingerprints, rule IDs and import kinds, because each is a literal identifier typed in `deptrace.yml` or printed by the CLI. The wordmark and all other UI text use the system sans.",
-        "section": "typography"
-      },
-      {
-        "name": "The Call Number Rule",
-        "body": "A path is lettered as a call number: the folder in `ink-3`, the file name in ink (the folder returns to full ink on link hover). Paths and long identifiers wrap only after \"/\" (a `<wbr>` after each slash), or anywhere only when nothing else fits.",
-        "section": "typography"
-      },
-      {
-        "name": "The Ruled Not Raised Rule",
-        "body": "Structure is a 1px hairline: `rule` around a container, `rule-soft` between rows inside it, `rule-strong` around controls and overlays. Nothing floats.",
-        "section": "elevation"
-      }
+      { "name": "The One Ramp Rule", "body": "Every neutral is a `tone-*` step. A surface is one step from what it sits on (ground `tone-1`, panel `tone-2`, elevated `tone-3`); seams are `tone-4`, control and overlay borders `tone-5`. Do not introduce a neutral outside the ramp.", "section": "colors" },
+      { "name": "The Syntax State Rule", "body": "Accents mean state and nothing else: blue is selection and the primary action, green is passing or a fix, purple is a cycle, amber is a warning, red is an error or vulnerability. An accent never decorates a heading, a panel or a brand element.", "section": "colors" },
+      { "name": "The Never-Cycled Rule", "body": "Layers take `layer-1`..`layer-8` in configured order; the ninth layer onward and unclassified files share `layer-none`. Hues are never reused for a second layer.", "section": "colors" },
+      { "name": "The Signed Status Rule", "body": "Error and warning always appear with an icon and a text label (the badge reads \"error\" or \"warning\"). Colour alone never carries a severity.", "section": "colors" },
+      { "name": "The Literal Is Mono Rule", "body": "Paths, fingerprints, rule IDs, import kinds, commands and every figure are set in `ui-monospace`. Headings, prose, controls and the wordmark are system sans.", "section": "typography" },
+      { "name": "The Weight Not Size Rule", "body": "The interface works at 14px and 13px; hierarchy above that comes from 650 weight and tracked uppercase labels, with 20px reserved for the page title and 30px for health figures.", "section": "typography" },
+      { "name": "The Path Lettering Rule", "body": "In a path the folder recedes to `tone-6` and the file name reads in ink (the folder returns to ink on link hover). Long identifiers wrap only after \"/\" unless nothing else fits.", "section": "typography" },
+      { "name": "The Seam Not Shadow Rule", "body": "Structure is a 1px line: `tone-4` around and between panels, `rule-soft` between rows inside one, `tone-5` around controls and overlays. Nothing casts a shadow.", "section": "elevation" },
+      { "name": "The Total Focus Rule", "body": "Selection lifts by contrast, not by depth: the selected item takes the accent and everything unrelated dims.", "section": "elevation" }
     ],
     "dos": [
-      "**Do** draw every boundary with a 1px hairline: `rule` around containers, `rule-soft` between rows, `rule-strong` around controls and overlays.",
-      "**Do** reserve `index-red` for the 2px rule under the pulled catalog card's header.",
-      "**Do** show the active nav item as the open drawer: `rail-2` face plus a 1px inset `rail-ink-2` hairline.",
-      "**Do** letter paths as call numbers: folder in `ink-3`, file name in ink, wrapping only after \"/\".",
-      "**Do** set paths, fingerprints, rule IDs and import kinds in `ui-monospace`, and everything else in the system sans.",
-      "**Do** pair every error and warning colour with an icon and a text label.",
-      "**Do** assign layer colours in the validated order and send the ninth layer onward to `layer-none`.",
-      "**Do** use tabular figures for every count and numeric column.",
-      "**Do** keep transitions to 150-200ms ease-out on colour and transform, and honour reduced motion."
+      "Do take every neutral from the `tone-0`..`tone-8` ramp, one step per layer of surface.",
+      "Do draw structure with 1px seams: `tone-4` around and between panels, `rule-soft` between rows, `tone-5` around controls and overlays.",
+      "Do keep accents to state: blue selection and primary action, green passing, purple cycles, amber warnings, red errors.",
+      "Do head every panel with a 12px, 650, 0.08em tracked uppercase label in `tone-6`.",
+      "Do set paths, fingerprints, rule IDs, commands and every figure in `ui-monospace`, and everything else in the system sans.",
+      "Do pair every error and warning colour with an icon and a text label.",
+      "Do assign layer colours in the validated order and send the ninth layer onward to `layer-none`.",
+      "Do ship both themes from the same roles: dark by default, light via `prefers-color-scheme` or `data-theme`.",
+      "Do keep transitions at 150-200ms ease-out on colour, opacity and transform, and honour reduced motion."
     ],
     "donts": [
-      "**Don't** use drop shadows, floating cards or raised tiles; overlays separate with a `rule-strong` border.",
-      "**Don't** use red for navigation, selection or emphasis; selection is `accent-wash`.",
-      "**Don't** cycle layer hues or invent a ninth hue.",
-      "**Don't** use `cycle` magenta for anything but edges inside a cycle.",
-      "**Don't** set the wordmark, headings or prose in monospace.",
-      "**Don't** build a dark KPI-tile wall or a glowing graph; counts live in the ruled ledger."
+      "Don't use shadows, glows or raised tiles; overlays separate with a `tone-5` border.",
+      "Don't round corners beyond 6px (4px for badges), except dots, swatches and graph nodes.",
+      "Don't use an accent to decorate headings, panels or the brand; red never marks navigation or selection.",
+      "Don't use `cycle` purple for anything but cycles.",
+      "Don't cycle layer hues or invent a ninth hue.",
+      "Don't set the wordmark, headings or prose in monospace.",
+      "Don't build a glowing KPI-tile wall or a light SaaS card grid; counts live in the seamed health strip and the ledger."
     ]
   }
 }

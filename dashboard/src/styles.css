@@ -291,7 +291,8 @@ kbd {
   /* The rail column continues below the sticky rail on long pages. */
   background: linear-gradient(
     90deg,
-    var(--rail) 0 var(--rail-width),
+    var(--rail) 0 calc(var(--rail-width) - 1px),
+    var(--rule) calc(var(--rail-width) - 1px) var(--rail-width),
     transparent var(--rail-width)
   );
 }
@@ -345,12 +346,15 @@ kbd {
   color: var(--rail-ink);
 }
 
-/* The current section: one step of elevation and a keyword-blue edge. */
+/* The current section: one step of elevation and weight. */
 .rail a[aria-current='page'] {
-  background: var(--rail-2);
+  background: var(--stock-2);
   color: var(--rail-ink);
-  font-weight: 600;
-  box-shadow: inset 2px 0 0 var(--accent);
+  font-weight: 650;
+}
+
+.rail a[aria-current='page'] .icon {
+  color: var(--accent);
 }
 
 .rail-label {
@@ -493,7 +497,7 @@ kbd {
   flex-shrink: 0;
 }
 
-.menu-button {
+.button.menu-button {
   display: none;
 }
 
@@ -1095,24 +1099,162 @@ a:hover .path-dir {
   margin-top: 4px;
 }
 
-.overview-grid {
+/* Persistent panels on one surface, divided by seams rather than gutters. */
+.console {
   display: grid;
   grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr);
-  gap: var(--gap);
-  align-items: start;
+  background: var(--stock);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
 }
 
-.overview-side {
+.console > .panel {
+  border: 0;
+  border-radius: 0;
+}
+
+.console > .panel + .console-side {
+  border-left: 1px solid var(--rule);
+}
+
+.console-side {
   display: grid;
-  gap: var(--gap);
+  align-content: start;
   min-width: 0;
+}
+
+.console-side > .panel {
+  border: 0;
+  border-radius: 0;
+}
+
+.console-side > .panel + .panel {
+  border-top: 1px solid var(--rule);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.panel-meta {
+  margin-left: auto;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.analysis .ledger {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+}
+
+/* The audit button stands where the count will be, at the same height. */
+.strip-value .button {
+  margin-block: 2px;
+  font-family: var(--font-sans);
+}
+
+@media (max-width: 1399px) {
+  .fact-wide {
+    display: none !important;
+  }
+}
+
+.fp {
+  margin-left: 10px;
+  font: 12px/1 var(--font-mono);
+  color: var(--ink-3);
+  opacity: 0.85;
+}
+
+.fix-target {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-bottom: 6px;
+}
+
+.fix-target code {
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.layer-diagram {
+  inline-size: 100%;
+  max-inline-size: 360px;
+  block-size: auto;
+}
+
+.layer-diagram .band {
+  fill: var(--stock-2);
+  stroke: var(--rule);
+  transition: fill 150ms ease-out;
+}
+
+.layer-diagram a:hover .band,
+.layer-diagram a:focus-visible .band {
+  fill: var(--accent-wash);
+}
+
+.layer-diagram a:focus-visible {
+  outline: none;
+}
+
+.layer-diagram .band-name {
+  fill: var(--ink);
+  font: 13px var(--font-sans);
+}
+
+.layer-diagram .band-count {
+  fill: var(--ink-3);
+  font: 13px var(--font-mono);
+}
+
+.layer-diagram circle {
+  fill: var(--layer-none);
+}
+.layer-diagram circle[data-slot='0'] {
+  fill: var(--layer-1);
+}
+.layer-diagram circle[data-slot='1'] {
+  fill: var(--layer-2);
+}
+.layer-diagram circle[data-slot='2'] {
+  fill: var(--layer-3);
+}
+.layer-diagram circle[data-slot='3'] {
+  fill: var(--layer-4);
+}
+.layer-diagram circle[data-slot='4'] {
+  fill: var(--layer-5);
+}
+.layer-diagram circle[data-slot='5'] {
+  fill: var(--layer-6);
+}
+.layer-diagram circle[data-slot='6'] {
+  fill: var(--layer-7);
+}
+.layer-diagram circle[data-slot='7'] {
+  fill: var(--layer-8);
+}
+
+.layer-diagram .broken-link {
+  fill: none;
+  stroke: var(--critical);
+  stroke-width: 2;
+}
+
+.layer-diagram .broken-head {
+  fill: var(--critical);
 }
 
 .panel-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 4px 12px;
   min-height: 44px;
   padding: 10px 18px;
   margin: -18px -18px 4px;
@@ -2467,8 +2609,17 @@ a:hover .path-dir {
 }
 
 @media (max-width: 1080px) {
-  .overview-grid {
+  .console {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .console > .panel + .console-side {
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .analysis .ledger {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .split.has-detail {
@@ -2510,14 +2661,13 @@ a:hover .path-dir {
   /* On phones the header wraps to several lines; it scrolls away instead of covering content. */
   .topbar {
     position: static;
-    border-top: 4px solid var(--rail);
   }
 
   .split-detail {
     scroll-margin-top: 12px;
   }
 
-  .menu-button {
+  .button.menu-button {
     display: inline-flex;
   }
 
@@ -2646,4 +2796,61 @@ details[open] > summary .disclosure {
   color: var(--ink-3);
   font-size: 12px;
   text-align: center;
+}
+
+@media (max-width: 560px) {
+  .strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .strip-cell {
+    padding: 12px 14px 14px;
+    border-top: 1px solid var(--rule);
+    margin-top: -1px;
+  }
+
+  .strip-value,
+  .strip-cell > dd:first-of-type {
+    font-size: 24px;
+  }
+
+  .analysis .ledger {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .panel-meta {
+    flex-basis: 100%;
+    margin-left: 0;
+    order: 3;
+  }
+}
+
+/* Short laptop screens: tighter rhythm so the first fix stays above the fold. */
+@media (min-width: 901px) and (max-height: 720px) {
+  .page {
+    padding-top: 16px;
+    gap: 14px;
+  }
+
+  .strip-cell {
+    padding: 12px 18px 14px;
+  }
+
+  .strip-value,
+  .strip-cell > dd:first-of-type {
+    font-size: 26px;
+  }
+
+  .fix-body {
+    gap: 8px;
+  }
+
+  .strip-detail {
+    line-height: 1.4;
+  }
+
+  .panel-head {
+    min-height: 40px;
+    padding-block: 8px;
+  }
 }

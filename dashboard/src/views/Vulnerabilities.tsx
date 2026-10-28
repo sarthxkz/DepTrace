@@ -131,9 +131,13 @@ function AuditResult({
   const [open, setOpen] = useState<string | null>(packages[0]?.path ?? null);
   return (
     <>
-      <dl className="strip" aria-label="Vulnerable packages by severity">
+      <h2 className="label">Packages by their most severe advisory</h2>
+      <dl className="strip" aria-label="Packages by their most severe advisory">
         {RANKED.slice(0, 4).map((severity) => (
-          <div key={severity} className={`strip-cell tone-${severity}`}>
+          <div
+            key={severity}
+            className={`strip-cell${summary[severity] > 0 ? ` tone-${severity}` : ''}`}
+          >
             <dt>{severity}</dt>
             <dd>{number(summary[severity])}</dd>
           </div>

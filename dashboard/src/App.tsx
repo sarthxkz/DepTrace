@@ -4,7 +4,7 @@ import { Notice, Skeleton } from './components/ui';
 import { parseAudit } from './contract/audit';
 import { LoadError, parseValue, readDocumentFile, type Loaded } from './contract/load';
 import { fetchReport, reanalyze, runAudit, ServerError } from './lib/api';
-import { formatTime } from './lib/format';
+import { formatTime, plural } from './lib/format';
 import { href, useRoute, type Page } from './lib/router';
 import type { AuditControl, AuditState, Ready, Source } from './lib/state';
 import { useTheme, type ThemeChoice } from './lib/theme';
@@ -262,7 +262,7 @@ export function App() {
           )}
         </main>
         <footer className="app-footer">
-          Created and designed by sarthxkz. All rights reserved.
+          Created and designed by sarthxkz · © 2026 Sarthak Kumar · MIT License
         </footer>
       </div>
     </div>
@@ -361,21 +361,39 @@ function Header({
         <Icon name="menu" size={18} />
       </button>
       <div className="project">
-        <p className="project-name">{name}</p>
+        <p
+          className="project-name"
+          title={
+            source?.kind === 'server' && source.meta.analyzedAt
+              ? `Analyzed ${formatTime(source.meta.analyzedAt)}`
+              : undefined
+          }
+        >
+          {name}
+        </p>
         {ready && (
           <dl className="project-facts">
             {report && (
               <div>
-                <dt>Analysis</dt>
+                <dt className="visually-hidden">Analysis</dt>
                 <dd>
                   <span className={`status-dot status-${report.status}`} aria-hidden="true" />
                   {report.status === 'completed' ? 'completed' : 'completed with diagnostics'}
                 </dd>
               </div>
             )}
+            {report && (
+              <div>
+                <dt className="visually-hidden">Size</dt>
+                <dd>
+                  {plural(report.summary.nodes, 'file')} ·{' '}
+                  {plural(report.summary.edges, 'dependency', 'dependencies')}
+                </dd>
+              </div>
+            )}
             {ready.loaded.kind === 'findings' && (
               <div>
-                <dt>Document</dt>
+                <dt className="visually-hidden">Document</dt>
                 <dd>
                   {ready.loaded.format === 'sarif'
                     ? 'SARIF log, findings only'
@@ -385,15 +403,15 @@ function Header({
             )}
             {tool && (
               <div>
-                <dt>Analyzer</dt>
+                <dt className="visually-hidden">Analyzer</dt>
                 <dd>
                   {tool.name} {tool.version}
                 </dd>
               </div>
             )}
             {source?.kind === 'server' && source.meta.analyzedAt && (
-              <div>
-                <dt>Analyzed</dt>
+              <div className="fact-wide">
+                <dt className="visually-hidden">Analyzed</dt>
                 <dd>
                   <time dateTime={source.meta.analyzedAt}>
                     {formatTime(source.meta.analyzedAt)}
@@ -403,13 +421,13 @@ function Header({
             )}
             {source?.kind === 'file' && (
               <div>
-                <dt>File</dt>
+                <dt className="visually-hidden">File</dt>
                 <dd>{source.name}</dd>
               </div>
             )}
             {git && (git.branch ?? git.commit) && (
               <div>
-                <dt>Git</dt>
+                <dt className="visually-hidden">Git</dt>
                 <dd className="mono">
                   {git.branch ?? 'detached HEAD'}
                   {git.commit && ` · ${git.commit.slice(0, 7)}`}

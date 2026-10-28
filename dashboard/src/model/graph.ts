@@ -298,13 +298,15 @@ export function groupedPositions(
   const bands: { group: string; x: number; y: number }[] = [];
   // Roughly as wide as tall, so the graph fits a landscape canvas at a readable zoom.
   const perRow = Math.max(4, Math.ceil(Math.sqrt(ids.length)));
-  const spacing = { x: 160, y: 60, band: 56 };
+  const spacing = { x: 200, y: 76, band: 64 };
   let y = 0;
   for (const group of order) {
     const members = (groups.get(group) ?? []).sort();
     members.forEach((id, i) => {
       const row = Math.floor(i / perRow);
-      positions.set(id, { x: (i % perRow) * spacing.x, y: y + row * spacing.y });
+      // Odd rows shift half a column, so edges pass between labels instead of through them.
+      const shift = row % 2 === 1 ? spacing.x / 2 : 0;
+      positions.set(id, { x: (i % perRow) * spacing.x + shift, y: y + row * spacing.y });
     });
     bands.push({ group, x: -spacing.x * 0.9, y });
     y += Math.ceil(members.length / perRow) * spacing.y + spacing.band;

@@ -261,6 +261,7 @@ export function Violations({ ready, params }: { ready: Ready; params: URLSearchP
                         <code>
                           <Breakable text={finding.ruleId} />
                         </code>
+                        {finding.fingerprint && <span className="fp">{finding.fingerprint}</span>}
                       </span>
                       <span className="violation-where mono">
                         <Breakable

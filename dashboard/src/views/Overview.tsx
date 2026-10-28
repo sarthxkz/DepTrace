@@ -1,12 +1,11 @@
-import { useState, type ReactNode } from 'react';
+import { Fragment, useState, type ReactNode } from 'react';
 import type { AuditControl, Ready } from '../lib/state';
 import { Icon, type IconName } from '../components/Icon';
-import { BaselineBadge, Breakable, EmptyState, Notice, SeverityBadge } from '../components/ui';
+import { BaselineBadge, Breakable, EmptyState, SeverityBadge } from '../components/ui';
 import type { Finding } from '../contract/load';
 import { location, number, plural, revealControls } from '../lib/format';
 import { href } from '../lib/router';
 import { hasLayers, type Model } from '../model/model';
-import { AuditConsent } from './Vulnerabilities';
 
 /** "type-only" with a non-breaking hyphen, so ledger details never wrap inside it. */
 const TYPE_ONLY = `type${String.fromCharCode(0x2011)}only`;
@@ -130,23 +129,30 @@ export function Overview({ ready, audit }: { ready: Ready; audit: AuditControl }
       <h1 className="visually-hidden">Overview</h1>
       <dl className="strip health" aria-label="Health">
         <HealthCell
-          label="Violations"
-          tone={errors > 0 ? 'error' : warnings > 0 ? 'warning' : 'good'}
-          value={rules?.length === 0 ? '—' : number(findings.length)}
-          link={href('violations')}
+          label="Errors"
+          tone={errors > 0 ? 'error' : 'plain'}
+          value={rules?.length === 0 ? '—' : number(errors)}
+          link={href('violations', { severity: 'error' })}
         >
           {rules?.length === 0 ? (
             'No rules configured in deptrace.yml'
+          ) : fresh > 0 ? (
+            <span className="badge baseline-new">{number(fresh)} new</span>
           ) : (
-            <>
-              {plural(errors, 'error')} · {plural(warnings, 'warning')}
-              {fresh > 0 && <span className="badge baseline-new">{number(fresh)} new</span>}
-            </>
+            'fail the check'
           )}
         </HealthCell>
         <HealthCell
+          label="Warnings"
+          tone={warnings > 0 ? 'warning' : 'plain'}
+          value={rules?.length === 0 ? '—' : number(warnings)}
+          link={href('violations', { severity: 'warning' })}
+        >
+          {rules?.length === 0 ? 'No rules configured' : 'fail only with --strict'}
+        </HealthCell>
+        <HealthCell
           label="Runtime cycles"
-          tone={model && model.report.summary.runtimeCycles > 0 ? 'cycle' : 'good'}
+          tone={model && model.report.summary.runtimeCycles > 0 ? 'cycle' : 'plain'}
           value={model ? number(model.report.summary.runtimeCycles) : '—'}
           {...(model && { link: href('cycles') })}
         >
@@ -155,32 +161,25 @@ export function Overview({ ready, audit }: { ready: Ready; audit: AuditControl }
             : 'Not in this document'}
         </HealthCell>
         <AuditCell audit={audit} />
-        <HealthCell
-          label="Files"
-          tone="plain"
-          value={model ? number(model.report.summary.nodes) : '—'}
-          {...(model && { link: href('modules') })}
-        >
-          {model
-            ? `${plural(model.report.summary.edges, 'dependency', 'dependencies')}${hasLayers(model) ? ` · ${number(model.unclassified.length)} in no layer` : ''}`
-            : 'Findings only: no dependency graph'}
-        </HealthCell>
       </dl>
 
-      {baseline && (
-        <Notice>
-          Compared with the baseline <code>{baseline.file}</code>:{' '}
-          {plural(baseline.new, 'new violation')}, {number(baseline.existing)} accepted,{' '}
-          {number(baseline.resolved)} resolved.
-          {baseline.resolved > 0 &&
-            ' Remove resolved entries with "deptrace baseline update" so they cannot return unnoticed.'}
-        </Notice>
-      )}
-
-      <div className="overview-grid">
+      <div className="console">
         <section className="panel start" aria-labelledby="start-title">
           <header className="panel-head">
             <h2 id="start-title">Where to start</h2>
+            {baseline && (
+              <span
+                className="panel-meta"
+                title={
+                  baseline.resolved > 0
+                    ? 'Remove resolved entries with "deptrace baseline update" so they cannot return unnoticed.'
+                    : undefined
+                }
+              >
+                <code>{baseline.file}</code>: {number(baseline.new)} new ·{' '}
+                {number(baseline.existing)} accepted · {number(baseline.resolved)} resolved
+              </span>
+            )}
             {findings.length > 0 && (
               <a className="panel-link" href={href('violations')}>
                 All {plural(findings.length, 'violation')} <Icon name="arrowRight" size={14} />
@@ -225,10 +224,9 @@ export function Overview({ ready, audit }: { ready: Ready; audit: AuditControl }
             </>
           )}
         </section>
-
-        <div className="overview-side">
+        <div className="console-side">
           {model && <LayerPanel model={model} />}
-          <section className="panel" aria-labelledby="analysis-title">
+          <section className="panel analysis" aria-labelledby="analysis-title">
             <header className="panel-head">
               <h2 id="analysis-title">Analysis</h2>
             </header>
@@ -264,6 +262,20 @@ export function Overview({ ready, audit }: { ready: Ready; audit: AuditControl }
   );
 }
 
+/** A rule id that wraps only after "/", never at its hyphens. */
+function RuleId({ id }: { id: string }) {
+  return id.split('/').map((part, index) => (
+    <Fragment key={index}>
+      {index > 0 && (
+        <>
+          /<wbr />
+        </>
+      )}
+      <span className="nowrap">{part}</span>
+    </Fragment>
+  ));
+}
+
 function HealthCell({
   label,
   value,
@@ -272,7 +284,7 @@ function HealthCell({
   children,
 }: {
   label: string;
-  value: string;
+  value: ReactNode;
   tone: string;
   link?: string;
   children: ReactNode;
@@ -314,7 +326,23 @@ function AuditCell({ audit }: { audit: AuditControl }) {
     <HealthCell
       label="Vulnerable packages"
       tone="plain"
-      value={state.status === 'running' ? '…' : '—'}
+      value={
+        state.status === 'idle' && audit.canRun ? (
+          <button
+            type="button"
+            className="button small"
+            onClick={audit.run}
+            aria-describedby="audit-consent"
+          >
+            <Icon name="bug" size={14} />
+            Check dependencies
+          </button>
+        ) : state.status === 'running' ? (
+          '…'
+        ) : (
+          '—'
+        )
+      }
       link={link}
     >
       {state.status === 'error' ? (
@@ -322,14 +350,8 @@ function AuditCell({ audit }: { audit: AuditControl }) {
       ) : state.status === 'running' ? (
         'Checking the installed packages…'
       ) : audit.canRun ? (
-        <span className="cell-action">
-          <button type="button" className="button small" onClick={audit.run}>
-            <Icon name="bug" size={14} />
-            Check dependencies
-          </button>
-          <span className="visually-hidden">
-            <AuditConsent />
-          </span>
+        <span id="audit-consent">
+          Not checked yet. Sends package names and versions to npm; no code.
         </span>
       ) : (
         'Not checked'
@@ -361,9 +383,12 @@ export function FixList({ findings, hasGraph }: { findings: Finding[]; hasGraph:
                   ? 'no file recorded'
                   : location(finding.file, finding.line, finding.column)}
               </span>
-              <code className="fix-rule">
-                <Breakable text={finding.ruleId} />
-              </code>
+              <span className="fix-rule">
+                <code>
+                  <RuleId id={finding.ruleId} />
+                </code>
+                {finding.fingerprint && <span className="fp">{finding.fingerprint}</span>}
+              </span>
               {finding.baselineStatus && <BaselineBadge status={finding.baselineStatus} />}
               <Icon name="chevronDown" size={16} />
             </button>
@@ -371,10 +396,13 @@ export function FixList({ findings, hasGraph }: { findings: Finding[]; hasGraph:
               <div className="fix-body">
                 <p>{revealControls(finding.message)}</p>
                 {finding.suggestion ? (
-                  <p className="fix-line">
+                  <div className="fix-line">
                     <Icon name="fix" size={16} />
-                    <span>{revealControls(finding.suggestion)}</span>
-                  </p>
+                    <div>
+                      <ImportToChange finding={finding} />
+                      <p>{revealControls(finding.suggestion)}</p>
+                    </div>
+                  </div>
                 ) : (
                   <p className="muted">
                     This document does not include a suggested fix (made before DepTrace 0.6.0, or
@@ -397,6 +425,20 @@ export function FixList({ findings, hasGraph }: { findings: Finding[]; hasGraph:
         );
       })}
     </ol>
+  );
+}
+
+/** The monospaced first line of a fix: the exact import the change starts from. */
+function ImportToChange({ finding }: { finding: Finding }) {
+  const ref = finding.references[0];
+  if (!ref || finding.file === null) return null;
+  return (
+    <p className="fix-target">
+      <span className="label">Change</span>
+      <code>
+        {finding.file}:{ref.line} import &quot;{revealControls(ref.specifier)}&quot;
+      </code>
+    </p>
   );
 }
 
@@ -430,7 +472,15 @@ function LayerPanel({ model }: { model: Model }) {
   const directions = model.report.architecture.layerDependencies
     .map((d) => ({ ...d, broken: broken.get(`${d.from}\0${d.to}`) ?? 0 }))
     .sort((a, b) => b.broken - a.broken || b.edges - a.edges);
-  const largest = Math.max(1, ...model.layers.map((layer) => layer.modules.length));
+  const failing = directions.filter((d) => d.broken > 0);
+  const allowed = directions.length - failing.length;
+  // The stacked diagram: one band per layer, broken directions drawn as red connectors on the right.
+  const BAND = 38;
+  const GAP = 10;
+  const WIDTH = 230;
+  const index = new Map(model.layers.map((layer, i) => [layer.name, i]));
+  const mid = (name: string) => (index.get(name) ?? 0) * (BAND + GAP) + BAND / 2;
+  const height = model.layers.length * (BAND + GAP) - GAP;
   return (
     <section className="panel" aria-labelledby="layers-title">
       <header className="panel-head">
@@ -439,37 +489,76 @@ function LayerPanel({ model }: { model: Model }) {
           Matrix <Icon name="arrowRight" size={14} />
         </a>
       </header>
-      <ul className="layer-stack" aria-label="Files per layer">
-        {model.layers.map((layer) => (
-          <li key={layer.name}>
-            <a href={href('layers', { layer: layer.name })}>
-              <span className="swatch" data-slot={layer.slot ?? 'none'} aria-hidden="true" />
-              {layer.name}
+      <svg
+        className="layer-diagram"
+        viewBox={`0 0 ${String(WIDTH + 20 + failing.length * 16)} ${String(height)}`}
+        role="img"
+        aria-label={`${plural(model.layers.length, 'layer')}; ${plural(failing.length, 'broken direction')}`}
+      >
+        <defs>
+          <marker
+            id="broken-arrow"
+            viewBox="0 0 8 8"
+            refX="7"
+            refY="4"
+            markerWidth="6"
+            markerHeight="6"
+            orient="auto"
+          >
+            <path d="M0 0 8 4 0 8z" className="broken-head" />
+          </marker>
+        </defs>
+        {model.layers.map((layer, i) => {
+          const y = i * (BAND + GAP);
+          return (
+            <a key={layer.name} href={href('layers', { layer: layer.name })}>
+              <rect className="band" x="0" y={y} width={WIDTH} height={BAND} rx="6" />
+              <circle cx="16" cy={y + BAND / 2} r="5" data-slot={layer.slot ?? 'none'} />
+              <text className="band-name" x="30" y={y + BAND / 2 + 5}>
+                {layer.name}
+              </text>
+              <text className="band-count" x={WIDTH - 12} y={y + BAND / 2 + 5} textAnchor="end">
+                {number(layer.modules.length)}
+              </text>
             </a>
-            <span
-              className="layer-bar"
-              data-slot={layer.slot ?? 'none'}
-              style={{ inlineSize: `${String((layer.modules.length / largest) * 100)}%` }}
-              aria-hidden="true"
-            />
-            <span className="mono">{number(layer.modules.length)}</span>
-          </li>
-        ))}
-      </ul>
-      <h3 className="label">Directions between layers</h3>
-      <ul className="direction-list" aria-label="Imports between layers">
-        {directions.slice(0, 8).map((d) => (
-          <li key={`${d.from}>${d.to}`} className={d.broken > 0 ? 'broken' : undefined}>
-            <span className="mono">
-              {d.from} <Icon name="arrowRight" size={12} /> {d.to}
-            </span>
-            <span className="muted">{plural(d.edges, 'import')}</span>
-            {d.broken > 0 && (
-              <span className="badge severity-error">{plural(d.broken, 'violation')}</span>
-            )}
-          </li>
-        ))}
-      </ul>
+          );
+        })}
+        {failing.map((d, k) => {
+          const y1 = mid(d.from);
+          const y2 = mid(d.to);
+          const reach = WIDTH + 14 + k * 16;
+          return (
+            <path
+              key={`${d.from}>${d.to}`}
+              className="broken-link"
+              d={`M${String(WIDTH)} ${String(y1 - 6)} C${String(reach)} ${String(y1 - 6)} ${String(reach)} ${String(y2 + 6)} ${String(WIDTH + 2)} ${String(y2 + 6)}`}
+              markerEnd="url(#broken-arrow)"
+            >
+              <title>
+                {d.from} imports {d.to}: {plural(d.broken, 'violation')}
+              </title>
+            </path>
+          );
+        })}
+      </svg>
+      {failing.length > 0 ? (
+        <ul className="direction-list" aria-label="Broken directions between layers">
+          {failing.map((d) => (
+            <li key={`${d.from}>${d.to}`} className="broken">
+              <span className="mono">
+                {d.from} <Icon name="arrowRight" size={12} /> {d.to}
+              </span>
+              <span>{plural(d.broken, 'violation')}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="muted">No layer imports a layer it may not.</p>
+      )}
+      <p className="muted panel-foot">
+        {plural(allowed, 'allowed direction')} in use; every direction is on the{' '}
+        <a href={href('layers')}>Layers</a> page.
+      </p>
     </section>
   );
 }
