@@ -1,0 +1,1391 @@
+/* DepTrace website: the Catalog Cards world (DESIGN.md) at landing-page volume.
+   The hero is a call slip on the oak desk; a real pulled card rises from the drawer.
+   Tokens mirror dashboard/src/styles.css; keep the two in step. */
+
+:root {
+  color-scheme: light;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --ground: #edf1f5;
+  --stock: #ffffff;
+  --stock-2: #f5f7fa;
+  --ink: #1b1e23;
+  --ink-2: #48505b;
+  --ink-3: #626b77;
+  --rule: #cdd8e4;
+  --rule-soft: #e2e9f0;
+  --rule-strong: #9fb2c7;
+  --rail: #5e4429;
+  --rail-2: #4e381f;
+  --rail-ink: #f6efe3;
+  --rail-ink-2: #e2d3bb;
+  --index-red: #c2362f;
+  --accent: #2f5d8c;
+  --accent-ink: #ffffff;
+  --accent-wash: #e3ecf6;
+  --critical: #d03b3b;
+  --critical-ink: #b42318;
+  --critical-wash: #fbe9e7;
+  --radius: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ground: #111317;
+    --stock: #1a1d22;
+    --stock-2: #21252b;
+    --ink: #e9ecef;
+    --ink-2: #b8c0ca;
+    --ink-3: #959eaa;
+    --rule: #2e343c;
+    --rule-soft: #262b32;
+    --rule-strong: #4a545f;
+    --rail: #2b2016;
+    --rail-2: #3a2c1e;
+    --rail-ink: #efe5d5;
+    --rail-ink-2: #c9b89e;
+    --index-red: #e2675f;
+    --accent: #8db4e2;
+    --accent-ink: #0d1520;
+    --accent-wash: #1d2a3a;
+    --critical-ink: #f08a84;
+    --critical-wash: #3a1d1c;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-color: var(--rule-strong) var(--ground);
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font: 16px/1.6 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent-wash);
+  color: var(--ink);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+
+code,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  /* Show CLI output byte for byte: no "->" turning into an arrow. */
+  font-variant-ligatures: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -48px;
+  z-index: 20;
+  padding: 8px 12px;
+  background: var(--stock);
+  color: var(--accent);
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+.wrap {
+  width: min(1180px, 100% - 40px);
+  margin-inline: auto;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ---------- Header: the oak drawer front ---------- */
+
+.site-header {
+  background: var(--rail);
+  color: var(--rail-ink);
+  border-bottom: 1px solid var(--rail-2);
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  min-height: 64px;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--rail-ink);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.site-header ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-header nav a {
+  color: var(--rail-ink-2);
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.site-header nav a:hover {
+  color: var(--rail-ink);
+  text-decoration: underline;
+}
+
+.site-header :focus-visible {
+  outline-color: var(--rail-ink);
+}
+
+/* ---------- Hero: call slip and pulled card on the oak desk ---------- */
+
+.hero {
+  background: var(--rail);
+  color: var(--rail-ink);
+  overflow: hidden;
+}
+
+.hero-stage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 400px;
+  align-items: end;
+  padding-top: 40px;
+}
+
+.slip {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 72px;
+  background: var(--stock);
+  color: var(--ink);
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+}
+
+.slip-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 28px;
+  border-bottom: 1px solid var(--rule-strong);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.slip-fields {
+  margin: 0;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr);
+  gap: 0 24px;
+  padding: 16px 28px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.field dt {
+  padding-top: 0.35em;
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.field dd {
+  margin: 0;
+  min-width: 0;
+}
+
+/* Keep slip text clear of the pulled card that overlaps the slip's right edge. */
+.slip-fields .field {
+  padding-right: 120px;
+}
+
+.field-title {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.field-title dt {
+  padding-top: 0.9em;
+}
+
+h1 {
+  max-width: 17ch;
+  font-size: clamp(2.3rem, 1.1rem + 3.2vw, 3.9rem);
+  font-weight: 750;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.lede {
+  max-width: 58ch;
+  font-size: 1.1rem;
+  color: var(--ink-2);
+}
+
+.field-call dd {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.command {
+  margin: 0;
+  padding: 12px 16px;
+  background: var(--stock-2);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+.field-call .command {
+  font-size: 1.15rem;
+  width: fit-content;
+  max-width: 100%;
+}
+
+/* One click selects the whole command for copying. */
+.command code {
+  font-size: inherit;
+  user-select: all;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--stock);
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 150ms ease-out,
+    border-color 150ms ease-out;
+}
+
+.button:hover {
+  background: var(--stock-2);
+  border-color: var(--ink-3);
+}
+
+.button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.button.primary:hover {
+  border-color: var(--ink);
+}
+
+/* The tear-off stub, separated by a row of perforations. */
+.slip-stub {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 22px 28px 20px;
+  background: radial-gradient(circle, var(--rule-strong) 2px, transparent 2.5px) top left / 14px 8px
+    repeat-x;
+}
+
+.slip-stub dt {
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.slip-stub dd {
+  margin: 0;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.pulled {
+  position: relative;
+  z-index: 2;
+  margin-left: -88px;
+  animation: pull 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pull {
+  from {
+    transform: translateY(64px);
+  }
+}
+
+.drawer-front {
+  position: relative;
+  z-index: 3;
+  margin-top: -48px;
+  padding: 18px 20px 22px;
+  background: var(--rail-2);
+  border-top: 1px solid var(--rail-ink-2);
+  text-align: center;
+}
+
+.label-holder {
+  display: inline-block;
+  max-width: 100%;
+  padding: 6px 16px;
+  border: 1px solid var(--rail-ink-2);
+  border-radius: 2px;
+  color: var(--rail-ink);
+  font-size: 0.85rem;
+}
+
+/* Desktop: the whole hero, header to drawer front, fits one laptop screen (down to about
+   1280x580 CSS pixels, a 1080p display at 150 % with browser toolbars). */
+@media (min-width: 901px) {
+  .header-row {
+    min-height: 56px;
+  }
+
+  /* Slip and card share a top edge; the card runs down into the drawer front. */
+  .hero-stage {
+    grid-template-columns: minmax(0, 1fr) clamp(320px, 30vw, 380px);
+    align-items: stretch;
+    padding-block: 24px 0;
+  }
+
+  .slip {
+    align-self: start;
+    margin-bottom: 40px;
+  }
+
+  .slip-head {
+    padding-block: 9px;
+  }
+
+  .field {
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 0 20px;
+    padding-block: 12px;
+  }
+
+  .slip-fields .field {
+    padding-right: 64px;
+  }
+
+  .field-title {
+    padding-block: 16px;
+  }
+
+  .field-title dt {
+    padding-top: 0.6em;
+  }
+
+  /* One sentence per line; the second balanced over two if it must wrap. */
+  h1 {
+    max-width: none;
+    font-size: clamp(2rem, min(3.3vw, 7.2vh), 3.1rem);
+  }
+
+  h1 span {
+    display: block;
+    text-wrap: balance;
+  }
+
+  .lede {
+    font-size: 1.02rem;
+  }
+
+  .field-call dd {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .field-call .command {
+    padding-block: 9px;
+    font-size: 1rem;
+  }
+
+  .slip-stub {
+    padding-block: 16px 14px;
+  }
+
+  .pulled {
+    display: flex;
+    margin-left: -40px;
+  }
+
+  .pulled .card {
+    flex: 1;
+  }
+
+  .card-section {
+    padding-block: 10px;
+  }
+
+  .fingerprint {
+    padding-bottom: 36px;
+  }
+
+  .drawer-front {
+    margin-top: -24px;
+    padding-block: 10px 12px;
+  }
+
+  .label-holder {
+    padding-block: 4px;
+  }
+}
+
+/* Short laptop screens: the stub's facts are repeated in the install step and the footer. */
+@media (min-width: 901px) and (max-height: 700px) {
+  .slip-stub {
+    display: none;
+  }
+}
+
+/* ---------- Catalog cards ---------- */
+
+.card {
+  margin: 0;
+  background: var(--stock);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  min-width: 0;
+}
+
+.card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  padding: 14px 18px 12px;
+  border-bottom: 2px solid var(--index-red);
+}
+
+.call {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.card-meta {
+  font-size: 0.85rem;
+  color: var(--ink-3);
+}
+
+.path-dir {
+  font-family: var(--font-mono);
+  color: var(--ink-3);
+}
+
+.path-file {
+  font-family: var(--font-mono);
+  color: var(--ink);
+}
+
+.finding .card-head {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.tags {
+  display: flex;
+  gap: 6px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+}
+
+.severity-error {
+  border-color: var(--critical);
+  background: var(--critical-wash);
+  color: var(--critical-ink);
+}
+
+.baseline-new {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--stock);
+}
+
+.card-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--rule-soft);
+  font-size: 0.92rem;
+  color: var(--ink-2);
+}
+
+.section-label {
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.card-section code {
+  color: var(--ink);
+}
+
+.ref-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ref {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--ink-3);
+}
+
+/* An import chain: a ruled line with ringed nodes, as in the dashboard card. */
+.chain {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+
+.chain li {
+  position: relative;
+  padding: 3px 0 3px 18px;
+}
+
+.chain li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--rule-strong);
+}
+
+.chain li:first-child::before {
+  top: 50%;
+}
+
+.chain li:last-child::before {
+  bottom: 50%;
+}
+
+.chain li::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: calc(50% - 4px);
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--ink-2);
+  border-radius: 50%;
+  background: var(--stock);
+}
+
+.fingerprint {
+  padding: 10px 18px 60px;
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+
+/* ---------- Sections ---------- */
+
+.section {
+  padding-block: 96px;
+}
+
+.band {
+  padding-block: 96px;
+  background: var(--stock);
+  border-block: 1px solid var(--rule);
+}
+
+.section-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 68ch;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: clamp(1.8rem, 1.2rem + 1.8vw, 2.6rem);
+  font-weight: 750;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+h3 {
+  font-size: 1.05rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.section-intro p,
+.stack > p {
+  font-size: 1.08rem;
+  color: var(--ink-2);
+}
+
+/* ---------- Screenshots as retrieved cards ---------- */
+
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.shot figcaption {
+  padding: 14px 18px 16px;
+  border-top: 1px solid var(--rule);
+  font-size: 0.92rem;
+  color: var(--ink-2);
+}
+
+.swipe-hint {
+  display: none;
+}
+
+.shot-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* ---------- Commands ---------- */
+
+.commands {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--rule);
+  background: var(--stock);
+}
+
+.commands th,
+.commands td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--rule-soft);
+  text-align: left;
+  vertical-align: top;
+}
+
+.commands thead th {
+  background: var(--stock-2);
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.commands tbody th code {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.commands td {
+  color: var(--ink-2);
+  font-size: 0.95rem;
+}
+
+.commands td:nth-child(3) code {
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.commands td:nth-child(4) code {
+  display: inline-block;
+  margin: 0 4px 4px 0;
+  padding: 1px 7px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--stock-2);
+  font-size: 0.8rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.global-options {
+  margin-top: 14px;
+  font-size: 0.92rem;
+  color: var(--ink-3);
+}
+
+.outputs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.output-note {
+  margin-top: 12px;
+  font-size: 0.88rem;
+  color: var(--ink-3);
+}
+
+/* ---------- Printed terminal output ---------- */
+
+.terminal {
+  margin: 0;
+  min-width: 0;
+}
+
+.terminal figcaption {
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  color: var(--ink-3);
+}
+
+.terminal figcaption code {
+  color: var(--ink-2);
+}
+
+.terminal pre {
+  margin: 0;
+  padding: 16px 18px;
+  /* Printed on ruled stock: one blue rule under every line of output. */
+  background-color: var(--stock-2);
+  background-image: linear-gradient(
+    to bottom,
+    transparent calc(1.6em - 1px),
+    var(--rule-soft) calc(1.6em - 1px)
+  );
+  background-size: 100% 1.6em;
+  background-position: 0 16px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+.terminal mark {
+  background: var(--critical-wash);
+  color: var(--critical-ink);
+  font-weight: 650;
+}
+
+/* ---------- Rules ---------- */
+
+.two-col {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 56px;
+  align-items: start;
+}
+
+.ledger {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ledger th,
+.ledger td {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule-soft);
+  text-align: left;
+  vertical-align: top;
+}
+
+.ledger th {
+  width: 46%;
+  padding-right: 16px;
+  font-weight: 650;
+}
+
+.ledger td {
+  color: var(--ink-2);
+}
+
+.config .code {
+  margin: 0;
+  padding: 18px;
+  line-height: 1.6;
+}
+
+/* Verbatim blocks wrap long lines instead of hiding them behind a scroll edge. */
+.config .code,
+.terminal pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* The full configuration gets the whole row, under the rule list. */
+#rules .two-col {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+}
+
+#rules .ledger th {
+  width: 30%;
+}
+
+/* ---------- CI: notes on the lines they explain ---------- */
+
+.ci-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+  margin-bottom: 40px;
+}
+
+.annotations {
+  margin: 28px 0 0;
+}
+
+.annotations div {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 0 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.annotations div:last-child {
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.annotations dt {
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.annotations dd {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--ink-2);
+}
+
+.ci-ledger th {
+  width: 30%;
+}
+
+/* ---------- Quick start: guide cards with tabs ---------- */
+
+.guides {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 28px 0 0;
+  list-style: none;
+}
+
+.guides li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px 18px 20px;
+  background: var(--stock);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  min-width: 0;
+  color: var(--ink-2);
+  font-size: 0.92rem;
+}
+
+/* The order carries meaning: each card's tab is its step. */
+.tab {
+  position: absolute;
+  top: -27px;
+  left: 18px;
+  min-width: 36px;
+  padding: 2px 10px;
+  background: var(--stock);
+  border: 1px solid var(--rule);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--ink);
+  text-align: center;
+}
+
+.guides h3 {
+  color: var(--ink);
+}
+
+/* ---------- Closing band ---------- */
+
+.closing {
+  padding-block: 88px;
+  background: var(--rail);
+  color: var(--rail-ink);
+}
+
+.closing-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: center;
+}
+
+.closing h2 {
+  color: var(--rail-ink);
+}
+
+.closing .stack > p {
+  color: var(--rail-ink-2);
+}
+
+.closing-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+}
+
+.closing a {
+  color: var(--rail-ink);
+}
+
+.closing :focus-visible {
+  outline-color: var(--rail-ink);
+}
+
+.closing-call {
+  padding: 20px 22px 22px;
+  background: var(--stock);
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+}
+
+.closing-label {
+  margin-bottom: 10px;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.closing-call .command {
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  padding-block: 28px;
+  font-size: 0.9rem;
+  color: var(--ink-3);
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+
+.footer-row ul {
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- Narrow screens ---------- */
+
+@media (max-width: 1080px) {
+  .guides {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 44px;
+  }
+
+  .shot-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-stage,
+  .two-col,
+  .closing-row,
+  .outputs,
+  .ci-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero-stage {
+    padding-top: 32px;
+  }
+
+  .slip {
+    margin-bottom: 0;
+  }
+
+  .pulled {
+    width: min(100%, 420px);
+    margin: -20px 0 0 auto;
+  }
+
+  .field,
+  .slip-fields .field {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+    padding: 16px 20px;
+  }
+
+  .field dt,
+  .field-title dt {
+    padding-top: 0;
+  }
+
+  /* A label right above the headline would read as an eyebrow. */
+  .title-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .annotations {
+    margin-top: 0;
+  }
+
+  .slip-head {
+    padding: 10px 20px;
+  }
+
+  .slip-stub {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-inline: 20px;
+  }
+
+  .section,
+  .band {
+    padding-block: 64px;
+  }
+
+  /* Commands become one block per command. */
+  .commands thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .commands tr {
+    display: grid;
+    gap: 6px;
+    padding: 16px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+
+  .commands th,
+  .commands td {
+    padding: 0;
+    border: 0;
+  }
+
+  .commands td:empty {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .guides {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Phones: verbatim blocks keep exact lines (YAML indentation, output columns) and
+     scroll sideways; the captions say so. */
+  .config .code,
+  .terminal pre {
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  /* Header: one swipeable row of full-size tap targets instead of two cramped rows. */
+  .header-row {
+    gap: 0;
+    min-height: 0;
+    padding-top: 12px;
+  }
+
+  .site-header nav {
+    width: calc(100% + 40px);
+    margin: 4px -20px 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    mask-image: linear-gradient(to right, #000 80%, transparent);
+  }
+
+  .site-header nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .site-header ul {
+    flex-wrap: nowrap;
+    gap: 0;
+    padding: 0 30px 0 10px;
+  }
+
+  .site-header nav a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 10px;
+    white-space: nowrap;
+  }
+
+  /* The three smaller screenshots become a swipe strip; the feature one stays. */
+  .shot-row {
+    display: flex;
+    gap: 14px;
+    margin: 20px -20px 0;
+    padding: 0 20px 4px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 20px;
+    scrollbar-width: none;
+  }
+
+  .shot-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .shot-row > .shot {
+    flex: 0 0 84%;
+    scroll-snap-align: start;
+  }
+
+  .swipe-hint {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: var(--ink-3);
+  }
+
+  /* One output sample is enough on a phone. */
+  .outputs .terminal:nth-child(2) {
+    display: none;
+  }
+
+  /* The full configuration scrolls inside a fixed window. */
+  .config .code {
+    max-height: 26em;
+    overflow: auto;
+  }
+
+  .config .card-meta::after {
+    content: ' · scroll to read the whole file';
+  }
+
+  /* Nothing below 12px. */
+  .section-label,
+  .field dt,
+  .closing-label,
+  .commands thead th {
+    font-size: 0.75rem;
+  }
+
+  .terminal pre {
+    font-size: 0.86rem;
+  }
+
+  .footer-row a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .wordmark {
+    min-height: 44px;
+  }
+
+  .fingerprint,
+  .label-holder,
+  .terminal figcaption {
+    font-size: 0.875rem;
+  }
+
+  .fingerprint code,
+  .label-holder code,
+  .terminal figcaption code {
+    font-size: 0.86em;
+  }
+
+  .section,
+  .band {
+    padding-block: 52px;
+  }
+
+  .ledger th,
+  .ledger td,
+  #rules .ledger th,
+  .ci-ledger th {
+    display: block;
+    width: auto;
+    padding: 0;
+    border: 0;
+  }
+
+  .ledger tr {
+    display: block;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+
+  .terminal figcaption::after {
+    content: ' · scroll sideways for long lines';
+  }
+
+  /* Phones: keep the pulled card in the first screen. The stub facts repeat in the
+     install step and the footer. */
+  .hero-stage {
+    padding-top: 20px;
+  }
+
+  .slip-stub {
+    display: none;
+  }
+
+  .field,
+  .slip-fields .field {
+    padding: 12px 18px;
+  }
+
+  .lede {
+    font-size: 1rem;
+  }
+
+  .pulled {
+    margin-top: -14px;
+  }
+
+  .annotations div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .field-call .command,
+  .closing-call .command {
+    padding-inline: 12px;
+    font-size: 0.84rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .pulled {
+    animation: none;
+  }
+}

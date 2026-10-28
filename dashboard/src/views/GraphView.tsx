@@ -7,6 +7,7 @@ import {
   ModuleLink,
   Notice,
   PathChain,
+  PathText,
   SeverityBadge,
 } from '../components/ui';
 import { number, plural, revealControls } from '../lib/format';
@@ -872,12 +873,32 @@ function FocusPanel({
   onClear: () => void;
 }) {
   if (!focus) {
+    const flagged = model.modules
+      .filter((m) => m.findings.length > 0)
+      .sort((a, b) => b.findings.length - a.findings.length || (a.id < b.id ? -1 : 1))
+      .slice(0, 8);
     return (
       <div className="focus-hint">
-        <h2>Pull a card</h2>
+        <h2>Select a file</h2>
         <p>
-          Select a file in the graph or search for one to see what it imports and what imports it.
+          Click a file in the graph or search for one to see what it imports and what imports it;
+          everything else dims.
         </p>
+        {flagged.length > 0 && (
+          <>
+            <h3 className="label">Files with violations</h3>
+            <ul className="flagged-list">
+              {flagged.map((m) => (
+                <li key={m.id}>
+                  <a href={href('graph', { focus: m.id })}>
+                    <PathText id={m.id} />
+                  </a>
+                  <span className="badge severity-error">{m.findings.length}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
         <ul className="key-list">
           <li>
             <kbd>/</kbd> search

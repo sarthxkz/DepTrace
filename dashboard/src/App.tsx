@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Icon, type IconName } from './components/Icon';
 import { Notice, Skeleton } from './components/ui';
+import { parseAudit } from './contract/audit';
 import { LoadError, parseValue, readDocumentFile, type Loaded } from './contract/load';
-import { fetchReport, reanalyze, ServerError } from './lib/api';
+import { fetchReport, reanalyze, runAudit, ServerError } from './lib/api';
 import { formatTime } from './lib/format';
 import { href, useRoute, type Page } from './lib/router';
-import type { Ready, Source } from './lib/state';
+import type { AuditControl, AuditState, Ready, Source } from './lib/state';
 import { useTheme, type ThemeChoice } from './lib/theme';
 import { buildModel } from './model/model';
 import { Configuration } from './views/Configuration';
@@ -17,6 +18,7 @@ import { Overview } from './views/Overview';
 import { Privacy } from './views/Privacy';
 import { Reports } from './views/Reports';
 import { Violations } from './views/Violations';
+import { Vulnerabilities } from './views/Vulnerabilities';
 
 type State =
   | { status: 'loading' }
@@ -25,9 +27,10 @@ type State =
 
 const NAV: { page: Page; label: string; icon: IconName; needsGraph: boolean }[] = [
   { page: 'overview', label: 'Overview', icon: 'overview', needsGraph: false },
+  { page: 'violations', label: 'Violations', icon: 'violations', needsGraph: false },
+  { page: 'vulnerabilities', label: 'Vulnerabilities', icon: 'bug', needsGraph: false },
   { page: 'graph', label: 'Dependency graph', icon: 'graph', needsGraph: true },
   { page: 'layers', label: 'Layers', icon: 'layers', needsGraph: true },
-  { page: 'violations', label: 'Violations', icon: 'violations', needsGraph: false },
   { page: 'cycles', label: 'Cycles', icon: 'cycles', needsGraph: true },
   { page: 'modules', label: 'Modules', icon: 'modules', needsGraph: true },
   { page: 'reports', label: 'Reports', icon: 'reports', needsGraph: false },
@@ -71,6 +74,7 @@ export function App() {
   const [notice, setNotice] = useState<{ tone: 'error' | 'info'; text: string } | null>(null);
   const [navOpen, setNavOpen] = useState(false);
   const [theme, setTheme] = useTheme();
+  const [auditState, setAuditState] = useState<AuditState>({ status: 'idle' });
 
   useEffect(() => {
     let current = true;
@@ -117,16 +121,66 @@ export function App() {
   const ready = state.status === 'ready' ? state : null;
   const findingsOnly = ready !== null && ready.model === null;
 
+  const audit: AuditControl = {
+    state: auditState,
+    canRun: ready?.source.kind === 'server' && ready.source.live,
+    run: () => {
+      setAuditState({ status: 'running' });
+      runAudit()
+        .then((value) => {
+          setAuditState({
+            status: 'done',
+            report: parseAudit(value),
+            origin: 'server',
+            name: 'registry',
+          });
+        })
+        .catch((error: unknown) => {
+          setAuditState({
+            status: 'error',
+            message: messageOf(error),
+            problems: problemsOf(error),
+          });
+        });
+    },
+    load: (file) => {
+      file
+        .text()
+        .then((text) => {
+          setAuditState({
+            status: 'done',
+            report: parseAudit(JSON.parse(text)),
+            origin: 'file',
+            name: file.name,
+          });
+        })
+        .catch((error: unknown) => {
+          setAuditState({
+            status: 'error',
+            message: `${file.name} is not a "deptrace audit --format json" file: ${messageOf(error)}`,
+            problems: problemsOf(error),
+          });
+        });
+    },
+  };
+  const counts: Partial<Record<Page, number>> = ready
+    ? {
+        violations: ready.loaded.findings.length,
+        ...(auditState.status === 'done' && { vulnerabilities: auditState.report.packages.length }),
+        ...(ready.model && {
+          cycles: ready.model.cycles.length,
+          graph: ready.model.modules.length,
+        }),
+      }
+    : {};
+
   return (
     <div className={`shell${navOpen ? ' nav-open' : ''}`}>
       <a className="skip-link" href="#main">
         Skip to content
       </a>
       <nav className="rail" aria-label="Sections">
-        <div className="rail-brand">
-          <span className="brand-mark" aria-hidden="true" />
-          deptrace
-        </div>
+        <div className="rail-brand">deptrace</div>
         {/* On small screens the rail is a drawer; following a link closes it. */}
         <ul
           onClick={() => {
@@ -141,7 +195,13 @@ export function App() {
                 className={findingsOnly && item.needsGraph ? 'unavailable' : undefined}
               >
                 <Icon name={item.icon} />
-                {item.label}
+                <span className="rail-label">{item.label}</span>
+                {counts[item.page] !== undefined && (
+                  <>
+                    {' '}
+                    <span className="rail-count">{counts[item.page]}</span>
+                  </>
+                )}
               </a>
             </li>
           ))}
@@ -197,9 +257,13 @@ export function App() {
               ready={ready}
               onImport={importFile}
               onTheme={setTheme}
+              audit={audit}
             />
           )}
         </main>
+        <footer className="app-footer">
+          Created and designed by sarthxkz. All rights reserved.
+        </footer>
       </div>
     </div>
   );
@@ -211,12 +275,14 @@ function PageView({
   ready,
   onImport,
   onTheme,
+  audit,
 }: {
   page: Page;
   params: URLSearchParams;
   ready: Ready;
   onImport: (file: File) => Promise<{ message: string; problems: string[] } | null>;
   onTheme: (choice: ThemeChoice) => void;
+  audit: AuditControl;
 }) {
   const { model } = ready;
   const unavailable = useMemo(() => {
@@ -225,8 +291,9 @@ function PageView({
   }, [page, model]);
   if (page === 'reports') return <Reports ready={ready} onImport={onImport} />;
   if (page === 'privacy') return <Privacy ready={ready} onTheme={onTheme} />;
-  if (page === 'overview') return <Overview ready={ready} />;
+  if (page === 'overview') return <Overview ready={ready} audit={audit} />;
   if (page === 'violations') return <Violations ready={ready} params={params} />;
+  if (page === 'vulnerabilities') return <Vulnerabilities ready={ready} audit={audit} />;
   if (unavailable || model === null) {
     const label = NAV.find((entry) => entry.page === page)?.label ?? page;
     return (

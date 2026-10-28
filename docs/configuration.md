@@ -2,7 +2,9 @@
 
 DepTrace reads `deptrace.yml` from the directory being scanned or checked (the `[directory]`
 argument or `--root`, default: current directory). `deptrace init` creates a starter file and
-never overwrites an existing one. DepTrace never writes to `deptrace.yml` otherwise.
+never overwrites an existing one; `deptrace init --detect` also suggests `layers` and a
+`layer-boundaries` rule from your folders and current imports (review it: it allows every import
+between layers that exists today). DepTrace never writes to `deptrace.yml` otherwise.
 
 ```yaml
 version: 1

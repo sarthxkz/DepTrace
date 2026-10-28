@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "tool": {
     "name": "deptrace",
-    "version": "0.5.0"
+    "version": "0.6.0"
   },
   "result": "failed",
   "strict": false,
@@ -79,6 +79,7 @@
         }
       ],
       "message": "Circular dependency between 3 file(s): src/application/cart-service.ts -> src/application/checkout.ts -> src/application/payment.ts -> src/application/cart-service.ts (one representative cycle; see the component files).",
+      "suggestion": "Break the cycle by removing one import. The smallest is src/application/cart-service.ts -> src/application/checkout.ts (1 import): move what it uses into a new file both can import, or pass it in instead of importing it.",
       "path": [
         "src/application/cart-service.ts",
         "src/application/checkout.ts",
@@ -116,6 +117,7 @@
         }
       ],
       "message": "src/application/catalog-service.ts must not import src/testing/fake-store.ts (rule \"forbidden-imports/no-test-doubles\": Production code must not import test doubles).",
+      "suggestion": "Remove the import of src/testing/fake-store.ts, or move what src/application/catalog-service.ts needs from it into a file outside src/testing/**. If src/application/catalog-service.ts is a deliberate exception, add it to \"exclude\" of rule \"forbidden-imports/no-test-doubles\" in deptrace.yml.",
       "path": ["src/application/catalog-service.ts", "src/testing/fake-store.ts"],
       "fingerprint": "d27f1dc68552bf64",
       "metadata": {},
@@ -146,6 +148,7 @@
         }
       ],
       "message": "src/domain/pricing.ts must not import the package \"fs\" (rule \"forbidden-packages/pure-domain\").",
+      "suggestion": "Move the code that uses \"fs\" to a file outside src/domain/** and call it through an interface this file may import, or replace the package. If src/domain/pricing.ts is a deliberate exception, add it to \"exclude\" of rule \"forbidden-packages/pure-domain\" in deptrace.yml.",
       "path": null,
       "fingerprint": "161397c95a60227c",
       "metadata": {},
@@ -175,6 +178,7 @@
         }
       ],
       "message": "Layer \"domain\" must not depend on layer \"infrastructure\" (allowed for \"domain\": shared). src/domain/pricing.ts imports src/infrastructure/db/client.ts.",
+      "suggestion": "Invert the dependency: declare the interface \"domain\" needs in \"shared\" (which \"domain\" may import), implement it in \"infrastructure\" (which may import \"shared\"), and pass the implementation in from the composition root. If \"domain\" should depend on \"infrastructure\", add \"infrastructure\" to allowed.domain in deptrace.yml.",
       "path": ["src/domain/pricing.ts", "src/infrastructure/db/client.ts"],
       "fingerprint": "c989df0aab6bd343",
       "metadata": {
@@ -207,6 +211,7 @@
         }
       ],
       "message": "Layer \"ui\" must not depend on layer \"infrastructure\" (allowed for \"ui\": application, shared). src/ui/product-list.ts imports src/infrastructure/db/client.ts.",
+      "suggestion": "Invert the dependency: declare the interface \"ui\" needs in \"application\" (which \"ui\" may import), implement it in \"infrastructure\" (which may import \"application\"), and pass the implementation in from the composition root. If \"ui\" should depend on \"infrastructure\", add \"infrastructure\" to allowed.ui in deptrace.yml.",
       "path": ["src/ui/product-list.ts", "src/infrastructure/db/client.ts"],
       "fingerprint": "9bb66c25fc937745",
       "metadata": {

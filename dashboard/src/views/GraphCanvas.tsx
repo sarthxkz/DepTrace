@@ -68,8 +68,8 @@ function stylesheet(large: boolean): StylesheetJson {
         'border-color': css('--graph-node-ring'),
         label: 'data(label)',
         'font-family': css('--font-mono'),
-        'font-size': 12,
-        color: css('--ink'),
+        'font-size': 13,
+        color: css('--ink-2'),
         'text-valign': 'bottom',
         'text-margin-y': 4,
         'text-outline-color': css('--graph-ground'),
@@ -129,7 +129,8 @@ function stylesheet(large: boolean): StylesheetJson {
         'target-arrow-shape': 'triangle',
         'arrow-scale': 0.8,
         'curve-style': large ? 'straight' : 'bezier',
-        opacity: 0.9,
+        // Plain imports recede so cycles and violations read first.
+        opacity: 0.6,
         'transition-property': 'opacity',
         'transition-duration': 150,
       },
@@ -153,12 +154,18 @@ function stylesheet(large: boolean): StylesheetJson {
     },
     {
       selector: 'edge[?cycle]',
-      style: { width: 2, 'line-color': css('--cycle'), 'target-arrow-color': css('--cycle') },
+      style: {
+        width: 2,
+        opacity: 1,
+        'line-color': css('--cycle'),
+        'target-arrow-color': css('--cycle'),
+      },
     },
     {
       selector: 'edge[?violation]',
       style: {
         width: 2.5,
+        opacity: 1,
         'line-color': css('--critical'),
         'target-arrow-color': css('--critical'),
       },

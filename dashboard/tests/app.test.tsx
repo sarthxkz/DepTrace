@@ -40,13 +40,23 @@ const meta = {
   git: { branch: 'main', commit: 'a'.repeat(40) },
 };
 
-function serve(report: unknown, options: { live?: boolean; status?: number } = {}) {
+function serve(
+  report: unknown,
+  options: { live?: boolean; status?: number; audit?: unknown } = {},
+) {
   const calls: { url: string; init?: RequestInit }[] = [];
   const fetchMock = vi.fn((url: string, init?: RequestInit) => {
     calls.push({ url, ...(init && { init }) });
     if (options.status !== undefined) {
       return Promise.resolve(
         new Response('Forbidden: unexpected Host header.', { status: options.status }),
+      );
+    }
+    if (url === '/api/audit') {
+      return Promise.resolve(
+        new Response(JSON.stringify(options.audit ?? null), {
+          headers: { 'Content-Type': 'application/json' },
+        }),
       );
     }
     const analyzedAt = url === '/api/analyze' ? '2026-10-27T09:30:00.000Z' : meta.analyzedAt;
@@ -104,7 +114,7 @@ describe('loading and errors', () => {
     expect(within(row('Unclassified files')).getByText('2')).toBeTruthy();
     // Header facts come from the server and the report only.
     expect(screen.getByText('main · aaaaaaa')).toBeTruthy();
-    expect(screen.getByText('deptrace 0.5.0')).toBeTruthy();
+    expect(screen.getByText('deptrace 0.6.0')).toBeTruthy();
   });
 
   it('distinguishes missing data from zero', async () => {
@@ -169,14 +179,42 @@ describe('loading and errors', () => {
 });
 
 describe('overview', () => {
-  it('orders what to investigate, starting with the new violation', async () => {
+  it('starts with the new violation, opened to its fix', async () => {
     await open('#/overview');
-    const leads = within(screen.getByRole('region', { name: 'Where to start' })).getAllByRole(
-      'link',
-    );
-    expect(leads[0]?.textContent).toBe('1 new violation not accepted by the baseline');
-    expect(leads[0]?.getAttribute('href')).toBe('#/violations?baseline=new');
-    expect(leads.some((link) => /Runtime cycle of 3 files/.test(link.textContent))).toBe(true);
+    const start = screen.getByRole('region', { name: 'Where to start' });
+    const items = within(start).getAllByRole('button', { expanded: true });
+    expect(items).toHaveLength(1);
+    expect(items[0]?.textContent).toContain('src/ui/product-list.ts:3:30');
+    expect(items[0]?.textContent).toContain('new');
+    expect(within(start).getByText(/^Invert the dependency/)).toBeTruthy();
+    const collapsed = within(start).getAllByRole('button', { expanded: false });
+    expect(collapsed).toHaveLength(4);
+    await userEvent.click(defined(collapsed[0]));
+    expect(within(start).getAllByRole('button', { expanded: true })).toHaveLength(1);
+    expect(
+      within(start)
+        .getAllByRole('link')
+        .some((link) => /Runtime cycle of 3 files/.test(link.textContent)),
+    ).toBe(true);
+  });
+
+  it('checks dependencies only when asked, and shows the result', async () => {
+    const calls = serve(fixture('storefront-report.json'), {
+      audit: fixture('storefront-audit.json'),
+    });
+    window.location.hash = '#/overview';
+    render(<App />);
+    const health = await screen.findByLabelText('Health');
+    const audits = () => calls.filter((call) => call.url === '/api/audit');
+    expect(audits()).toHaveLength(0);
+    await userEvent.click(within(health).getByRole('button', { name: /Check dependencies/ }));
+    expect(await within(health).findByText('1 high')).toBeTruthy();
+    expect(audits()).toHaveLength(1);
+    expect(audits()[0]?.init?.method).toBe('POST');
+    await go('#/vulnerabilities');
+    expect(await screen.findByText('lodash@4.17.20')).toBeTruthy();
+    expect(screen.getByText('npm update lodash')).toBeTruthy();
+    expect(screen.getByText(/not in your own code/)).toBeTruthy();
   });
 
   it('never calls a report without findings healthy', async () => {
@@ -568,7 +606,10 @@ describe('privacy and security page', () => {
 describe('accessibility basics', () => {
   it('marks the current section and offers a skip link', async () => {
     await open('#/cycles');
-    expect(screen.getByRole('link', { name: 'Cycles' }).getAttribute('aria-current')).toBe('page');
+    // The rail link carries its count: "Cycles 2".
+    expect(screen.getByRole('link', { name: /^Cycles\b/ }).getAttribute('aria-current')).toBe(
+      'page',
+    );
     expect(screen.getByRole('link', { name: 'Skip to content' }).getAttribute('href')).toBe(
       '#main',
     );

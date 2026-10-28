@@ -127,8 +127,8 @@ export function Violations({ ready, params }: { ready: Ready; params: URLSearchP
           loaded.tool.name === 'DepTrace') && (
           <p className="muted">
             These are architecture rule violations in the analyzed code, from the rules in
-            deptrace.yml. They are not security vulnerabilities, and DepTrace does not scan for
-            those.
+            deptrace.yml. They are not security vulnerabilities; known vulnerabilities in your npm
+            dependencies are on the <a href={href('vulnerabilities')}>Vulnerabilities</a> page.
           </p>
         )}
 
@@ -358,6 +358,14 @@ function FindingCard({ finding, hasGraph }: { finding: Finding; hasGraph: boolea
         <p>{revealControls(finding.message)}</p>
         {finding.ruleDescription && <p className="muted">Rule: {finding.ruleDescription}</p>}
       </CardSection>
+      {finding.suggestion && (
+        <CardSection title="How to fix it">
+          <p className="fix-line">
+            <Icon name="fix" size={16} />
+            <span>{revealControls(finding.suggestion)}</span>
+          </p>
+        </CardSection>
+      )}
       <CardSection title="Where">
         <dl className="facts">
           <dt>Source</dt>

@@ -4,7 +4,14 @@ import type { AnalysisResult, GraphEdge, ImportReference } from '../analysis/typ
 import { fingerprint } from './fingerprint.js';
 import { createLayerResolver, createModuleResolver } from './layers.js';
 import { compileMatcher } from './patterns.js';
-import type { Policy, Rule, RuleType, Violation } from './types.js';
+import type {
+  LayerBoundariesRule,
+  ModuleBoundariesRule,
+  Policy,
+  Rule,
+  RuleType,
+  Violation,
+} from './types.js';
 
 export interface RuleContext {
   result: AnalysisResult;
@@ -33,11 +40,33 @@ function checkedReferences(edge: GraphEdge, ignoreTypeOnly: boolean): ImportRefe
     : edge.references;
 }
 
+const quoted = (items: readonly string[]) => items.map((item) => `"${item}"`).join(', ');
+const exception = (ruleId: string, file: string) =>
+  ` If ${file} is a deliberate exception, add it to "exclude" of rule "${ruleId}" in deptrace.yml.`;
+
+/** Fix for a layer-boundaries violation: a route the policy allows, or inverting the import. */
+function layerSuggestion(rule: LayerBoundariesRule, from: string, to: string): string {
+  const allowed = rule.allowed[from] ?? [];
+  const intended = ` If "${from}" should depend on "${to}", add "${to}" to allowed.${from} in deptrace.yml.`;
+  const via = allowed.find((layer) => rule.allowed[layer]?.includes(to));
+  if (via !== undefined) {
+    return `Go through layer "${via}": "${from}" may import "${via}", and "${via}" may import "${to}". Move the call into "${via}" and import that instead.${intended}`;
+  }
+  const port = allowed.find((layer) => rule.allowed[to]?.includes(layer));
+  if (port !== undefined) {
+    return `Invert the dependency: declare the interface "${from}" needs in "${port}" (which "${from}" may import), implement it in "${to}" (which may import "${port}"), and pass the implementation in from the composition root.${intended}`;
+  }
+  return allowed.length > 0
+    ? `Move the code "${from}" needs out of "${to}" into a layer it may import (${quoted(allowed)}).${intended}`
+    : `"${from}" may not import any other layer: move the code it needs into "${from}" itself.${intended}`;
+}
+
 function edgeViolation(
   base: ViolationBase,
   edge: GraphEdge,
   references: ImportReference[],
   message: string,
+  suggestion: string,
   metadata: Record<string, string> = {},
 ): Violation {
   const [first] = references;
@@ -51,6 +80,7 @@ function edgeViolation(
     typeOnly: references.every((reference) => reference.typeOnly),
     references,
     message,
+    suggestion,
     path: [edge.from, edge.to],
     fingerprint: fingerprint(base.ruleId, edge.from, edge.to),
     metadata,
@@ -94,6 +124,7 @@ const layerBoundaries: RuleDefinition<'layer-boundaries'> = {
         edge,
         references,
         `Layer "${from}" must not depend on layer "${to}" (allowed for "${from}": ${list(allowed)}). ${edge.from} imports ${edge.to}.`,
+        layerSuggestion(rule, from, to),
         { fromLayer: from, toLayer: to },
       );
     }),
@@ -113,6 +144,7 @@ const forbiddenImports: RuleDefinition<'forbidden-imports'> = {
             edge,
             references,
             `${edge.from} must not import ${edge.to} (rule "${base.ruleId}": ${base.ruleDescription}).`,
+            `Remove the import of ${edge.to}, or move what ${edge.from} needs from it into a file outside ${list(rule.to)}.${exception(base.ruleId, edge.from)}`,
           )
         : null,
     );
@@ -177,6 +209,7 @@ const forbiddenPackages: RuleDefinition<'forbidden-packages'> = {
         typeOnly: references.every((reference) => reference.typeOnly),
         references,
         message: `${first.file} must not import the package "${first.packageName}" (rule "${base.ruleId}").`,
+        suggestion: `Move the code that uses "${first.packageName}" to a file outside ${list(rule.from)} and call it through an interface this file may import, or replace the package.${exception(base.ruleId, first.file)}`,
         path: null,
         fingerprint: fingerprint(base.ruleId, first.file, `package:${first.packageName}`),
         metadata: {},
@@ -184,6 +217,24 @@ const forbiddenPackages: RuleDefinition<'forbidden-packages'> = {
     });
   },
 };
+
+/** Fix for a module-boundaries violation: the module's public entry file, when it exists. */
+function moduleSuggestion(
+  rule: ModuleBoundariesRule,
+  context: RuleContext,
+  module: string,
+  imported: string,
+): string {
+  if (rule.public.length === 0) {
+    return `Modules may not import each other. Move the shared code out of "${module}" into a file outside every module.`;
+  }
+  const entry = rule.public
+    .map((pattern) => `${module}/${pattern}`)
+    .find((file) => context.result.graph.indexOf.has(file));
+  return entry !== undefined
+    ? `Import ${entry} instead of ${imported}; if what you need is not exported there, export it from ${entry}.`
+    : `Import module "${module}" only through its public files (${list(rule.public)}); export what you need from one of them.`;
+}
 
 const moduleBoundaries: RuleDefinition<'module-boundaries'> = {
   type: 'module-boundaries',
@@ -202,6 +253,7 @@ const moduleBoundaries: RuleDefinition<'module-boundaries'> = {
         edge,
         references,
         `Module "${from}" may only use the public files of module "${to}" (${list(rule.public)}). ${edge.from} imports ${edge.to}.`,
+        moduleSuggestion(rule, context, to, edge.to),
         { fromModule: from, toModule: to },
       );
     });
@@ -231,6 +283,13 @@ const circularDependencies: RuleDefinition<'circular-dependencies'> = {
       const firstEdge = cycle.edges.find((edge) => edge.from === file);
       const reference = firstEdge?.references[0];
       const references = cycle.edges.flatMap((edge) => edge.references);
+      // The edge with the fewest imports is usually the cheapest one to cut.
+      const weakest = cycle.edges.reduce((a, b) =>
+        b.references.length < a.references.length ? b : a,
+      );
+      const suggestion = cycle.runtime
+        ? `Break the cycle by removing one import. The smallest is ${weakest.from} -> ${weakest.to} (${String(weakest.references.length)} import${weakest.references.length === 1 ? '' : 's'}): move what it uses into a new file both can import, or pass it in instead of importing it.`
+        : 'Every import in this cycle is type-only, so it disappears at runtime. Set "ignore-type-only: true" on this rule if that is acceptable, or move the shared types into their own file.';
       return {
         ...base,
         file,
@@ -241,6 +300,7 @@ const circularDependencies: RuleDefinition<'circular-dependencies'> = {
         typeOnly: !cycle.runtime,
         references: firstEdge?.references ?? [],
         message: `Circular dependency between ${String(cycle.nodes.length)} file(s): ${cycle.representativePath.join(' -> ')}${cycle.nodes.length > 2 ? ' (one representative cycle; see the component files)' : ''}.`,
+        suggestion,
         path: cycle.representativePath,
         fingerprint: fingerprint(base.ruleId, ...cycle.nodes),
         metadata: { componentSize: String(cycle.nodes.length), edges: String(cycle.edges.length) },

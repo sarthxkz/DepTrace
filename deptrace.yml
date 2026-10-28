@@ -25,6 +25,9 @@ layers:
     files: ['src/analysis/**']
   - name: config
     files: ['src/config/**']
+  # Dependency advisories; the only module that uses the network.
+  - name: audit
+    files: ['src/audit/**']
   - name: core
     files: ['src/core/**', 'src/utils/**']
   # The browser app talks to the analyzer only through the JSON report.
@@ -36,12 +39,13 @@ rules:
     severity: error
     # importer layer -> layers it may import
     allowed:
-      cli: [dashboard-server, baseline, rules, analysis, config, core]
+      cli: [dashboard-server, baseline, rules, analysis, config, audit, core]
       dashboard-server: [core]
       baseline: [rules, core]
       rules: [analysis, core]
       analysis: [core]
       config: [rules, core]
+      audit: [core]
       core: []
       dashboard-app: []
 

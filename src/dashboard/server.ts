@@ -28,6 +28,11 @@ export interface DashboardServerOptions {
   initial: DashboardState;
   /** Re-runs the analysis; absent when serving a report file. */
   analyze?: () => Promise<DashboardState>;
+  /**
+   * Runs `deptrace audit` and returns its JSON report. The only network use of the
+   * dashboard, and only when the user asks; absent when serving a report file.
+   */
+  audit?: () => Promise<string>;
 }
 
 const HOST = '127.0.0.1';
@@ -76,9 +81,9 @@ export async function loadAssets(directory: string): Promise<Map<string, Asset>>
 }
 
 /**
- * Serves the dashboard on 127.0.0.1 only. The API has two endpoints:
- * `GET /api/report` and, for live analyses, `POST /api/analyze`. Neither takes
- * a path or any other parameter from the browser.
+ * Serves the dashboard on 127.0.0.1 only. The API has three endpoints:
+ * `GET /api/report` and, for live analyses, `POST /api/analyze` and
+ * `POST /api/audit`. None takes a path or any other parameter from the browser.
  */
 export async function startDashboardServer(
   options: DashboardServerOptions,
@@ -89,6 +94,7 @@ export async function startDashboardServer(
   }
   let state = options.initial;
   let analyzing: Promise<DashboardState> | null = null;
+  let auditing: Promise<string> | null = null;
   let port = options.port;
 
   const send = (
@@ -123,25 +129,59 @@ export async function startDashboardServer(
     }
     const url = new URL(request.url ?? '/', `http://${host}`);
 
-    if (url.pathname === '/api/analyze') {
+    /** Rejects anything but a same-origin, body-less POST that names its action. */
+    const acceptAction = (action: string): boolean => {
       if (request.method !== 'POST') {
         send(response, 405, 'Method not allowed.\n');
-        return;
+        return false;
       }
       // Cross-site requests: browsers always send Origin on POST. The custom
       // header also forces a CORS preflight, which this server never approves.
       if (
         request.headers.origin !== `http://${host}` ||
-        request.headers['x-deptrace-request'] !== 'analyze'
+        request.headers['x-deptrace-request'] !== action
       ) {
         send(response, 403, 'Forbidden: cross-origin request.\n');
-        return;
+        return false;
       }
       const length = Number(request.headers['content-length'] ?? 0);
       if (length > 0 || request.headers['transfer-encoding'] !== undefined) {
         send(response, 413, 'This endpoint takes no request body.\n');
+        return false;
+      }
+      return true;
+    };
+
+    if (url.pathname === '/api/audit') {
+      if (!acceptAction('audit')) return;
+      if (!options.audit) {
+        send(response, 409, 'This dashboard shows a report file; it cannot run an audit.\n');
         return;
       }
+      if (auditing) {
+        send(response, 409, 'An audit is already running.\n');
+        return;
+      }
+      auditing = options.audit();
+      let body: string;
+      try {
+        body = await auditing;
+      } catch (error) {
+        send(
+          response,
+          502,
+          `Audit failed: ${error instanceof Error ? error.message : String(error)}\n`,
+        );
+        return;
+      } finally {
+        auditing = null;
+      }
+      send(response, 200, body, 'application/json; charset=utf-8');
+      return;
+    }
+
+    if (url.pathname === '/api/analyze') {
+      if (!acceptAction('analyze')) return;
       if (!options.analyze) {
         send(response, 409, 'This dashboard shows a report file; it cannot re-analyze.\n');
         return;

@@ -5,6 +5,7 @@ export const PAGES = [
   'graph',
   'layers',
   'violations',
+  'vulnerabilities',
   'cycles',
   'modules',
   'reports',

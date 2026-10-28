@@ -10,24 +10,25 @@ rules you define (layers, forbidden imports and packages, module boundaries, cyc
 > **Status: Phase 7A (security, privacy and legal foundation).** Dependency analysis, dependency inspection, the
 > rules engine (`check`), architecture reports (`report`), baselines, SARIF output, GitHub Actions
 > workflows and a local browser dashboard (`dashboard`) work; security, privacy and legal documents
-> exist as drafts awaiting legal review. The package is not published to npm
-> and there is no published GitHub Action. See [Roadmap](#roadmap).
+> exist as drafts awaiting legal review. Published on npm as [`deptrace-cli`](https://www.npmjs.com/package/deptrace-cli);
+> there is no published GitHub Action. See [Roadmap](#roadmap).
 
 ## What works today
 
-| Command                        | Status  | What it does                                                                   |
-| ------------------------------ | ------- | ------------------------------------------------------------------------------ |
-| `deptrace scan [directory]`    | Working | Dependency analysis: files, imports, graph, cycles, diagnostics (text or JSON) |
-| `deptrace deps <file>`         | Working | What a file imports (`outgoing`), or which files import it (`incoming`)        |
-| `deptrace path <from> <to>`    | Working | A shortest import path between two files                                       |
-| `deptrace init`                | Working | Creates a starter `deptrace.yml`; never overwrites an existing one             |
-| `deptrace --help`, `--version` | Working |                                                                                |
-| `deptrace check [directory]`   | Working | Evaluates the rules in `deptrace.yml`; exit code `3` on violations             |
-| `deptrace report [directory]`  | Working | Layers, layer dependencies, rule results and cycles (text or JSON)             |
-| `deptrace baseline create`     | Working | Records the current violations in `deptrace-baseline.json`; never overwrites   |
-| `deptrace baseline update`     | Working | Replaces an existing baseline (explicit, atomic)                               |
-| `deptrace check --baseline`    | Working | Fails only on violations not in the baseline; reports new/existing/resolved    |
-| `deptrace dashboard`           | Working | Graph, layers, cycles, modules and violations in the browser (127.0.0.1 only)  |
+| Command                        | Status  | What it does                                                                    |
+| ------------------------------ | ------- | ------------------------------------------------------------------------------- |
+| `deptrace scan [directory]`    | Working | Dependency analysis: files, imports, graph, cycles, diagnostics (text or JSON)  |
+| `deptrace deps <file>`         | Working | What a file imports (`outgoing`), or which files import it (`incoming`)         |
+| `deptrace path <from> <to>`    | Working | A shortest import path between two files                                        |
+| `deptrace init`                | Working | Creates a starter `deptrace.yml` (`--detect` suggests layers); never overwrites |
+| `deptrace --help`, `--version` | Working |                                                                                 |
+| `deptrace check [directory]`   | Working | Evaluates the rules in `deptrace.yml`; exit code `3` on violations              |
+| `deptrace report [directory]`  | Working | Layers, layer dependencies, rule results and cycles (text or JSON)              |
+| `deptrace baseline create`     | Working | Records the current violations in `deptrace-baseline.json`; never overwrites    |
+| `deptrace baseline update`     | Working | Replaces an existing baseline (explicit, atomic)                                |
+| `deptrace check --baseline`    | Working | Fails only on violations not in the baseline; reports new/existing/resolved     |
+| `deptrace dashboard`           | Working | Graph, layers, cycles, modules and violations in the browser (127.0.0.1 only)   |
+| `deptrace audit [directory]`   | Working | Known vulnerabilities in installed npm packages, who imports them, and the fix  |
 
 The analysis is **static**: DepTrace parses files with the TypeScript compiler and never runs your
 code. It cannot see imports computed at runtime, dependency injection, reflection or other
@@ -41,6 +42,7 @@ Documentation:
 - [docs/baseline.md](docs/baseline.md): baselines, fingerprints, compatibility, approval process
 - [docs/github-actions.md](docs/github-actions.md): GitHub Actions setup, SARIF, security model
 - [docs/dashboard.md](docs/dashboard.md): the dashboard, supported reports, graph limits, security
+- [docs/website.md](docs/website.md): the project website in `site/` and how to host it (nginx, HTTPS)
 - [docs/trust/README.md](docs/trust/README.md): Security & Trust Center: security features, data
   inventory, threat model; [SECURITY.md](SECURITY.md) (reporting vulnerabilities),
   [PRIVACY.md](PRIVACY.md) and [TERMS.md](TERMS.md) (drafts, legal review required)
@@ -53,12 +55,19 @@ Documentation:
 
 Requires **Node.js 22.12 or later**.
 
-The package is not published to npm yet. The intended package name is **`deptrace-cli`**
-(`deptrace` is already taken on npm; `deptrace-cli` was unclaimed when checked on 2026-10-26, but
-availability is only certain at publish time). To try it locally:
+The npm package is **`deptrace-cli`** (the name `deptrace` belongs to an unrelated package); it
+installs the `deptrace` command:
 
 ```sh
-git clone <this repository> deptrace
+npm install -g deptrace-cli        # then: deptrace --help
+npx deptrace-cli --help            # or run it once without installing
+npm install --save-dev deptrace-cli # or per project, then: npx deptrace check
+```
+
+From source:
+
+```sh
+git clone https://github.com/sarthxkz/DepTrace.git deptrace
 cd deptrace
 npm ci
 npm run build
@@ -67,8 +76,6 @@ node dist/index.js --help      # run the built file directly
 npm link && deptrace --help    # or link the `deptrace` command globally
 npm pack                       # or create deptrace-cli-<version>.tgz to install elsewhere
 ```
-
-`npx deptrace` does **not** work from an unpublished checkout; use one of the options above.
 
 ## Usage
 
@@ -216,6 +223,10 @@ error: Architecture check failed: 4 failing violations.
 
 (Output for the sample project in `tests/fixtures/layered` with the configuration above.)
 
+Every violation comes with a suggested fix (`fix:` in text, `suggestion` in JSON) derived from the
+rule and your configuration, for example the layer to route an import through, or the module's
+public file to import instead.
+
 Exit codes: `0` passed, `3` violations, `2` missing/invalid configuration or no rules. `--strict`
 makes warnings fail too; `--format json` prints machine-readable results with a stable
 `fingerprint` per violation. Unresolved imports and cycles are never violations unless a rule
@@ -283,12 +294,44 @@ deptrace report --format json > report.json && deptrace dashboard --report repor
 See [docs/dashboard.md](docs/dashboard.md) for every page, the data contract, large-graph behavior
 and the security model.
 
+### `deptrace audit [directory]`
+
+Finds known security vulnerabilities in the npm packages installed in a repository. It reads
+`package-lock.json` (lockfile version 2 or 3), looks up advisories in the npm registry's advisory
+database (the service `npm audit` uses), shows which of your source files import each vulnerable
+package, and suggests the smallest update that clears every known advisory: `npm update <name>`
+when the fix is inside the range in `package.json`, `npm install <name>@<version>` when it is not,
+and guidance for transitive dependencies.
+
+```sh
+deptrace audit                     # text report
+deptrace audit --format json       # machine-readable; the dashboard can open this file
+deptrace audit --fail-on high      # exit 5 only for high or critical
+```
+
+This is the **only command that uses the network**. It sends package names and versions, never
+source code, and only for packages installed from registry.npmjs.org; private-registry, git and
+local packages are listed as not checked. `DEPTRACE_AUDIT_REGISTRY` selects a mirror. These are
+vulnerabilities in dependencies, not a scan of your own code, and separate from architecture
+violations. pnpm and Yarn lockfiles are not supported.
+
+| Option                 | Description                                                          |
+| ---------------------- | -------------------------------------------------------------------- |
+| `--format`             | `text` (default) or `json`                                           |
+| `--fail-on <severity>` | Lowest severity that fails: `info`, `low` (default), `moderate`, ... |
+
 ### `deptrace init`
 
 Creates a starter `deptrace.yml` in the current directory, with a commented rules example. If the
 file exists, nothing is written and the command exits with code `1`. There is no overwrite flag.
 The full format is described in [docs/configuration.md](docs/configuration.md); without a
 `deptrace.yml`, `scan` analyzes all supported files and `check` refuses to run.
+
+`deptrace init --detect` analyzes the directory first and writes a configuration with one layer
+per folder in `src/` (or per top-level folder when `src/` has fewer than two) and a
+`layer-boundaries` rule that allows every import between those layers that exists today. It is
+a starting point, not a verdict: existing violations are allowed too, and layers that import each
+other are pointed out. Delete the directions your architecture should not have, then run `check`.
 
 ### Global options
 
@@ -303,10 +346,11 @@ The full format is described in [docs/configuration.md](docs/configuration.md); 
 | Code  | Meaning                                                                                                                                                                                                                 |
 | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `0`   | Success. For `scan`/`deps`/`path`: the analysis completed, even if it found cycles or diagnostics                                                                                                                       |
-| `1`   | Operational error (e.g. permission denied, `deptrace.yml` or the baseline already exists for `init` / `baseline create`)                                                                                                |
+| `1`   | Operational error (e.g. permission denied, `deptrace.yml` or the baseline already exists for `init` / `baseline create`, the advisory service unreachable for `audit`)                                                  |
 | `2`   | Invalid usage or configuration (unknown command/option, missing directory, invalid `deptrace.yml`, `check` without rules, file argument that is not an analyzed source file, missing, invalid or incompatible baseline) |
 | `3`   | `check`: architecture rule violations (errors; with `--strict` also warnings; with `--baseline` only new ones)                                                                                                          |
 | `4`   | Reserved for functionality that is not implemented (no command returns it today)                                                                                                                                        |
+| `5`   | `audit`: vulnerable packages at or above `--fail-on`                                                                                                                                                                    |
 | `130` | Interrupted with Ctrl+C                                                                                                                                                                                                 |
 
 Whether an analysis was complete is reported in the output (`status` in JSON, the last line in
@@ -314,8 +358,9 @@ text), not in the exit code.
 
 ## Security, privacy and license
 
-DepTrace runs only on your machine and in your CI: no telemetry, no network requests from the CLI,
-no accounts. Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md), never in a
+DepTrace runs only on your machine and in your CI: no telemetry and no accounts. The one network
+request is `deptrace audit` (or Check dependencies in the dashboard), and only when you run it: it
+sends the package names and versions in `package-lock.json` to the npm registry, never source code. Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md), never in a
 public issue. What DepTrace reads and stores is listed in the
 [data inventory](docs/trust/data-inventory.md); protections and their tests are in the
 [Security & Trust Center](docs/trust/README.md).
@@ -345,7 +390,7 @@ See [docs/development.md](docs/development.md) and [docs/architecture.md](docs/a
 
 Planned, **not available** in this release:
 
-- Publishing to npm and a reusable, versioned GitHub Action (today each repository copies the
-  workflow and pins DepTrace by commit).
+- A reusable, versioned GitHub Action (today each repository copies the workflow and pins DepTrace
+  by commit).
 - Pull request comments.
 - History across runs: stored snapshots and trends in the dashboard (today it shows one report).

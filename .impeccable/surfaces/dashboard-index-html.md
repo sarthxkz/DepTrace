@@ -8,19 +8,20 @@ related_targets: []
 # Dashboard surface brief
 
 Scope: the DepTrace dashboard (`dashboard/`), every route. Visitor mode: Operate.
-Audience: a developer exploring their own repository locally, and a reviewer opening a report produced elsewhere (CI). Task: find what depends on what, where cycles and violations are, and why; decide what to investigate first.
-Constraints: every value from the analyzer report; zero vs missing vs unsupported stated plainly; graphs may be thousands of files; local-only, no external requests.
+Audience: a developer exploring their own repository locally, and a reviewer opening a report produced elsewhere (CI). Task: see the health of the codebase (violations, cycles, vulnerable dependencies), know what to fix first and how, and explore what depends on what.
+Constraints: every value from the analyzer or audit report; zero vs missing vs unsupported vs not checked stated plainly; graphs may be thousands of files; the only network use is the user-triggered dependency audit (package names and versions to the npm registry), said so at the button.
+User feedback driving the redesign (2026-10-28): the old look felt dated and plain, the graph was hard to use, and pages were too dense and cramped. The first screen must be health plus what to fix.
 
 ## Direction contract
 
-THESIS: Every module is a catalog card. The dashboard is a card catalog of the codebase: a file path is a call number, its imports and importers are cross-references, and selecting anything pulls its card. It refuses the category default of a dark KPI-tile wall with a glowing graph.
+THESIS: A dark-first developer console where every finding arrives with its fix. Persistent panels divided by 1px seams show health, the ranked fix list and the architecture at once; it refuses the glowing KPI-tile wall and the light SaaS card grid.
 
-OWN-WORLD: White ruled index stock on a pale blue-gray ground; an oak drawer rail (#5E4429 family) as the shell; one index-card red rule on the pulled card header only; blue ruling hairlines (1px) carry all structure — no shadows, no floating cards, no rounded tiles. System sans for UI, ui-monospace only for paths and fingerprints. Layer identity uses the validated categorical order; error/warning use the fixed status palette with icon and label.
+OWN-WORLD: Graphite ground (#0d1117), panels one step up (#151a22), elevated one more (#1b212b), 1px seams (#262c36), no shadows, no rounded tiles beyond 6px. Syntax-derived accents for state only: keyword blue for selection and the primary action, string green for passing, number purple for cycles, warning amber, destructive red. System sans for UI at two working sizes, ui-monospace for paths, fingerprints and every figure; panel headers in tracked small caps.
 
-STORY: The visitor sees what the analysis found and where to start, pulls a module's card to read its cross-references, follows a path or cycle across the graph, and understands which rule a finding breaks and which import causes it.
+STORY: The visitor reads the health strip, takes the first item in Where to start, reads its fix, opens the file in the graph to see its reach, then checks dependencies for known vulnerabilities and applies the suggested update.
 
-FIRST VIEWPORT: Oak rail with navigation on the left; a header with project name, analysis status, analyzer version, branch/commit when known and the re-analyze action. Overview: a ruled summary ledger of real counts across the top, "Where to start" findings list beneath on the left, layer and rule breakdowns on the right. In the graph route the canvas fills the work area and the pulled card sits in a right column.
+FIRST VIEWPORT: Left rail (sections with live counts). Top bar: project, analysis status dot, files and dependencies, version, branch and commit, Re-analyze. Health strip of four seamed cells: errors (with new), warnings, runtime cycles, vulnerable packages (or Check dependencies). Below, two panels: Where to start (ranked findings, the first expanded with its fix) and Layers (a stacked layer diagram with broken directions drawn in red).
 
-FORM: Catalog Cards, position 5 of my ordered grounded list (assigned). seed:73b2add5498ee3e3. Raised by: hairline-only structure (Annual Plates); focus dims everything not connected (Title Wall); one depth control drives the transitive highlight live (Type Specimen). Signature interaction: pulling a card — selecting a module anywhere opens its red-ruled catalog card with Imports / Imported by cross-references, and the graph dims to that module's reach.
+FORM: Dark Developer Console, a catalog challenger chosen by the user over the assigned Orienteering Course (position 3 of my ordered list) and the Transit Diagram pick. seed:0b9b8ba89ef241c4. Raised by: two working type sizes with rank carried by weight and case (Timetable Slide Rack); a stable code on every finding, the fingerprint (Factory Catalog Sleeve); one tonal ramp as the only neutrals (Exposure Record Sheets); total focus, the selected item lifts and everything else dims (Streaming Title Wall). Signature interaction: the fix strip, a finding opens in place into its rule, the import that causes it and a monospaced fix line, and the graph dims to that finding's files.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

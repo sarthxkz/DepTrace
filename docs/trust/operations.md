@@ -1,12 +1,12 @@
 # Security operations
 
 DepTrace has **no hosted backend**: no server the project operates, no database, no accounts, no
-tenants, no outbound integrations. Checked on 2026-10-28: the runtime dependencies are `commander`,
-`picomatch`, `typescript` and `yaml`, and the only server is the user's own `deptrace dashboard`
-on `127.0.0.1`. There is therefore **no security admin panel**. Building one would add a remote
+tenants. The one outbound request is the user-run dependency audit to the npm registry. Checked on
+2026-10-28: the runtime dependencies are `commander`, `picomatch`, `semver`, `typescript` and
+`yaml`, and the only server is the user's own `deptrace dashboard` on `127.0.0.1`. There is therefore **no security admin panel**. Building one would add a remote
 attack surface that protects nothing.
 
-The project's real operations happen on GitHub (and on npm once the package is published). This page
+The project's real operations happen on GitHub (and on npm, where the package is published as `deptrace-cli`). This page
 maps every admin capability to where it actually lives, and gives the runbooks.
 
 ## Requested admin capabilities
@@ -81,7 +81,7 @@ an upstream advisory.
    - Revoke the affected credential: GitHub sessions, personal access tokens, SSH keys, or npm
      tokens (`npm token revoke`).
    - Require 2FA, and review recent pushes, releases, workflow runs and npm versions.
-2. **Malicious or broken npm version** (once published):
+2. **Malicious or broken npm version:**
    - Run `npm deprecate deptrace-cli@<version> "<reason>"` and publish a fixed version.
    - Unpublishing is only possible within npm's unpublish window; version numbers can never be
      reused.
@@ -95,7 +95,10 @@ an upstream advisory.
 
 ### 4. Release and rollback
 
-There is no deployment: a release is a version of the npm package (not published yet) and a Git tag.
+There is no deployment: a release is a version of the npm package `deptrace-cli` and a Git tag. 0.5.0
+(2026-10-28) was published without a Git tag; npm also lists a `0.0.0-stage` placeholder version left
+by its staged-publishing flow, which can be deprecated (`npm deprecate deptrace-cli@0.0.0-stage
+"placeholder, not a release"`).
 
 - **Release:**
   1. Run the full verification.

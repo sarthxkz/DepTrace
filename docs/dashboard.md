@@ -201,7 +201,9 @@ deptrace dashboard ──analysis (static, in-process)──▶ report JSON (in 
 - The app renders all repository text (paths, messages, specifiers) as text; there is no HTML
   rendering of report content. Invisible control and bidirectional-override characters in that text
   are shown as visible escapes (for example, U+202E RIGHT-TO-LEFT OVERRIDE appears as a backslash-u escape), so a file name cannot display as something
-  else. It makes no external requests: no fonts, analytics or telemetry.
+  else. The page makes no external requests: no fonts, analytics or telemetry. Check dependencies
+  (`POST /api/audit`, same protections as `/api/analyze`) asks the local server to run
+  `deptrace audit`, which contacts the npm registry; it runs only when pressed.
 - Reports contain repository-relative paths only; the server adds the directory name, never its
   absolute path.
 - There is no authentication: any program running as you on this machine can read the report from

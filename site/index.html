@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>DepTrace: architecture checks for TypeScript and JavaScript</title>
+    <meta
+      name="description"
+      content="DepTrace reads the imports of TypeScript and JavaScript repositories, checks them against the architecture rules you write, and shows every violation with the import that causes it. Open source, MIT licensed."
+    />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="wrap header-row">
+        <a class="wordmark" href="#top" aria-label="DepTrace home">deptrace</a>
+        <nav aria-label="Sections">
+          <ul>
+            <li><a href="#evidence">Dashboard</a></li>
+            <li><a href="#commands">Commands</a></li>
+            <li><a href="#rules">Rules</a></li>
+            <li><a href="#ci">CI</a></li>
+            <li><a href="#start">Quick start</a></li>
+            <li><a href="https://github.com/sarthxkz/DepTrace">GitHub</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- The hero is one call slip on the oak desk, with the card it retrieved. -->
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="wrap hero-stage">
+          <div class="slip">
+            <p class="slip-head" aria-hidden="true">
+              <span>Call slip</span>
+            </p>
+            <dl class="slip-fields">
+              <div class="field field-title">
+                <dt class="title-label">Title</dt>
+                <dd>
+                  <h1 id="hero-title">
+                    <span>See your architecture.</span>
+                    <span>Catch violations before they ship.</span>
+                  </h1>
+                </dd>
+              </div>
+              <div class="field">
+                <dt>Subject</dt>
+                <dd class="lede">
+                  DepTrace reads every import in your repository, checks it against the layer and
+                  dependency rules you write, and shows each violation with the exact import that
+                  causes it. It never runs your code.
+                </dd>
+              </div>
+              <div class="field field-call">
+                <dt>Call number</dt>
+                <dd>
+                  <pre
+                    class="command"
+                    aria-label="Install command"
+                  ><code>npm install -g deptrace-cli</code></pre>
+                  <div class="actions">
+                    <a class="button primary" href="#start">Quick start</a>
+                    <a class="button" href="https://github.com/sarthxkz/DepTrace">View on GitHub</a>
+                  </div>
+                </dd>
+              </div>
+            </dl>
+            <dl class="slip-stub">
+              <div>
+                <dt>Version</dt>
+                <dd>0.6.0</dd>
+              </div>
+              <div>
+                <dt>License</dt>
+                <dd>MIT</dd>
+              </div>
+              <div>
+                <dt>Requires</dt>
+                <dd>Node.js 22.12+</dd>
+              </div>
+              <div>
+                <dt>Package</dt>
+                <dd><a href="https://www.npmjs.com/package/deptrace-cli">npm</a></dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="pulled">
+            <article class="card finding" aria-label="A violation found in the sample project">
+              <header class="card-head">
+                <p class="call">
+                  <span class="path-dir">src/ui/</span
+                  ><span class="path-file">product-list.ts</span>
+                </p>
+                <p class="tags">
+                  <span class="badge severity-error"
+                    ><svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0-18 0M9 9l6 6M15 9l-6 6" /></svg
+                    >error</span
+                  >
+                  <span class="badge baseline-new">new</span>
+                </p>
+              </header>
+              <section class="card-section">
+                <h2 class="section-label">Breaks</h2>
+                <p><code>layer-boundaries</code></p>
+                <p>
+                  Layer &ldquo;ui&rdquo; must not depend on layer &ldquo;infrastructure&rdquo;
+                  (allowed for &ldquo;ui&rdquo;: application, shared).
+                </p>
+              </section>
+              <section class="card-section">
+                <h2 class="section-label">Caused by</h2>
+                <p class="ref-row">
+                  <code>../infrastructure/db/client</code><span class="ref">3:30</span>
+                </p>
+              </section>
+              <section class="card-section">
+                <h2 class="section-label">Path</h2>
+                <ol class="chain">
+                  <li>
+                    <span class="path-dir">src/ui/</span
+                    ><span class="path-file">product-list.ts</span>
+                  </li>
+                  <li>
+                    <span class="path-dir">src/infrastructure/db/</span
+                    ><span class="path-file">client.ts</span>
+                  </li>
+                </ol>
+              </section>
+              <p class="fingerprint">fingerprint <code>9bb66c25fc937745</code></p>
+            </article>
+          </div>
+        </div>
+        <div class="drawer-front">
+          <p class="label-holder">
+            Pulled from the sample project <code>tests/fixtures/storefront</code>
+          </p>
+        </div>
+      </section>
+
+      <section class="section wrap" id="evidence" aria-labelledby="evidence-title">
+        <div class="section-intro">
+          <h2 id="evidence-title">Every finding opens to its evidence</h2>
+          <p>
+            <code>deptrace dashboard</code> serves the analysis to your browser from
+            <code>127.0.0.1</code>: the dependency graph, the layer matrix, cycles and violations.
+            Every number comes from the analysis, and every finding opens to the rule, the import
+            and its line.
+          </p>
+        </div>
+
+        <figure class="card shot shot-feature">
+          <header class="card-head">
+            <p class="call">#/graph</p>
+            <p class="card-meta">Dependency graph</p>
+          </header>
+          <img
+            src="assets/graph.png"
+            width="1280"
+            height="800"
+            loading="lazy"
+            alt="The dependency graph with one file selected: its dependencies are highlighted and everything else is dimmed; the file's card lists what it imports and what imports it, with line and column of each import."
+          />
+          <figcaption>
+            Search a file, then follow its dependencies, its dependents, the shortest path to
+            another file, a cycle or a violation. Large graphs are grouped by folder instead of
+            being cut off.
+          </figcaption>
+        </figure>
+
+        <div class="shot-row" role="region" aria-label="More dashboard screens" tabindex="0">
+          <figure class="card shot">
+            <header class="card-head">
+              <p class="call">#/violations</p>
+            </header>
+            <img
+              src="assets/violations.png"
+              width="1280"
+              height="800"
+              loading="lazy"
+              alt="The violations page filtered to the one violation that is new compared with the baseline, with its card showing the rule, the source and target files, the import that causes it and the dependency path."
+            />
+            <figcaption>
+              Filter by severity, rule, file or baseline status. New findings stand apart from
+              accepted ones.
+            </figcaption>
+          </figure>
+          <figure class="card shot">
+            <header class="card-head">
+              <p class="call">#/layers</p>
+            </header>
+            <img
+              src="assets/layers.png"
+              width="1280"
+              height="800"
+              loading="lazy"
+              alt="The layer matrix: rows import columns, each cell counts dependencies between two layers and marks pairs that the layer policy forbids, with the selected forbidden pair listing its dependency."
+            />
+            <figcaption>
+              Your configured layers as a matrix, with forbidden pairs marked and counted.
+            </figcaption>
+          </figure>
+          <figure class="card shot">
+            <header class="card-head">
+              <p class="call">#/cycles</p>
+            </header>
+            <img
+              src="assets/cycles-dark.png"
+              width="1280"
+              height="800"
+              loading="lazy"
+              alt="The Cycles page in the dark theme: two cycle groups listed, the three-file runtime cycle selected, with its representative path, its files and the dependencies inside the group."
+            />
+            <figcaption>
+              Each cycle group with a representative path and every dependency inside it, in light
+              or dark.
+            </figcaption>
+          </figure>
+        </div>
+        <p class="swipe-hint">Swipe for the violations, layers and cycles pages.</p>
+      </section>
+
+      <section class="band" id="commands" aria-labelledby="commands-title">
+        <div class="wrap">
+          <div class="section-intro">
+            <h2 id="commands-title">Every command</h2>
+            <p>
+              Eight commands, one binary. Every command takes <code>--help</code>; analysis commands
+              print text or <code>--format json</code>.
+            </p>
+          </div>
+          <table class="commands">
+            <caption class="visually-hidden">
+              DepTrace commands, what they do, an example and their main options
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Command</th>
+                <th scope="col">What it does</th>
+                <th scope="col">Example</th>
+                <th scope="col">Main options</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"><code>init</code></th>
+                <td>
+                  Creates a starter <code>deptrace.yml</code>; <code>--detect</code> suggests layers
+                  from your folders and current imports. Never overwrites an existing one.
+                </td>
+                <td><code>deptrace init --detect</code></td>
+                <td><code>--detect</code></td>
+              </tr>
+              <tr>
+                <th scope="row"><code>scan</code></th>
+                <td>Analyzes source dependencies and detects circular imports.</td>
+                <td><code>deptrace scan ./my-app</code></td>
+                <td><code>--format json</code> <code>--verbose</code></td>
+              </tr>
+              <tr>
+                <th scope="row"><code>deps</code></th>
+                <td>What a file imports, or which files import it.</td>
+                <td><code>deptrace deps src/db.ts -d incoming</code></td>
+                <td><code>-d, --direction</code> <code>-r, --root</code> <code>--format</code></td>
+              </tr>
+              <tr>
+                <th scope="row"><code>path</code></th>
+                <td>A shortest import path from one file to another.</td>
+                <td><code>deptrace path src/index.ts src/db.ts</code></td>
+                <td><code>-r, --root</code> <code>--format</code></td>
+              </tr>
+              <tr>
+                <th scope="row"><code>check</code></th>
+                <td>
+                  Evaluates the rules in <code>deptrace.yml</code> and prints a suggested fix for
+                  every violation; exit code 3 on violations.
+                </td>
+                <td><code>deptrace check --baseline deptrace-baseline.json</code></td>
+                <td>
+                  <code>--strict</code> <code>--baseline</code> <code>--format github</code>
+                  <code>--report</code> <code>--sarif</code> <code>--summary</code>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row"><code>report</code></th>
+                <td>
+                  Layers, layer dependencies, rule results and cycles; always exits 0 when the
+                  analysis completes.
+                </td>
+                <td><code>deptrace report --format json</code></td>
+                <td><code>--baseline</code> <code>--verbose</code> <code>--format</code></td>
+              </tr>
+              <tr>
+                <th scope="row"><code>baseline</code></th>
+                <td>
+                  Records today's violations so <code>check --baseline</code> fails only on new
+                  ones. <code>create</code> never overwrites; <code>update</code> replaces
+                  explicitly.
+                </td>
+                <td><code>deptrace baseline create</code></td>
+                <td><code>create</code> <code>update</code> <code>--file</code></td>
+              </tr>
+              <tr>
+                <th scope="row"><code>dashboard</code></th>
+                <td>Explores the architecture in your browser, served on 127.0.0.1 only.</td>
+                <td><code>deptrace dashboard --baseline deptrace-baseline.json</code></td>
+                <td><code>--port</code> <code>--baseline</code> <code>--report</code></td>
+              </tr>
+              <tr>
+                <th scope="row"><code>audit</code></th>
+                <td>
+                  Known vulnerabilities in your installed npm packages, the files that import them,
+                  and the update that fixes each. The only command that uses the network: package
+                  names and versions go to the npm registry, never your code.
+                </td>
+                <td><code>deptrace audit --fail-on high</code></td>
+                <td><code>--format</code> <code>--fail-on</code></td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="global-options">
+            Everywhere: <code>-h, --help</code> · <code>-V, --version</code> · <code>--debug</code>
+            prints stack traces on failure.
+          </p>
+
+          <div class="outputs">
+            <figure class="terminal">
+              <figcaption>
+                <code>deptrace path src/ui/cart-view.ts src/domain/order.ts</code>
+              </figcaption>
+              <pre><code>Dependency path from src/ui/cart-view.ts to src/domain/order.ts (3 steps):
+  src/ui/cart-view.ts
+    -&gt; src/application/cart-service.ts  "../application/cart-service" import 1:27
+    -&gt; src/application/checkout.ts  "./checkout" import 2:26
+    -&gt; src/domain/order.ts  "../domain/order" import 2:23</code></pre>
+            </figure>
+            <figure class="terminal">
+              <figcaption>
+                <code>deptrace deps src/domain/pricing.ts -d both</code> (excerpt)
+              </figcaption>
+              <pre><code>Outgoing (what src/domain/pricing.ts imports):
+  Internal files (2):
+    src/infrastructure/db/client.ts  "../infrastructure/db/client" import 3:30
+    src/shared/money.ts  "../shared/money" import 4:23
+  External packages (1):
+    fs  "fs" import 2:30
+
+Incoming (files that import src/domain/pricing.ts):
+  Internal files (1):
+    src/domain/discount.ts  "./pricing" import 1:28</code></pre>
+            </figure>
+          </div>
+          <p class="output-note">
+            Real output on the sample project <code>tests/fixtures/storefront</code>.
+          </p>
+        </div>
+      </section>
+
+      <section class="section wrap" id="rules" aria-labelledby="rules-title">
+        <div class="two-col">
+          <div class="stack">
+            <h2 id="rules-title">Rules you write in one file</h2>
+            <p>
+              Name your layers with globs in <code>deptrace.yml</code> and choose the rules.
+              <code>deptrace check</code> exits with code 3 when one is broken, so CI fails on the
+              pull request that broke it.
+            </p>
+            <table class="ledger">
+              <caption class="visually-hidden">
+                Rule types
+              </caption>
+              <tbody>
+                <tr>
+                  <th scope="row"><code>layer-boundaries</code></th>
+                  <td>Each layer imports only the layers you allow.</td>
+                </tr>
+                <tr>
+                  <th scope="row"><code>forbidden-imports</code></th>
+                  <td>Files matching one glob never import files matching another.</td>
+                </tr>
+                <tr>
+                  <th scope="row"><code>forbidden-packages</code></th>
+                  <td>Keep frameworks and Node.js APIs out of code that should not use them.</td>
+                </tr>
+                <tr>
+                  <th scope="row"><code>module-boundaries</code></th>
+                  <td>Feature modules meet only through their public files.</td>
+                </tr>
+                <tr>
+                  <th scope="row"><code>circular-dependencies</code></th>
+                  <td>No group of files imports itself, optionally ignoring type-only imports.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <figure class="card config">
+            <header class="card-head">
+              <p class="call">deptrace.yml</p>
+              <p class="card-meta">layers and rules of the sample project</p>
+            </header>
+            <pre class="code"><code>layers:
+  - name: ui
+    files: ["src/ui/**"]
+  - name: application
+    files: ["src/application/**"]
+  - name: domain
+    files: ["src/domain/**"]
+  - name: infrastructure
+    files: ["src/infrastructure/**"]
+  - name: shared
+    files: ["src/shared/**"]
+
+rules:
+  layer-boundaries:
+    severity: error
+    allowed:
+      ui: [application, shared]
+      application: [domain, shared]
+      domain: [shared]
+      infrastructure: [application, domain, shared]
+      shared: []
+
+  forbidden-packages:
+    - name: pure-domain
+      description: The domain layer does not use Node.js APIs or web frameworks
+      severity: error
+      from: ["src/domain/**"]
+      packages: ["express", "fs"]
+
+  forbidden-imports:
+    - name: no-test-doubles
+      description: Production code must not import test doubles
+      severity: warning
+      from: ["src/**"]
+      to: ["src/testing/**"]
+      exclude: ["src/testing/**"]
+
+  circular-dependencies:
+    severity: error
+    # Type-only cycles are erased at runtime; they are reported but not violations.
+    ignore-type-only: true</code></pre>
+          </figure>
+        </div>
+      </section>
+
+      <section class="band" id="ci" aria-labelledby="ci-title">
+        <div class="wrap">
+          <div class="section-intro">
+            <h2 id="ci-title">Built for CI</h2>
+            <p>
+              Commit a baseline of today's violations, and the check fails only on the ones a pull
+              request adds. Here is that run on the sample project, line by line.
+            </p>
+          </div>
+          <div class="ci-grid">
+            <figure class="terminal">
+              <figcaption>
+                <code>deptrace check --baseline deptrace-baseline.json</code> on the sample project
+                (excerpt)
+              </figcaption>
+              <pre><code>Violations: 4 errors, 1 warning
+  error   existing  src/application/cart-service.ts:2:26  [circular-dependencies]
+  warning existing  src/application/catalog-service.ts:4:27  [forbidden-imports/no-test-doubles]
+  error   existing  src/domain/pricing.ts:2:30  [forbidden-packages/pure-domain]
+  error   existing  src/domain/pricing.ts:3:30  [layer-boundaries]
+<mark>  error   new       src/ui/product-list.ts:3:30  [layer-boundaries]</mark>
+
+Baseline: deptrace-baseline.json (1 new, 4 existing, 1 resolved)
+error: Architecture check failed: 1 new failing violation (4 existing violations accepted by the baseline).</code></pre>
+            </figure>
+            <dl class="annotations" aria-label="What the output means">
+              <div>
+                <dt><code>existing</code></dt>
+                <dd>
+                  Listed in <code>deptrace-baseline.json</code>, written once with
+                  <code>deptrace baseline create</code>. Still reported, never hidden, but accepted.
+                </dd>
+              </div>
+              <div>
+                <dt><code>new</code></dt>
+                <dd>
+                  Not in the baseline: this import arrived with the change, so it fails the check.
+                </dd>
+              </div>
+              <div>
+                <dt><code>1 resolved</code></dt>
+                <dd>
+                  An accepted violation that is gone. <code>deptrace baseline update</code> removes
+                  it so it cannot return unnoticed.
+                </dd>
+              </div>
+              <div>
+                <dt>Exit code 3</dt>
+                <dd>
+                  The job fails on the pull request that broke the rule; 0 when nothing new fails.
+                </dd>
+              </div>
+            </dl>
+          </div>
+          <table class="ledger ci-ledger">
+            <caption class="visually-hidden">
+              CI integration
+            </caption>
+            <tbody>
+              <tr>
+                <th scope="row">GitHub Actions</th>
+                <td>
+                  Job summaries, annotations on the offending import, and SARIF for code scanning,
+                  from copyable workflows with pinned actions and read-only permissions.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Deterministic</th>
+                <td>
+                  The same code gives the same report and the same fingerprints on every machine.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Fast enough for every push</th>
+                <td>
+                  About 7 seconds for a synthetic 10,000-file repository on the benchmark machine
+                  (<a href="https://github.com/sarthxkz/DepTrace/blob/master/docs/performance.md"
+                    >measurements</a
+                  >).
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section wrap" id="start" aria-labelledby="start-title">
+        <div class="section-intro">
+          <h2 id="start-title">Quick start</h2>
+          <p>Four commands, in this order.</p>
+        </div>
+        <ol class="guides">
+          <li>
+            <span class="tab" aria-hidden="true">1</span>
+            <h3>Install</h3>
+            <pre class="command"><code>npm install -g deptrace-cli</code></pre>
+            <p>Needs Node.js 22.12 or later.</p>
+          </li>
+          <li>
+            <span class="tab" aria-hidden="true">2</span>
+            <h3>Write the rules</h3>
+            <pre class="command"><code>deptrace init</code></pre>
+            <p>
+              Creates <code>deptrace.yml</code>; add your layers and rules (<a
+                href="https://github.com/sarthxkz/DepTrace/blob/master/docs/rules.md"
+                >rule guide</a
+              >).
+            </p>
+          </li>
+          <li>
+            <span class="tab" aria-hidden="true">3</span>
+            <h3>Check</h3>
+            <pre class="command"><code>deptrace check</code></pre>
+            <p>Exit code 0 when the rules hold, 3 when they are broken.</p>
+          </li>
+          <li>
+            <span class="tab" aria-hidden="true">4</span>
+            <h3>Explore</h3>
+            <pre class="command"><code>deptrace dashboard</code></pre>
+            <p>Open the printed address; Ctrl+C stops it.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="closing" aria-labelledby="closing-title">
+        <div class="wrap closing-row">
+          <div class="stack">
+            <h2 id="closing-title">Your code stays on your machine</h2>
+            <p>
+              DepTrace parses files with the TypeScript compiler and never executes them. The
+              dashboard talks only to its local server, and there is no telemetry and no account.
+              The only network request is the dependency audit you run yourself: package names and
+              versions to the npm registry, never your code.
+            </p>
+            <p class="closing-links">
+              <a href="https://github.com/sarthxkz/DepTrace/blob/master/docs/trust/README.md"
+                >Security &amp; Trust Center</a
+              >
+              <a href="https://github.com/sarthxkz/DepTrace/blob/master/SECURITY.md"
+                >Report a vulnerability</a
+              >
+              <a href="https://github.com/sarthxkz/DepTrace/blob/master/PRIVACY.md">Privacy</a>
+            </p>
+          </div>
+          <div class="closing-call">
+            <p class="closing-label">Call number</p>
+            <pre class="command"><code>npm install -g deptrace-cli</code></pre>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-row">
+        <p>DepTrace 0.6.0 · MIT License · © 2026 Sarthak Kumar</p>
+        <ul>
+          <li><a href="https://github.com/sarthxkz/DepTrace">GitHub</a></li>
+          <li><a href="https://www.npmjs.com/package/deptrace-cli">npm</a></li>
+          <li><a href="https://github.com/sarthxkz/DepTrace#readme">Documentation</a></li>
+        </ul>
+      </div>
+    </footer>
+  </body>
+</html>

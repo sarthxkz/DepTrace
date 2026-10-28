@@ -2,6 +2,7 @@ import { Command, CommanderError } from 'commander';
 import { CLI_NAME, ExitCode, PRODUCT_NAME, TAGLINE } from '../core/constants.js';
 import { DepTraceError } from '../core/errors.js';
 import { logger } from '../utils/logger.js';
+import { registerAuditCommand } from './commands/audit.js';
 import { registerBaselineCommand } from './commands/baseline.js';
 import { registerCheckCommand } from './commands/check.js';
 import { registerDashboardCommand } from './commands/dashboard.js';
@@ -50,6 +51,7 @@ export function createProgram(version: string): Command {
   registerReportCommand(program);
   registerBaselineCommand(program);
   registerDashboardCommand(program);
+  registerAuditCommand(program);
   return program;
 }
 

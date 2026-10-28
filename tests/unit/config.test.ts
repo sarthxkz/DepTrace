@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { parse } from 'yaml';
+import { detectLayers, renderDetectedConfig } from '../../src/config/detect.js';
 import { writeStarterConfig } from '../../src/config/init.js';
 import { configPath, resolveTargetDirectory } from '../../src/config/paths.js';
 import { CONFIG_VERSION, validateConfig } from '../../src/config/schema.js';
@@ -165,5 +166,55 @@ describe('writeStarterConfig', () => {
     const dir = await makeTempDir();
     await mkdir(path.join(dir, 'deptrace.yml'));
     await expect(writeStarterConfig(dir)).rejects.toBeInstanceOf(DepTraceError);
+  });
+});
+
+describe('detectLayers', () => {
+  const files = [
+    'src/main.ts',
+    'src/ui/list.ts',
+    'src/domain/order.ts',
+    'src/infra/db.ts',
+    'src/(group)/page.ts',
+    'tests/order.test.ts',
+  ];
+  const edges = [
+    { from: 'src/ui/list.ts', to: 'src/domain/order.ts' },
+    { from: 'src/infra/db.ts', to: 'src/domain/order.ts' },
+    { from: 'src/domain/order.ts', to: 'src/infra/db.ts' },
+    { from: 'src/main.ts', to: 'src/ui/list.ts' },
+  ];
+
+  it('makes one layer per src/ folder and allows the imports that exist', () => {
+    expect(detectLayers(files, edges)).toEqual({
+      base: 'src',
+      layers: [
+        { name: 'domain', directory: 'src/domain' },
+        { name: 'infra', directory: 'src/infra' },
+        { name: 'ui', directory: 'src/ui' },
+      ],
+      allowed: { domain: ['infra'], infra: ['domain'], ui: ['domain'] },
+      mutual: [['domain', 'infra']],
+      unassigned: 3,
+      skipped: ['src/(group)'],
+    });
+  });
+
+  it('falls back to top-level folders and needs at least two layers', () => {
+    expect(detectLayers(['lib/a.ts', 'App/b.ts'], [])?.layers).toEqual([
+      { name: 'app', directory: 'App' },
+      { name: 'lib', directory: 'lib' },
+    ]);
+    expect(detectLayers(['src/a/x.ts', 'index.ts'], [])).toBeNull();
+  });
+
+  it('renders a valid configuration', () => {
+    const detection = detectLayers(files, edges);
+    if (detection === null) throw new Error('no detection');
+    const text = renderDetectedConfig('my app', detection);
+    expect(validateConfig(parse(text))).toEqual([]);
+    expect(text).toContain('domain and infra import each other');
+    expect(text).toContain('Not suggested (name not usable as a layer or pattern): src/(group)');
+    expect(renderDetectedConfig('my app', detection)).toBe(text);
   });
 });

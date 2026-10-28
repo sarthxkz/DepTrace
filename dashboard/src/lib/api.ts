@@ -1,4 +1,4 @@
-/** The local `deptrace dashboard` server: GET /api/report and POST /api/analyze. */
+/** The local `deptrace dashboard` server: GET /api/report, POST /api/analyze and POST /api/audit. */
 
 export interface ServerMeta {
   source: 'analysis' | 'file';
@@ -70,6 +70,31 @@ async function request(input: string, init?: RequestInit): Promise<ServerState> 
 }
 
 export const fetchReport = () => request('/api/report');
+
+/**
+ * Runs `deptrace audit` on the server. It sends package names and versions from
+ * package-lock.json to the npm registry, so it only runs when the user asks.
+ */
+export async function runAudit(): Promise<unknown> {
+  let response: Response;
+  try {
+    response = await fetch('/api/audit', {
+      method: 'POST',
+      cache: 'no-store',
+      headers: { 'X-DepTrace-Request': 'audit' },
+    });
+  } catch {
+    throw new ServerError(
+      'The DepTrace server is not reachable. Is "deptrace dashboard" still running?',
+      true,
+    );
+  }
+  if (!response.ok) {
+    const detail = (await response.text().catch(() => '')).trim().slice(0, 500);
+    throw new ServerError(detail || `The server answered ${String(response.status)}.`);
+  }
+  return response.json();
+}
 
 /** Re-runs the analysis on the server (same directory and options it was started with). */
 export const reanalyze = () =>

@@ -15,7 +15,11 @@
 - DepTrace is software you run yourself: a command-line tool and a dashboard served from your own
   computer. There is **no hosted service, no account and no sign-in**.
 - The software **sends no data to the DepTrace project or anyone else**: no telemetry, analytics,
-  crash reports or update checks. The CLI makes no network requests at all.
+  crash reports or update checks. The one network request is the dependency audit (`deptrace
+audit`, or Check dependencies in the dashboard), made only when you run it: it sends the names and
+  versions of the packages in `package-lock.json` that were installed from registry.npmjs.org to
+  the npm registry, to look up known advisories. It sends no source code and nothing for packages
+  from private registries, git or local paths. npm's own privacy terms apply to that request.
 - DepTrace reads your source code on your machine and writes results only where you tell it to.
 
 The complete list of what is read, where it goes and how long it stays is the
@@ -41,8 +45,9 @@ report files like source code.
   `deptrace-report` artifact (the provided workflows set `retention-days: 14`) and, with the code
   scanning workflow, the SARIF results. This happens in your GitHub account under GitHub's terms
   and privacy statement; the DepTrace project does not receive this data.
-- **npm.** The package is not published. `[[PLACEHOLDER: describe npm's processing of download data
-once the package is published, or remove this item]]`
+- **npm.** If you install DepTrace from npm, the npm registry processes your download under npm's
+  own terms and privacy policy. The DepTrace project sees only the aggregate download counts npm shows
+  publicly for every package.
 
 ## Data the project receives when you contact it
 

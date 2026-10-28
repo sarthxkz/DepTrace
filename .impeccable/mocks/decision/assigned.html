@@ -1,54 +1,64 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><title>Catalog Cards</title>
-<style>
+<html><head><meta charset="utf-8"><style>
 *{box-sizing:border-box;margin:0}
-body{width:1440px;height:900px;overflow:hidden;font:14px/1.45 system-ui,sans-serif;color:#1C1F24;background:#FBFBF8;display:grid;grid-template-columns:232px 1fr}
-.rail{background:#6B4F2E;color:#F3EADB;padding:20px 0}
-.brand{font:600 22px/1 ui-monospace,monospace;padding:0 20px 24px}
-.rail a{display:block;padding:9px 20px;color:#F3EADB;text-decoration:none;border-left:3px solid transparent}
-.rail a.on{background:#5A4126;border-left-color:#C8352E}
-main{display:grid;grid-template-rows:56px 112px 1fr;min-width:0}
-header{display:flex;align-items:center;gap:16px;padding:0 24px;border-bottom:1px solid #9DB7D5}
-header h1{font-size:22px;font-weight:600}
-.chip{border:1px solid #9DB7D5;padding:2px 8px;font-size:12px}
-.metrics{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid #9DB7D5}
-.m{padding:18px 20px;border-right:1px solid #DDE6F0}
-.m b{display:block;font:600 34px/1.1 ui-monospace,monospace}
-.m.err b{color:#C8352E}
-.work{display:grid;grid-template-columns:1fr 420px;min-height:0}
-.graph{position:relative;border-right:1px solid #9DB7D5;background:repeating-linear-gradient(#FBFBF8 0 31px,#EEF3F8 31px 32px)}
-.n{position:absolute;padding:4px 8px;border:1px solid #1C1F24;background:#fff;font:12px ui-monospace,monospace}
-.n.dim{opacity:.25}.n.sel{outline:3px solid #C8352E}
+body{width:1440px;height:900px;overflow:hidden;font:15px/1.45 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#141414;background:#fff;display:grid;grid-template-columns:232px 1fr}
+.rail{background:#174a2c;color:#eaf4ec;padding:22px 0}
+.brand{font-weight:800;font-size:19px;padding:0 24px 22px;letter-spacing:-.01em}
+.rail a{display:flex;justify-content:space-between;padding:11px 24px;color:#cfe3d4;text-decoration:none;font-weight:550}
+.rail a.on{background:#fff;color:#174a2c;font-weight:750}
+.rail a span{font-variant-numeric:tabular-nums;opacity:.8}
+main{display:grid;grid-template-rows:auto auto 1fr;min-width:0}
+header{display:flex;align-items:center;gap:18px;padding:16px 32px;border-bottom:1px solid #e4ddd2}
+header h1{font-size:20px;font-weight:800}
+.meta{color:#5d5d5d;font-size:13px}
+.btn{margin-left:auto;border:1.5px solid #141414;border-radius:6px;padding:8px 14px;font-weight:700;background:#fff}
+.legend{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #e4ddd2}
+.legend div{padding:18px 32px;border-right:1px solid #e4ddd2}
+.legend b{display:block;font-size:34px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.legend small{color:#5d5d5d;font-size:13px}
+.err b{color:#c0281f}.cyc b{color:#0a86c8}.vul b{color:#141414}
+.vul .btn{display:inline-block;margin:6px 0 0;padding:5px 10px;font-size:13px}
+.work{display:grid;grid-template-columns:1fr 520px;min-height:0}
+.map{position:relative;background:#fff;border-right:1px solid #e4ddd2;padding:22px 28px}
+.map h2,.sheet h2{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
+.terrain{position:absolute;left:28px;right:28px;height:84px;border-radius:3px;font-size:12px;font-weight:700;padding:6px 10px;color:#3d3d3d}
+.t1{top:56px;background:#fff1b8}.t2{top:146px;background:#e4f5d9}.t3{top:236px;background:#ffffff;border:1px dashed #c26a2a}.t4{top:326px;background:#cfeec2}.t5{top:416px;background:#f4f4f4}
 svg{position:absolute;inset:0}
-.card{margin:24px;background:#fff;border:1px solid #9DB7D5;box-shadow:0 1px 0 #9DB7D5}
-.card .head{border-bottom:2px solid #C8352E;padding:14px 18px}
-.card .call{font:600 24px/1.2 ui-monospace,monospace}
-.card .row{padding:8px 18px;border-bottom:1px solid #DDE6F0;font-family:ui-monospace,monospace;font-size:13px}
-.card h3{padding:12px 18px 4px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#6B4F2E}
-.depth{margin:0 24px;display:flex;gap:8px;align-items:center}
-.depth span{border:1px solid #1C1F24;padding:4px 10px}.depth span.on{background:#1C1F24;color:#fff}
+.sheet{padding:22px 28px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:#5d5d5d;text-align:left;padding:6px 8px;border-bottom:2px solid #141414}
+td{padding:10px 8px;border-bottom:1px solid #e4ddd2;vertical-align:top}
+td.n{color:#a62b9c;font-weight:800;font-size:18px;width:34px}
+.path{font-family:ui-monospace,Consolas,monospace;font-size:13px}
+.tag{font-size:11px;font-weight:800;border-radius:4px;padding:1px 6px;margin-left:6px}
+.new{background:#a62b9c;color:#fff}.e{color:#c0281f;font-weight:700}.w{color:#8a5a00;font-weight:700}
+tr.sel td{background:#fbf0fa}
+.fix{margin-top:6px;font-size:13.5px;color:#2f2f2f;border-left:3px solid #a62b9c;padding-left:10px}
 </style></head><body>
 <nav class="rail"><div class="brand">deptrace</div>
-<a>Overview</a><a class="on">Dependency graph</a><a>Layers</a><a>Violations</a><a>Cycles</a><a>Modules</a><a>Reports</a><a>Configuration</a></nav>
+<a class="on" href="#">Overview</a><a href="#">Violations <span>5</span></a><a href="#">Vulnerabilities <span>–</span></a><a href="#">Graph <span>23</span></a><a href="#">Layers <span>5</span></a><a href="#">Cycles <span>2</span></a><a href="#">Modules</a><a href="#">Reports</a><a href="#">Configuration</a></nav>
 <main>
-<header><h1>layered-shop</h1><span class="chip">analysis completed</span><span class="chip">deptrace 0.4.0</span><span class="chip">main · 3d3c42e</span></header>
-<section class="metrics">
-<div class="m"><b>20</b>source files</div><div class="m"><b>26</b>internal deps</div><div class="m"><b>2</b>packages</div><div class="m"><b>2</b>cycle groups</div><div class="m err"><b>5</b>errors</div><div class="m"><b>2</b>warnings</div></section>
+<header><h1>storefront</h1><span class="meta">Analysis complete · 23 files · 35 dependencies · DepTrace 0.6.0 · master @ 4b9bfb7</span><span class="btn">Re-analyze</span></header>
+<section class="legend">
+<div class="err"><b>4</b><small>errors · 1 warning · <strong>1 new</strong></small></div>
+<div class="cyc"><b>1</b><small>runtime cycle (3 files) · 1 type-only</small></div>
+<div><b>5</b><small>layers · 3 files in no layer</small></div>
+<div class="vul"><b>Not checked</b><small>Dependency vulnerabilities</small><br><span class="btn">Check 3 packages</span></div>
+</section>
 <section class="work">
-<div class="graph">
-<svg width="100%" height="100%"><g stroke="#1C1F24" stroke-width="1.2" fill="none"><path d="M200 120 L380 220"/><path d="M380 220 L560 160"/><path d="M380 220 L520 360"/><path d="M520 360 L700 420" stroke="#C8352E" stroke-width="2.5"/><path d="M200 430 L380 220" opacity=".25"/></g></svg>
-<div class="n" style="left:120px;top:105px">presentation/cli.ts</div>
-<div class="n sel" style="left:300px;top:205px">application/place-order.ts</div>
-<div class="n" style="left:520px;top:145px">application/notify.ts</div>
-<div class="n" style="left:450px;top:345px">domain/pricing.ts</div>
-<div class="n" style="left:640px;top:405px">infrastructure/db/connection.ts</div>
-<div class="n dim" style="left:120px;top:420px">features/cart/index.ts</div>
-<div class="n dim" style="left:700px;top:260px">legacy/pad.ts</div>
-</div>
-<aside>
-<div class="card"><div class="head"><div class="call">src/application/place-order.ts</div>layer application · in cycle 1</div>
-<h3>Imports →</h3><div class="row">src/application/notify.ts · 3:30</div><div class="row">src/domain/order.ts · type 1:1</div><div class="row">src/domain/pricing.ts · 2:24</div>
-<h3>Imported by ←</h3><div class="row">src/application/notify.ts · 1:28</div><div class="row">src/presentation/http/order-controller.ts</div>
-<h3>Violations</h3><div class="row">warning circular-dependencies</div></div>
-<div class="depth">Depth <span>1</span><span class="on">2</span><span>3</span><span>all</span></div>
-</aside></section></main></body></html>
+<div class="map"><h2>Course · fix in this order</h2>
+<div class="terrain t1">ui</div><div class="terrain t2">application</div><div class="terrain t3">domain</div><div class="terrain t4">infrastructure</div><div class="terrain t5">shared</div>
+<svg viewBox="0 0 688 560"><g fill="#141414"><circle cx="120" cy="105" r="4"/><circle cx="260" cy="110" r="4"/><circle cx="430" cy="100" r="4"/><circle cx="160" cy="195" r="4"/><circle cx="330" cy="190" r="4"/><circle cx="520" cy="200" r="4"/><circle cx="210" cy="285" r="4"/><circle cx="380" cy="280" r="4"/><circle cx="560" cy="290" r="4"/><circle cx="300" cy="375" r="4"/><circle cx="470" cy="370" r="4"/><circle cx="200" cy="465" r="4"/><circle cx="420" cy="460" r="4"/></g>
+<g stroke="#8a8a8a" stroke-width="1"><path d="M120 105 160 195M260 110 330 190M330 190 380 280M380 280 470 370M160 195 210 285M520 200 560 290M210 285 200 465"/></g>
+<path d="M330 190 Q360 150 520 200 Q470 250 330 190" fill="none" stroke="#0a86c8" stroke-width="2.5"/>
+<g stroke="#a62b9c" stroke-width="2.5" fill="none"><path d="M60 60 l14 24 h-28z"/><path d="M68 84 L248 104"/><circle cx="260" cy="110" r="14"/><path d="M268 122 L462 360"/><circle cx="470" cy="370" r="14"/><path d="M460 360 L392 290"/><circle cx="380" cy="280" r="14"/><path d="M392 282 L512 205"/><circle cx="520" cy="200" r="14"/><path d="M520 214 L560 520"/><circle cx="560" cy="532" r="9"/><circle cx="560" cy="532" r="15"/></g>
+<g fill="#a62b9c" font-weight="800" font-size="17"><text x="280" y="98">1</text><text x="490" y="368">2</text><text x="348" y="270">3</text><text x="540" y="188">4</text></g></svg></div>
+<div class="sheet"><h2>Control descriptions</h2>
+<table><tr><th>#</th><th>Finding</th><th>Rule</th></tr>
+<tr class="sel"><td class="n">1</td><td><span class="path">src/ui/product-list.ts</span><span class="tag new">NEW</span><div class="fix">Invert the dependency: declare the interface "ui" needs in "application", implement it in "infrastructure", pass it in from the composition root.</div></td><td class="e">layer-boundaries</td></tr>
+<tr><td class="n">2</td><td><span class="path">src/domain/pricing.ts</span></td><td class="e">layer-boundaries</td></tr>
+<tr><td class="n">3</td><td><span class="path">src/domain/pricing.ts</span> → fs</td><td class="e">pure-domain</td></tr>
+<tr><td class="n">4</td><td>Cycle of 3 files from <span class="path">cart-service.ts</span></td><td class="e">circular</td></tr>
+<tr><td class="n">5</td><td><span class="path">catalog-service.ts</span> → fake-store.ts</td><td class="w">no-test-doubles</td></tr>
+</table></div>
+</section></main></body></html>

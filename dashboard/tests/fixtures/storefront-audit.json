@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "tool": {
+    "name": "deptrace",
+    "version": "0.6.0"
+  },
+  "registry": "https://registry.npmjs.org",
+  "lockfile": "package-lock.json",
+  "packageVersionsSent": 2,
+  "packagesNotChecked": 0,
+  "summary": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 1,
+    "critical": 0,
+    "packages": 1
+  },
+  "packages": [
+    {
+      "name": "lodash",
+      "version": "4.17.20",
+      "path": "node_modules/lodash",
+      "direct": true,
+      "dev": false,
+      "severity": "high",
+      "advisories": [
+        {
+          "id": 1106913,
+          "url": "https://github.com/advisories/GHSA-35jh-r3h4-6jhm",
+          "title": "Command Injection in lodash",
+          "severity": "high",
+          "vulnerableVersions": "<4.17.21",
+          "cwe": ["CWE-77", "CWE-94"],
+          "cvssScore": 7.2
+        },
+        {
+          "id": 1115806,
+          "url": "https://github.com/advisories/GHSA-r5fr-rjxr-66jc",
+          "title": "lodash vulnerable to Code Injection via `_.template` imports key names",
+          "severity": "high",
+          "vulnerableVersions": ">=4.0.0 <=4.17.23",
+          "cwe": ["CWE-94"],
+          "cvssScore": 8.1
+        },
+        {
+          "id": 1108258,
+          "url": "https://github.com/advisories/GHSA-29mw-wpgm-hmr9",
+          "title": "Regular Expression Denial of Service (ReDoS) in lodash",
+          "severity": "moderate",
+          "vulnerableVersions": ">=4.0.0 <4.17.21",
+          "cwe": ["CWE-400", "CWE-1333"],
+          "cvssScore": 5.3
+        },
+        {
+          "id": 1115810,
+          "url": "https://github.com/advisories/GHSA-f23m-r3pf-42rh",
+          "title": "lodash vulnerable to Prototype Pollution via array path bypass in `_.unset` and `_.omit`",
+          "severity": "moderate",
+          "vulnerableVersions": "<=4.17.23",
+          "cwe": ["CWE-1321"],
+          "cvssScore": 6.5
+        },
+        {
+          "id": 1120370,
+          "url": "https://github.com/advisories/GHSA-xxjr-mmjv-4gpg",
+          "title": "Lodash has Prototype Pollution Vulnerability in `_.unset` and `_.omit` functions",
+          "severity": "moderate",
+          "vulnerableVersions": ">=4.0.0 <=4.17.22",
+          "cwe": ["CWE-1321"],
+          "cvssScore": 6.5
+        }
+      ],
+      "importedBy": [],
+      "fix": {
+        "version": "4.18.0",
+        "command": "npm update lodash",
+        "breaking": false,
+        "note": "4.18.0 is within the range in package.json (^4.17.0)."
+      }
+    }
+  ]
+}

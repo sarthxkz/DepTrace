@@ -98,6 +98,8 @@ export interface Violation {
   references: ImportReference[];
   /** Human-readable explanation. */
   message: string;
+  /** How to fix it, derived from the rule and the configuration. */
+  suggestion: string;
   /** Dependency path, when meaningful (a cycle, or importer → imported). */
   path: string[] | null;
   /** Stable identity: does not change when lines move or the repository is relocated. */

@@ -3,6 +3,7 @@ import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { InvalidArgumentError, type Command } from 'commander';
+import { runAudit } from '../../audit/report.js';
 import { CLI_NAME, ExitCode } from '../../core/constants.js';
 import { DepTraceError, fromFsError } from '../../core/errors.js';
 import { readGitHead } from '../../dashboard/git.js';
@@ -100,6 +101,7 @@ Examples:
 
       let initial: DashboardState;
       let analyze: (() => Promise<DashboardState>) | undefined;
+      let audit: (() => Promise<string>) | undefined;
       if (options.report !== undefined) {
         if (directory !== '.' || options.baseline !== undefined) {
           throw new DepTraceError(
@@ -151,6 +153,16 @@ Examples:
           };
         };
         initial = await analyze();
+        audit = async () => {
+          const run = await cli.runAnalysis(directory);
+          const registry = process.env.DEPTRACE_AUDIT_REGISTRY;
+          const report = await runAudit(run.info.path, {
+            toolVersion: version,
+            external: run.result.external,
+            ...(registry !== undefined && { registry }),
+          });
+          return JSON.stringify(report);
+        };
       }
 
       let url: string;
@@ -160,6 +172,7 @@ Examples:
           port: options.port,
           initial,
           ...(analyze && { analyze }),
+          ...(audit && { audit }),
         }));
       } catch (error) {
         if ((error as NodeJS.ErrnoException).code === 'EADDRINUSE') {

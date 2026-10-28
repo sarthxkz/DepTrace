@@ -1,44 +1,32 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><title>Survey Strata</title>
-<style>
+<html><head><meta charset="utf-8"><style>
 *{box-sizing:border-box;margin:0}
-body{width:1440px;height:900px;overflow:hidden;font:14px/1.45 system-ui,sans-serif;color:#20231F;background:#F1F2EE;display:grid;grid-template-columns:220px 1fr}
-.rail{background:#20231F;color:#E7E8E2;padding:20px 0}
-.brand{font:600 22px/1 system-ui;padding:0 20px 24px}
-.rail a{display:block;padding:9px 20px}.rail a.on{background:#343832;box-shadow:inset 3px 0 #D9A441}
-main{display:grid;grid-template-rows:60px 1fr;min-width:0}
-header{display:flex;align-items:center;gap:16px;padding:0 28px;border-bottom:1px solid #C9CBC2}
-header h1{font-size:24px}
-.body{display:grid;grid-template-columns:520px 1fr;gap:0}
-.column{padding:28px;border-right:1px solid #C9CBC2;position:relative}
-.column h2{font-size:26px;margin-bottom:16px}
-.stratum{height:104px;border-bottom:1px solid #20231F;display:flex;justify-content:space-between;align-items:end;padding:10px 14px;font-weight:600}
-.s1{background:#D9A441}.s2{background:#8FAF7E}.s3{background:#C98579}.s4{background:#6C7A89;color:#fff}.s5{background:repeating-linear-gradient(45deg,#E4E5DF 0 6px,#D3D5CC 6px 12px)}
-.fault{position:absolute;left:250px;top:120px;width:4px;height:380px;background:#B3261E;transform:rotate(14deg)}
-.fault2{position:absolute;left:380px;top:200px;width:4px;height:300px;background:#B3261E;transform:rotate(-10deg)}
-.right{padding:28px;display:grid;grid-template-rows:auto 1fr;gap:24px}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid #C9CBC2}
-.m{padding:16px;border-right:1px solid #C9CBC2}.m b{display:block;font-size:34px}
-.m.f b{color:#B3261E}
-table{width:100%;border-collapse:collapse;background:#fff}
-td,th{padding:10px 12px;border-bottom:1px solid #E1E2DC;text-align:left}
-th{font-size:12px;text-transform:uppercase;letter-spacing:.06em}
-.sev{color:#B3261E;font-weight:600}
+body{width:1440px;height:900px;overflow:hidden;font:15px/1.45 Helvetica,Arial,sans-serif;color:#111;background:#f7f7f5;display:grid;grid-template-rows:64px 1fr}
+.top{display:flex;align-items:center;gap:28px;padding:0 32px;background:#111;color:#fff}
+.top b{font-size:19px}.top a{color:#bbb;text-decoration:none;font-weight:700;font-size:14px}.top a.on{color:#fff;border-bottom:3px solid #ee352e;padding-bottom:4px}
+.top .btn{margin-left:auto;background:#fff;color:#111;border-radius:20px;padding:7px 16px;font-weight:700;font-size:14px}
+.body{display:grid;grid-template-columns:1fr 470px}
+.diagram{padding:26px 32px;position:relative}
+h2{font-size:22px;font-weight:800;margin-bottom:4px}.sub{color:#555;font-size:14px;margin-bottom:10px}
+.lines{display:flex;gap:10px;margin-bottom:6px}.bullet{width:26px;height:26px;border-radius:50%;color:#fff;font-weight:800;display:grid;place-items:center;font-size:13px}
+svg{width:100%;height:640px}
+.side{background:#fff;border-left:1px solid #ddd;padding:26px 28px}
+.stat{display:flex;gap:26px;margin-bottom:22px}.stat b{display:block;font-size:30px;font-weight:800}.stat small{color:#555}
+.alert{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:14px 0;border-top:1px solid #e3e3e3}
+.alert .bullet{width:30px;height:30px}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:13px}
+.fix{font-size:13px;color:#333;margin-top:4px}
 </style></head><body>
-<nav class="rail"><div class="brand">deptrace</div><a>Overview</a><a>Dependency graph</a><a class="on">Layers</a><a>Violations</a><a>Cycles</a><a>Modules</a><a>Reports</a><a>Configuration</a></nav>
-<main><header><h1>layered-shop</h1><span>completed · deptrace 0.4.0</span></header>
-<div class="body">
-<section class="column"><h2>Layer column</h2>
-<div class="stratum s1">presentation<span>2 files</span></div>
-<div class="stratum s2">application<span>2 files</span></div>
-<div class="stratum s3">domain<span>6 files</span></div>
-<div class="stratum s4">infrastructure<span>3 files</span></div>
-<div class="stratum s5">unclassified<span>7 files</span></div>
-<div class="fault"></div><div class="fault2"></div></section>
-<section class="right">
-<div class="metrics"><div class="m"><b>4</b>layers</div><div class="m"><b>6</b>cross-layer deps</div><div class="m f"><b>3</b>boundary faults</div><div class="m"><b>7</b>unclassified</div></div>
-<table><tr><th>Fault</th><th>From</th><th>To</th><th>Severity</th></tr>
-<tr><td>domain → infrastructure</td><td>src/domain/pricing.ts</td><td>src/infrastructure/db/connection.ts</td><td class="sev">error</td></tr>
-<tr><td>infrastructure → presentation</td><td>src/infrastructure/http/server.ts</td><td>src/presentation/http/order-controller.ts</td><td class="sev">error</td></tr>
-<tr><td>presentation → infrastructure</td><td>src/presentation/cli.ts</td><td>src/infrastructure/db/order-repository.ts</td><td class="sev">error</td></tr></table>
-</section></div></main></body></html>
+<div class="top"><b>deptrace</b><a class="on">Service status</a><a>Violations</a><a>Vulnerabilities</a><a>Map</a><a>Cycles</a><a>Reports</a><span class="btn">Re-analyze</span></div>
+<div class="body"><section class="diagram"><h2>storefront</h2><p class="sub">23 files on 5 lines · 35 connections · DepTrace 0.6.0</p>
+<div class="lines"><span class="bullet" style="background:#0039a6">U</span><span class="bullet" style="background:#ff6319">A</span><span class="bullet" style="background:#00933c">D</span><span class="bullet" style="background:#fccc0a;color:#111">I</span><span class="bullet" style="background:#a7a9ac">S</span></div>
+<svg viewBox="0 0 900 640"><g fill="none" stroke-width="9" stroke-linecap="round"><path d="M40 90 H620 L700 170" stroke="#0039a6"/><path d="M40 220 H520 L600 300 H860" stroke="#ff6319"/><path d="M40 360 H860" stroke="#00933c"/><path d="M40 500 H420 L500 420 H860" stroke="#fccc0a"/><path d="M40 600 H860" stroke="#a7a9ac"/></g>
+<g fill="#fff" stroke="#111" stroke-width="3"><circle cx="160" cy="90" r="9"/><circle cx="320" cy="90" r="9"/><circle cx="480" cy="90" r="9"/><circle cx="200" cy="220" r="9"/><circle cx="380" cy="220" r="9"/><circle cx="300" cy="360" r="9"/><circle cx="560" cy="360" r="9"/><circle cx="740" cy="360" r="9"/><circle cx="260" cy="500" r="9"/><circle cx="640" cy="420" r="9"/><circle cx="420" cy="600" r="9"/></g>
+<path d="M480 90 C520 250 560 380 640 420" stroke="#ee352e" stroke-width="4" stroke-dasharray="10 7" fill="none"/>
+<g font-size="13" font-weight="700"><text x="440" y="70">product-list</text><text x="600" y="446">db/client</text><text x="520" y="385">pricing</text></g></svg></section>
+<aside class="side"><div class="stat"><div><b style="color:#ee352e">4</b><small>errors</small></div><div><b>1</b><small>warning</small></div><div><b style="color:#0039a6">1</b><small>cycle</small></div><div><b>–</b><small>vulnerabilities</small></div></div>
+<div class="alert"><span class="bullet" style="background:#ee352e">1</span><div><b>UI line skips to Infrastructure</b><div class="mono">src/ui/product-list.ts → db/client.ts</div><div class="fix">Change at Application: declare the interface there, implement it in infrastructure.</div></div></div>
+<div class="alert"><span class="bullet" style="background:#ee352e">2</span><div><b>Domain line skips to Infrastructure</b><div class="mono">src/domain/pricing.ts</div></div></div>
+<div class="alert"><span class="bullet" style="background:#ee352e">3</span><div><b>Domain uses fs</b><div class="mono">src/domain/pricing.ts</div></div></div>
+<div class="alert"><span class="bullet" style="background:#0039a6">4</span><div><b>Loop on the Application line</b><div class="mono">cart-service.ts · 3 stations</div></div></div>
+</aside></div></body></html>

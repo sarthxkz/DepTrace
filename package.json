@@ -1,6 +1,6 @@
 {
   "name": "deptrace-cli",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "DepTrace: see your architecture. Catch violations before they ship.",
   "keywords": [
     "architecture",
@@ -48,6 +48,7 @@
   "dependencies": {
     "commander": "^15.0.0",
     "picomatch": "^4.0.7",
+    "semver": "^7.8.5",
     "typescript": "~6.0.3",
     "yaml": "^2.9.1"
   },
@@ -61,6 +62,7 @@
     "@types/picomatch": "^4.0.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@types/semver": "^7.8.0",
     "@vitejs/plugin-react": "^6.1.2",
     "ajv": "^8.20.0",
     "ajv-draft-04": "^1.0.0",

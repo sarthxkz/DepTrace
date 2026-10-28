@@ -6,12 +6,20 @@ const FIXTURES = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtur
 
 /** Real analyzer output for tests/fixtures/storefront (see docs/dashboard.md to regenerate). */
 export const fixtureText = (
-  name: 'storefront-report.json' | 'storefront-check.json' | 'storefront.sarif',
+  name:
+    | 'storefront-report.json'
+    | 'storefront-check.json'
+    | 'storefront-audit.json'
+    | 'storefront.sarif',
 ) => readFileSync(path.join(FIXTURES, name), 'utf8');
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- tests name the shape they read
 export const fixture = <T extends object = Record<string, unknown>>(
-  name: 'storefront-report.json' | 'storefront-check.json' | 'storefront.sarif',
+  name:
+    | 'storefront-report.json'
+    | 'storefront-check.json'
+    | 'storefront-audit.json'
+    | 'storefront.sarif',
 ) => JSON.parse(fixtureText(name)) as T;
 
 /** Narrows away null and undefined, failing the test when the value is missing. */

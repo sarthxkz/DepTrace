@@ -1,0 +1,18 @@
+# Imported by Vybe's Caddyfile (deploy/sites/*.caddy on the VM). Serves the DepTrace website
+# (this repository's site/), uploaded to deploy/public/deptrace on the VM. Caddy gets and
+# renews the certificate itself once DNS for deptrace.sarthxkz.in points at 161.153.37.106.
+deptrace.sarthxkz.in {
+	encode zstd gzip
+	header {
+		-Server
+		# Static page: no scripts, no third-party resources, no forms.
+		Content-Security-Policy "default-src 'none'; img-src 'self'; style-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		X-Frame-Options DENY
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+	}
+	header /assets/* Cache-Control "public, max-age=604800"
+	root * /srv/public/deptrace
+	file_server
+}

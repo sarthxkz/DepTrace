@@ -5,9 +5,13 @@ Everything DepTrace reads, produces or stores, from the code in this repository 
 
 ## Not collected
 
-DepTrace has **no telemetry, analytics, crash reporting, update checks, accounts or cookies**. The CLI
-makes no network requests; the dashboard requests only its own local server (enforced by its
-Content Security Policy and checked by `dashboard/e2e/dashboard.spec.ts`).
+DepTrace has **no telemetry, analytics, crash reporting, update checks, accounts or cookies**. The
+only network request is the dependency audit, and only when the user runs it (`deptrace audit`, or
+Check dependencies in the dashboard, which asks the local server to run it): package names and
+versions from `package-lock.json`, for packages installed from registry.npmjs.org, sent to the npm
+registry's advisory endpoint (`src/audit/audit.ts`; `tests/unit/audit.test.ts` checks exactly what is
+sent). Everything else in the CLI is offline, and the dashboard page requests only its own local
+server (enforced by its Content Security Policy and checked by `dashboard/e2e/dashboard.spec.ts`).
 
 ## Inventory
 

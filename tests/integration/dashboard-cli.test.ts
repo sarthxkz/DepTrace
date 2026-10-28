@@ -1,7 +1,7 @@
 import { spawn, type ChildProcess } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
-import { request } from 'node:http';
+import { createServer as createHttpServer, request } from 'node:http';
 import { createServer } from 'node:net';
 import path from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -263,6 +263,74 @@ describe('deptrace dashboard', () => {
     );
   });
 
+  it('runs the dependency audit only on a same-origin request, against the configured registry', async () => {
+    const lodash = {
+      id: 1,
+      url: 'https://github.com/advisories/GHSA-test',
+      title: 'Test advisory',
+      severity: 'high',
+      vulnerable_versions: '<4.17.21',
+      cwe: [],
+      cvss: { score: 7 },
+    };
+    const sent: string[] = [];
+    const registry = createHttpServer((request, response) => {
+      sent.push(`${request.method ?? ''} ${request.url ?? ''}`);
+      response.setHeader('Content-Type', 'application/json');
+      response.end(
+        request.url?.endsWith('/advisories/bulk')
+          ? JSON.stringify({ lodash: [lodash] })
+          : JSON.stringify({ versions: { '4.17.21': {}, '4.18.0': {} } }),
+      );
+    });
+    await new Promise<void>((resolve) => registry.listen(0, '127.0.0.1', resolve));
+    const address = registry.address();
+    process.env.DEPTRACE_AUDIT_REGISTRY = `http://127.0.0.1:${String(typeof address === 'object' && address ? address.port : 0)}`;
+    try {
+      const dir = await copyFixture('storefront');
+      await writeFile(
+        path.join(dir, 'package-lock.json'),
+        JSON.stringify({
+          lockfileVersion: 3,
+          packages: {
+            '': { dependencies: { lodash: '^4.17.0' } },
+            'node_modules/lodash': {
+              version: '4.17.20',
+              resolved: 'https://registry.npmjs.org/lodash/-/lodash-4.17.20.tgz',
+            },
+          },
+        }),
+      );
+      const { url, origin } = await startDashboard([], dir);
+      const audit = new URL('/api/audit', url).href;
+      expect((await http(audit)).status).toBe(405);
+      expect(
+        (
+          await http(audit, {
+            method: 'POST',
+            headers: { Origin: 'https://evil.example', 'X-DepTrace-Request': 'audit' },
+          })
+        ).status,
+      ).toBe(403);
+      expect(sent).toEqual([]);
+      const response = await http(audit, {
+        method: 'POST',
+        headers: { Origin: origin, 'X-DepTrace-Request': 'audit' },
+      });
+      expect(response.status).toBe(200);
+      const report = json(response.body) as { packages: { name: string; fix: unknown }[] };
+      expect(report.packages.map((p) => p.name)).toEqual(['lodash']);
+      expect(report.packages[0]?.fix).toMatchObject({
+        version: '4.17.21',
+        command: 'npm update lodash',
+      });
+      expect(sent[0]).toBe('POST /-/npm/v1/security/advisories/bulk');
+    } finally {
+      delete process.env.DEPTRACE_AUDIT_REGISTRY;
+      registry.close();
+    }
+  });
+
   it('serves a saved report file read-only', async () => {
     const dir = await copyFixture('storefront');
     const report = runCli(['report', '--format', 'json'], dir).stdout;
@@ -281,6 +349,11 @@ describe('deptrace dashboard', () => {
       headers: { Origin: origin, 'X-DepTrace-Request': 'analyze' },
     });
     expect(analyze.status).toBe(409);
+    const audit = await http(new URL('/api/audit', url).href, {
+      method: 'POST',
+      headers: { Origin: origin, 'X-DepTrace-Request': 'audit' },
+    });
+    expect(audit.status).toBe(409);
   });
 
   it('fails clearly on bad options and files', async () => {

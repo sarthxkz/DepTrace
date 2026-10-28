@@ -29,6 +29,15 @@
         ],
         "createdAt": "2026-10-27T03:43:42.354Z",
         "reason": "Claude: unchosen direction sketch (Lexicon), never shipped"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "tests/unit/site.test.ts"
+        ],
+        "createdAt": "2026-10-28T03:37:57.369Z",
+        "reason": "Claude: false positive, the match is a regex literal in a test, not markup"
       }
     ]
   }

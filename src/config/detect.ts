@@ -1,0 +1,149 @@
+import { PRODUCT_NAME } from '../core/constants.js';
+import { CONFIG_VERSION } from './schema.js';
+
+/** Glob syntax and backslashes; folders containing them cannot be written as plain patterns. */
+const GLOB_SPECIAL = /[*?[\]{}()!+@,\\]/;
+
+export interface DetectedLayer {
+  name: string;
+  /** Repository-relative folder, e.g. "src/ui". */
+  directory: string;
+}
+
+export interface LayerDetection {
+  /** Folder the layers were found in: "src", or "" for the repository root. */
+  base: string;
+  /** Sorted by directory. */
+  layers: DetectedLayer[];
+  /** Importer layer -> layers it imports today, in `layers` order. Lists every layer. */
+  allowed: Record<string, string[]>;
+  /** Layer pairs that import each other. */
+  mutual: [string, string][];
+  /** Analyzed files in no layer (they are not checked). */
+  unassigned: number;
+  /** Folders skipped because their names contain glob characters or clash with another layer name. */
+  skipped: string[];
+}
+
+function folderOf(file: string, base: string): string | null {
+  const rest =
+    base === '' ? file : file.startsWith(`${base}/`) ? file.slice(base.length + 1) : null;
+  const slash = rest?.indexOf('/') ?? -1;
+  return rest && slash > 0 ? rest.slice(0, slash) : null;
+}
+
+function foldersIn(files: readonly string[], base: string): string[] {
+  const folders = new Set<string>();
+  for (const file of files) {
+    const folder = folderOf(file, base);
+    if (folder !== null) folders.add(folder);
+  }
+  return [...folders].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+}
+
+/**
+ * Suggests one layer per folder that holds analyzed files: the folders in `src/` when it
+ * has at least two, otherwise the top-level folders. The allowed directions are the
+ * imports between those folders today, so they include any existing violation. Returns
+ * null when fewer than two layers can be suggested.
+ */
+export function detectLayers(
+  files: readonly string[],
+  edges: readonly { from: string; to: string }[],
+): LayerDetection | null {
+  const base = foldersIn(files, 'src').length >= 2 ? 'src' : '';
+  const layerByFolder = new Map<string, string>();
+  const layers: DetectedLayer[] = [];
+  const skipped: string[] = [];
+  for (const folder of foldersIn(files, base)) {
+    const directory = base === '' ? folder : `${base}/${folder}`;
+    const name = folder
+      .toLowerCase()
+      .replace(/[^a-z0-9-]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    if (GLOB_SPECIAL.test(folder) || name === '' || layers.some((layer) => layer.name === name)) {
+      skipped.push(directory);
+      continue;
+    }
+    layerByFolder.set(folder, name);
+    layers.push({ name, directory });
+  }
+  if (layers.length < 2) return null;
+
+  const layerOf = (file: string) => {
+    const folder = folderOf(file, base);
+    return folder === null ? undefined : layerByFolder.get(folder);
+  };
+  const imports = new Map(layers.map((layer) => [layer.name, new Set<string>()]));
+  for (const edge of edges) {
+    const from = layerOf(edge.from);
+    const to = layerOf(edge.to);
+    if (from !== undefined && to !== undefined && from !== to) imports.get(from)?.add(to);
+  }
+
+  const allowed: Record<string, string[]> = {};
+  const mutual: [string, string][] = [];
+  layers.forEach((layer, index) => {
+    const targets = imports.get(layer.name) ?? new Set<string>();
+    allowed[layer.name] = layers.filter((other) => targets.has(other.name)).map((l) => l.name);
+    for (const other of layers.slice(index + 1)) {
+      if (targets.has(other.name) && imports.get(other.name)?.has(layer.name)) {
+        mutual.push([layer.name, other.name]);
+      }
+    }
+  });
+  const unassigned = files.filter((file) => layerOf(file) === undefined).length;
+  return { base, layers, allowed, mutual, unassigned, skipped };
+}
+
+/** Renders a configuration with the detected layers. Output depends only on its inputs. */
+export function renderDetectedConfig(projectName: string, detection: LayerDetection): string {
+  const where = detection.base === '' ? 'top-level folder' : `folder in ${detection.base}/`;
+  const notes = [
+    `# One layer per ${where}, detected from the files analyzed today.`,
+    ...(detection.unassigned > 0
+      ? [`# ${String(detection.unassigned)} analyzed file(s) are in no layer and are not checked.`]
+      : []),
+    ...detection.skipped.map(
+      (dir) => `# Not suggested (name not usable as a layer or pattern): ${dir}`,
+    ),
+  ];
+  const layers = detection.layers.map(
+    (layer) => `  - name: ${layer.name}\n    files: [${JSON.stringify(`${layer.directory}/**`)}]`,
+  );
+  const allowed = detection.layers.map(
+    (layer) => `      ${layer.name}: [${(detection.allowed[layer.name] ?? []).join(', ')}]`,
+  );
+  const mutual = detection.mutual.map(
+    ([a, b]) =>
+      `    # ${a} and ${b} import each other; one of these directions is probably unwanted.`,
+  );
+  return `version: ${String(CONFIG_VERSION)}
+
+# ${PRODUCT_NAME} configuration (format version ${String(CONFIG_VERSION)}), generated by
+# "deptrace init --detect". Reference: docs/configuration.md and docs/rules.md.
+
+project:
+  name: ${JSON.stringify(projectName)}
+
+analysis:
+  include:
+    - "**/*"
+  exclude: []
+
+${notes.join('\n')}
+layers:
+${layers.join('\n')}
+
+rules:
+  layer-boundaries:
+    severity: error
+    # REVIEW THIS LIST. It allows every import between layers that exists today,
+    # including any that break your intended architecture. Delete the directions
+    # that should not exist, then run "deptrace check" ("deptrace baseline create"
+    # accepts the violations you cannot fix yet).
+${mutual.length > 0 ? `${mutual.join('\n')}\n` : ''}    # importer layer: [layers it may import]
+    allowed:
+${allowed.join('\n')}
+`;
+}

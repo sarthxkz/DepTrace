@@ -5,11 +5,21 @@ import { DepTraceError, fromFsError } from '../core/errors.js';
 import { configPath } from './paths.js';
 import { renderStarterConfig } from './templates.js';
 
+export function configExistsError(file: string): DepTraceError {
+  return new DepTraceError(
+    `${CONFIG_FILENAME} already exists at ${file}. It was not modified.`,
+    ExitCode.OperationalError,
+  );
+}
+
 /**
- * Writes the starter configuration into `directory`. Never overwrites an
- * existing file. Returns the path of the created file.
+ * Writes the starter configuration (or `render`'s) into `directory`. Never
+ * overwrites an existing file. Returns the path of the created file.
  */
-export async function writeStarterConfig(directory: string): Promise<string> {
+export async function writeStarterConfig(
+  directory: string,
+  render: (projectName: string) => string = renderStarterConfig,
+): Promise<string> {
   try {
     if (!(await stat(directory)).isDirectory()) {
       throw new DepTraceError(`Not a directory: ${directory}`, ExitCode.OperationalError);
@@ -23,13 +33,10 @@ export async function writeStarterConfig(directory: string): Promise<string> {
   const projectName = path.basename(directory) || 'my-project';
   try {
     // 'wx' fails if the file exists, so there is no check-then-write race.
-    await writeFile(file, renderStarterConfig(projectName), { encoding: 'utf8', flag: 'wx' });
+    await writeFile(file, render(projectName), { encoding: 'utf8', flag: 'wx' });
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'EEXIST') {
-      throw new DepTraceError(
-        `${CONFIG_FILENAME} already exists at ${file}. It was not modified.`,
-        ExitCode.OperationalError,
-      );
+      throw configExistsError(file);
     }
     throw fromFsError(error, file, 'Writing the configuration file');
   }

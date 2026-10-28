@@ -1,7 +1,7 @@
-import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import { readFile, mkdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { CLI_PATH, ROOT, makeTempDir, runCli } from '../helpers.js';
+import { CLI_PATH, ROOT, copyFixture, makeTempDir, runCli } from '../helpers.js';
 
 const pkg = JSON.parse(await readFile(path.join(ROOT, 'package.json'), 'utf8')) as {
   version: string;
@@ -47,6 +47,27 @@ describe('invalid usage exits with code 2', () => {
 });
 
 describe('init', () => {
+  it('--detect suggests layers that pass check on the code as it is', async () => {
+    const dir = await copyFixture('storefront');
+    await rm(path.join(dir, 'deptrace.yml'));
+    const result = runCli(['init', '--detect'], dir);
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain(
+      'Detected 6 layers from folders in src/: application, domain, infrastructure, shared, testing, ui',
+    );
+    const content = await readFile(path.join(dir, 'deptrace.yml'), 'utf8');
+    expect(content).toContain('ui: [application, infrastructure, shared]');
+    expect(runCli(['check'], dir).code).toBe(0);
+  });
+
+  it('--detect refuses an existing deptrace.yml before analyzing', async () => {
+    const dir = await makeTempDir();
+    await writeFile(path.join(dir, 'deptrace.yml'), 'version: [1\n');
+    const result = runCli(['init', '--detect'], dir);
+    expect(result.code).toBe(1);
+    expect(result.stderr).toContain('already exists');
+  });
+
   it('creates deptrace.yml, then refuses to overwrite it', async () => {
     const dir = await makeTempDir();
     const first = runCli(['init'], dir);

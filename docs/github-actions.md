@@ -4,8 +4,8 @@ DepTrace runs in GitHub Actions as an ordinary CLI: no GitHub credentials, no AP
 special action. The CLI writes everything GitHub needs (a job summary, annotations, a JSON report,
 optionally SARIF), and the workflow decides what to do with the exit code.
 
-> **Status.** DepTrace is not published to npm, and there is no published GitHub Action or
-> Marketplace listing. The workflows below build DepTrace from a pinned commit of its Git
+> **Status.** DepTrace is published to npm as `deptrace-cli`, but there is no published GitHub
+> Action or Marketplace listing. The workflows below build DepTrace from a pinned commit of its Git
 > repository. They are validated locally (schema, security checks, and their shell steps run
 > against the real CLI in tests), but they have **not yet run on GitHub**.
 

@@ -33,7 +33,7 @@ anything beyond the license is needed is part of the legal review.
 
 ## Third-party services
 
-Using DepTrace with GitHub Actions or installing it from npm (once published) is subject to those
+Using DepTrace with GitHub Actions or installing it from npm is subject to those
 platforms' own terms.
 
 ## Governing law and changes

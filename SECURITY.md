@@ -75,8 +75,9 @@ Out of scope:
 
 ## Supported versions
 
-DepTrace has **no published releases yet** (the npm package is not published). Fixes are made on the
-default branch, `master`.
+Releases are published to npm as [`deptrace-cli`](https://www.npmjs.com/package/deptrace-cli); the
+first release is 0.5.0 (2026-10-28). Fixes are made on the default branch, `master`, and released as
+new versions.
 
 `[[PLACEHOLDER: supported-versions policy once releases exist, e.g. which release lines receive
 security fixes]]`

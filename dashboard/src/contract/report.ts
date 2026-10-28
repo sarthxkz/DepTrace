@@ -81,6 +81,8 @@ export interface Violation {
   typeOnly: boolean;
   references: ImportRef[];
   message: string;
+  /** How to fix it (DepTrace 0.6.0 and later). */
+  suggestion: string | null;
   path: string[] | null;
   fingerprint: string;
   /** Present only when the report was made with --baseline. */
@@ -232,6 +234,7 @@ export function violation(c: Checker, value: unknown, at: string): Violation {
     typeOnly: c.boolean(o, 'typeOnly', at),
     references: c.array(o, 'references', at, (item, p) => importRef(c, item, p)),
     message: c.string(o, 'message', at),
+    suggestion: o.suggestion === undefined ? null : c.string(o, 'suggestion', at),
     path: o.path === null ? null : c.strings(o, 'path', at),
     fingerprint: c.string(o, 'fingerprint', at),
     baselineStatus:

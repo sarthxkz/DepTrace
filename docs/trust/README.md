@@ -17,8 +17,9 @@ and the tests for each claim. It covers DepTrace 0.5.0 as implemented in this re
 
 DepTrace runs entirely on infrastructure you control:
 
-- **CLI** (`deptrace`): reads a repository from disk and prints or writes results. It makes no
-  network requests.
+- **CLI** (`deptrace`): reads a repository from disk and prints or writes results. Only
+  `deptrace audit` uses the network: it sends package names and versions (never source code) to the
+  npm registry to look up known vulnerabilities.
 - **Dashboard** (`deptrace dashboard`): the same analysis, served to your browser by a small HTTP
   server bound to `127.0.0.1`. The browser app talks only to that server.
 - **GitHub Actions workflows**: run the CLI inside your CI, with read-only permissions (plus
@@ -121,7 +122,6 @@ Every `[[PLACEHOLDER: …]]` in these documents must appear in this list (a test
 - [ ] `supported-versions policy` (SECURITY.md)
 - [ ] `safe-harbor statement` (SECURITY.md)
 - [ ] `name and contact details of the party responsible` (PRIVACY.md)
-- [ ] `npm's processing of download data` (PRIVACY.md)
 - [ ] `how long the project keeps vulnerability reports` (PRIVACY.md)
 - [ ] `data-protection rights` (PRIVACY.md)
 - [ ] `statement on children's data` (PRIVACY.md)

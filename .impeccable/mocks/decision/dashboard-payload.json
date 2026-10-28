@@ -1,0 +1,125 @@
+{
+  "title": "Choose the dashboard's new visual world",
+  "question": "The roll assigned the Orienteering Course. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "kind": "assigned",
+      "label": "Orienteering Course",
+      "kicker": "THE ROLL",
+      "lineage": "IOF orienteering maps with the purple course overprint",
+      "thesis": "What to fix first is a course: numbered control circles joined by purple legs across your architecture, read beside a control-description sheet.",
+      "palette": ["#174a2c", "#ffffff", "#fff1b8", "#cfeec2", "#a62b9c", "#0a86c8", "#c0281f", "#141414"],
+      "materials": ["map white with open-land yellow and vegetation greens for layers", "purple overprint for the course only", "blue for cycles (water loops)", "black for files and text"],
+      "viewport": "Forest-green rail with sections and counts; header with project, analysis status, version, commit and Re-analyze; a legend row of real counts (errors, cycles, layers, vulnerabilities with a Check button); below, the architecture as terrain bands with the purple course 1→4 on the left and the control-description sheet (numbered findings, each opening to its fix) on the right.",
+      "risk": "Orienteering maps are less familiar to developers than transit maps; the course metaphor must stay functional (ranked findings) or it becomes decoration.",
+      "raised": [
+        { "from": "challenger-timetable", "raise": "Two type sizes for working text; rank carried by weight, case and reversal instead of more sizes, which un-crams dense tables." },
+        { "from": "challenger-saville", "raise": "Every control carries a stable code (the violation fingerprint), the way each orienteering control has a code." },
+        { "from": "challenger-zones", "raise": "All neutrals come from one disciplined tonal ramp; no ad-hoc greys." },
+        { "from": "challenger-wall", "raise": "Focus is total: selecting a control dims everything off its legs and lifts its row." }
+      ],
+      "html": ".impeccable/mocks/decision/assigned.html"
+    },
+    {
+      "id": "model-pick",
+      "kind": "pick",
+      "label": "Transit Diagram",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "Vignelli's 1972 New York subway diagram",
+      "thesis": "Layers are colored lines and files are stations; a violation is a line that skips to a station it should never reach.",
+      "palette": ["#111111", "#f7f7f5", "#0039a6", "#ff6319", "#00933c", "#fccc0a", "#ee352e"],
+      "materials": ["solid route colors", "white station rings", "Helvetica-style bold labels"],
+      "viewport": "Black top bar navigation; the layer lines drawn across the work area with stations; a status column of numbered service alerts with fixes.",
+      "risk": "The most familiar direction: transit-map dependency diagrams are where many tools in this category land.",
+      "html": ".impeccable/mocks/decision/model-pick.html"
+    },
+    {
+      "id": "challenger-console",
+      "kind": "challenger",
+      "catalogId": "digital-design-canon-dark-first-developer-console",
+      "label": "Dark Developer Console",
+      "verdict": "competitive",
+      "lineage": "dark-first developer consoles",
+      "thesis": "Graphite panels divided by hairline seams, syntax-derived accents for state only.",
+      "palette": ["#16181c", "#1d2026", "#2a2e35", "#7cc4ff", "#ff7b72", "#e3b341", "#d2a8ff"],
+      "materials": ["graphite panels", "1px seams", "syntax accents"],
+      "viewport": "Persistent panels: counts strip, where-to-start list, layer stack.",
+      "case": "Developers identify with it instantly; it loses on product clarity because nothing in it shows what to fix first beyond a list.",
+      "risk": "Close to the category default the redesign is meant to leave.",
+      "html": ".impeccable/mocks/decision/challenger-console.html"
+    },
+    {
+      "id": "challenger-timetable",
+      "kind": "challenger",
+      "catalogId": "rw-timetable-slide-rack",
+      "label": "Timetable Slide Rack",
+      "verdict": "declined",
+      "lineage": "1971 pocket airline timetables on a light table",
+      "palette": ["#e0a72a", "#2f3b45", "#f4efe2", "#d6402b"],
+      "materials": ["raked glass slides", "one type size"],
+      "case": "Raked containers fight a working dashboard; developers do not identify with it.",
+      "kept": "A strict type scale where rank is weight and case."
+    },
+    {
+      "id": "challenger-saville",
+      "kind": "challenger",
+      "catalogId": "brand-identity-canon-saville-catalog-sleeve",
+      "label": "Factory Catalog Sleeve",
+      "verdict": "declined",
+      "lineage": "Peter Saville's Factory Records catalog",
+      "palette": ["#0b0b0b", "#ffffff", "#e4322b", "#2f7fd3"],
+      "materials": ["matte black", "coded color strips"],
+      "case": "Replacing names with color codes hides the file paths the task depends on.",
+      "kept": "A stable catalog code on every item."
+    },
+    {
+      "id": "challenger-zones",
+      "kind": "challenger",
+      "catalogId": "operate-b-exposure-record-zone-sheets",
+      "label": "Exposure Record Sheets",
+      "verdict": "declined",
+      "lineage": "darkroom printer's exposure records",
+      "palette": ["#1c1c1c", "#8a8a8a", "#e8e8e8", "#c0398f"],
+      "materials": ["zone ramp", "hatching"],
+      "case": "Overlapping translucent sheets obscure dense findings.",
+      "kept": "One tonal ramp as the only neutrals."
+    },
+    {
+      "id": "challenger-wall",
+      "kind": "challenger",
+      "catalogId": "pop-culture-shelf-streaming-title-card-wall",
+      "label": "Streaming Title Wall",
+      "verdict": "declined",
+      "lineage": "streaming catalog rows",
+      "palette": ["#141414", "#e50914", "#ffffff"],
+      "materials": ["poster rows", "focus scale"],
+      "case": "Poster rows have no place for paths, rules and fixes.",
+      "kept": "Total focus: the selected item lifts, everything else dims."
+    },
+    {
+      "id": "challenger-folio",
+      "kind": "challenger",
+      "catalogId": "editorial-sequence-montage-botanical-folio-season",
+      "label": "Botanical Folio",
+      "verdict": "declined",
+      "lineage": "botanical plate sequences",
+      "palette": ["#f1e9d6", "#3d6b35", "#b0242b"],
+      "materials": ["fixed-scale plates"],
+      "case": "No audience identification; plates do not carry a graph.",
+      "kept": "Comparable views keep one exact scale."
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "canon": true,
+  "canonCard": {
+    "kind": "canon",
+    "label": "The category standard",
+    "thesis": "A clean light SaaS dashboard: KPI cards, a findings table, a blue primary action.",
+    "palette": ["#f9fafb", "#ffffff", "#111827", "#2563eb", "#b91c1c"],
+    "materials": ["rounded white cards", "system sans", "pill badges"],
+    "viewport": "Sidebar, four KPI cards, a where-to-start table and a layers card.",
+    "risk": "Clean and familiar, and indistinguishable from every other dashboard.",
+    "html": ".impeccable/mocks/decision/canon.html"
+  }
+}

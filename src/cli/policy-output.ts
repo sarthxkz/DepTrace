@@ -26,6 +26,7 @@ function formatViolation(violation: Violation, verbose: boolean, status: string)
   if (violation.target.kind !== 'cycle' && violation.references.length > 0) {
     lines.push(`          imports: ${violation.references.map(formatReference).join(', ')}`);
   }
+  lines.push(`          fix: ${violation.suggestion}`);
   if (verbose) lines.push(`          fingerprint: ${violation.fingerprint}`);
   return lines;
 }

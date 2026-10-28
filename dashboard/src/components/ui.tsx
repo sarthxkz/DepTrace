@@ -181,7 +181,7 @@ export function EmptyState({
   );
 }
 
-/** A red-ruled catalog card: the signature container for one selected thing. */
+/** The detail panel for one selected thing (a module, a finding, a cycle). */
 export function CatalogCard({
   title,
   meta,

@@ -34,6 +34,8 @@ export interface Finding {
   column: number | null;
   target: Target | null;
   message: string;
+  /** How to fix it, when the document says. */
+  suggestion: string | null;
   path: string[] | null;
   references: ImportRef[];
   dependencyKinds: string[];
@@ -75,6 +77,7 @@ export function fromViolation(v: Violation): Finding {
     column: v.column,
     target: v.target,
     message: v.message,
+    suggestion: v.suggestion,
     path: v.path,
     references: v.references,
     dependencyKinds: v.dependencyKinds,
@@ -174,6 +177,7 @@ function parseSarif(value: unknown): Loaded {
           column: typeof region?.startColumn === 'number' ? region.startColumn : null,
           target: null,
           message: c.string(message, 'text', `${at}.message`),
+          suggestion: null,
           path: null,
           references: [],
           dependencyKinds: [],

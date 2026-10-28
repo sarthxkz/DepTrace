@@ -84,6 +84,14 @@ export function Privacy({
           </dd>
           <dt>Re-analysis</dt>
           <dd>Only when you press Re-analyze; nothing is analyzed in the background.</dd>
+          <dt>Dependency check</dt>
+          <dd>
+            Only when you press Check dependencies: the local server (not this page) sends the
+            package names and versions from <code>package-lock.json</code> to the npm registry
+            (registry.npmjs.org) to look up advisories. No source code, and nothing for packages
+            installed from private registries, git or local paths. Advisory links open the advisory
+            site in a new tab.
+          </dd>
         </dl>
       </section>
 
