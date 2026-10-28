@@ -8,7 +8,7 @@ and the tests for each claim. It covers DepTrace 0.5.0 as implemented in this re
 | -------------------------------------- | -------------------------------------------------------------- |
 | [SECURITY.md](../../SECURITY.md)       | Vulnerability disclosure policy: how to report, scope          |
 | [PRIVACY.md](../../PRIVACY.md)         | Privacy policy (draft, legal review required)                  |
-| [TERMS.md](../../TERMS.md)             | Terms of use (draft, legal review required; no license yet)    |
+| [TERMS.md](../../TERMS.md)             | Terms of use (draft, legal review required; MIT licensed)      |
 | [data-inventory.md](data-inventory.md) | Every piece of data: source, destination, retention, deletion  |
 | [threat-model.md](threat-model.md)     | Assets, trust boundaries, threats, mitigations, residual risks |
 | [operations.md](operations.md)         | Security operations: why there is no admin panel, runbooks     |
@@ -102,13 +102,12 @@ These cannot be done from the code and are not done yet:
 1. **Enable GitHub private vulnerability reporting** (repository **Settings → Code security →
    Private vulnerability reporting**). On 2026-10-27 the GitHub API reported it as disabled for
    `sarthxkz/DepTrace`. Then update the status note in [SECURITY.md](../../SECURITY.md).
-2. **Choose a license** and add `LICENSE` plus the `license` field in `package.json`.
-3. **Fill every placeholder below** and have [PRIVACY.md](../../PRIVACY.md),
+2. **Fill every placeholder below** and have [PRIVACY.md](../../PRIVACY.md),
    [TERMS.md](../../TERMS.md) and the safe-harbor section of [SECURITY.md](../../SECURITY.md)
    reviewed by a lawyer. Then remove the "Draft" notices.
-4. **Enable Dependabot alerts and security updates** (Settings → Code security) so
+3. **Enable Dependabot alerts and security updates** (Settings → Code security) so
    `.github/dependabot.yml` takes effect for alerts as well as version updates.
-5. **Protect the default branch** and add a `CODEOWNERS` entry for `deptrace-baseline.json` and
+4. **Protect the default branch** and add a `CODEOWNERS` entry for `deptrace-baseline.json` and
    `.github/workflows/` so changes to accepted violations and CI need review
    ([baseline.md](../baseline.md#approving-and-updating-a-baseline)).
 
@@ -127,8 +126,6 @@ Every `[[PLACEHOLDER: …]]` in these documents must appear in this list (a test
 - [ ] `data-protection rights` (PRIVACY.md)
 - [ ] `statement on children's data` (PRIVACY.md)
 - [ ] `how changes to this policy are announced` (PRIVACY.md)
-- [ ] `choose and add a LICENSE file` (TERMS.md)
-- [ ] `warranty disclaimer and limitation of liability` (TERMS.md)
 - [ ] `acceptable-use rules` (TERMS.md)
 - [ ] `governing law` (TERMS.md)
 - [ ] `review owner and cadence` (docs/trust/threat-model.md)

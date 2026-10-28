@@ -139,7 +139,8 @@ export function Privacy({
             <code>PRIVACY.md</code> privacy policy (draft, legal review pending)
           </li>
           <li>
-            <code>TERMS.md</code> terms of use (draft; the project has no license yet)
+            <code>TERMS.md</code> terms of use (draft); the code is MIT licensed, see{' '}
+            <code>LICENSE</code>
           </li>
           <li>
             <code>docs/trust/</code> security features, data inventory and threat model

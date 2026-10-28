@@ -1,14 +1,13 @@
 # Terms of use
 
 > **Draft. Legal review required before publication.** DepTrace is software you run yourself; its
-> use is normally governed by its **license**, and the repository has **no license yet**. This draft
-> only collects the facts and decisions the owner and a lawyer need. Every
+> use is governed by its license, the **MIT License** ([LICENSE](LICENSE)). This draft only collects
+> the remaining facts and decisions the owner and a lawyer need. Every
 > `[[PLACEHOLDER: …]]` is listed in [docs/trust/README.md](docs/trust/README.md#open-placeholders).
 
 ## License
 
-`[[PLACEHOLDER: choose and add a LICENSE file (and the "license" field in package.json); until
-then, no license is granted beyond what applicable law allows]]`
+DepTrace is licensed under the MIT License. The full text is in [LICENSE](LICENSE).
 
 ## What DepTrace is
 
@@ -24,8 +23,9 @@ hosted service and no account. Facts relevant to these terms:
 
 ## Warranty and liability
 
-`[[PLACEHOLDER: warranty disclaimer and limitation of liability, normally part of the chosen
-license; requires legal review]]`
+The MIT License provides the software "as is", without warranty of any kind, and limits the
+authors' and copyright holders' liability; the binding wording is in [LICENSE](LICENSE). Whether
+anything beyond the license is needed is part of the legal review.
 
 ## Acceptable use
 

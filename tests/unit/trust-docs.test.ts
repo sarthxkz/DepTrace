@@ -78,6 +78,10 @@ describe('security, privacy and legal documents', () => {
     // The only browser storage key.
     expect(read('dashboard/src/lib/theme.ts')).toContain("THEME_STORAGE_KEY = 'deptrace.theme'");
     expect(inventory).toContain('`deptrace.theme`');
+    // The license the documents refer to.
+    expect(read('LICENSE')).toMatch(/^MIT License\n\nCopyright \(c\) \d{4} \S/);
+    expect((JSON.parse(read('package.json')) as { license?: string }).license).toBe('MIT');
+    expect(read('TERMS.md')).toContain('MIT License');
     // The local server's binding.
     expect(read('src/dashboard/server.ts')).toContain("const HOST = '127.0.0.1';");
   });

@@ -320,7 +320,7 @@ public issue. What DepTrace reads and stores is listed in the
 [data inventory](docs/trust/data-inventory.md); protections and their tests are in the
 [Security & Trust Center](docs/trust/README.md).
 
-The repository has **no license yet**, and the privacy policy and terms are drafts with
+DepTrace is released under the [MIT License](LICENSE). The privacy policy and terms are drafts with
 placeholders that need the owner's decisions and legal review.
 
 ## Development
