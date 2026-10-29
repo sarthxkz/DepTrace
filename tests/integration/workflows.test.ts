@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { readFile, symlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -120,9 +120,22 @@ describe('workflow files', () => {
   }
 });
 
+/**
+ * The bash GitHub uses for `shell: bash`. On Windows that is Git Bash; the first bash on PATH
+ * is often WSL's, which cannot run this checkout's Windows Node.
+ */
+function findBash(): string {
+  if (process.platform !== 'win32') return 'bash';
+  // git --exec-path is <Git>/mingw64/libexec/git-core; Git Bash is <Git>/bin/bash.exe.
+  const exec = spawnSync('git', ['--exec-path'], { encoding: 'utf8' }).stdout.trim();
+  const gitBash = path.resolve(exec, '..', '..', '..', 'bin', 'bash.exe');
+  return exec !== '' && existsSync(gitBash) ? gitBash : 'bash';
+}
+const BASH = findBash();
+
 /** Runs a workflow step's script the way GitHub runs bash steps. */
 function runStep(script: string, env: Record<string, string>, cwd: string) {
-  const result = spawnSync('bash', ['--noprofile', '--norc', '-eo', 'pipefail', '-c', script], {
+  const result = spawnSync(BASH, ['--noprofile', '--norc', '-eo', 'pipefail', '-c', script], {
     cwd,
     encoding: 'utf8',
     env: { ...process.env, ...env },
